@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Create Question</title>
+  </head>
+  <body>
+    <h1>Create Question</h1>
+
+    <form action="/create-question/new" method="POST" enctype="application/json">
+      <label for="questionText">Question Text:</label>
+      <input type="text" id="text" name="text" required /><br /><br />
+
+      <div id="choices-container">
+        <!-- Initially, include one input field for a choice -->
+        <input type="text" name="choices" required />
+      </div>
+
+      <button type="button" id="add-choice">Add Choice</button>
+      <button type="button" id="remove-choice">Remove Choice</button>
+
+      <label for="correctAnswerID">Correct Answer ID:</label>
+      <input type="number" id="correctAnswerID" name="correctAnswerID" required /><br /><br />
+
+      <input type="submit" value="Create Question" />
+    </form>
+
+    <script>
+      // JavaScript to add/remove choice input fields
+      const choicesContainer = document.getElementById('choices-container')
+      const addChoiceButton = document.getElementById('add-choice')
+      const removeChoiceButton = document.getElementById('remove-choice')
+      
+      addChoiceButton.addEventListener('click', () => {
+        const input = document.createElement('input')
+        input.type = 'text'
+        input.name = 'choices'
+        input.required = true
+        choicesContainer.appendChild(input)
+      })
+      
+      removeChoiceButton.addEventListener('click', () => {
+        const inputFields = choicesContainer.getElementsByTagName('input')
+        if (inputFields.length > 1) {
+          choicesContainer.removeChild(inputFields[inputFields.length - 1])
+        }
+      })
+    </script>
+  </body>
+</html>

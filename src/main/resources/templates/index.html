@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Question and Exam</title>
+</head>
+<body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <h1>Create Question and Exam</h1>
+
+    <!-- Button to create a question -->
+    <button onclick="createQuestion()">Create Question</button>
+
+    <!-- Button to create an exam -->
+    <button onclick="createExam()">Create Exam</button>
+
+    <script>
+        function createQuestion() {
+            window.location.href = '/create-question-view'; 
+        }
+        
+        function createExam() {
+            window.location.href = '/create-exam-view';
+        }
+
+        setTimeout(function() {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // disapear after 2s
+    </script>
+</body>
+</html>
