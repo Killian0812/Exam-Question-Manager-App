@@ -21,13 +21,17 @@ docker run -d --rm --name mysql-springboot-exam \
 -p 3309:3306 \
 --volume mysql-springboot-exam-volume:/var/lib/mysql \
 mysql:latest
-
+*/
+/* 
 mysql -h localhost -P 3309 --protocol=tcp -u killian -p
 */
+
 @Configuration
 public class Database {
 
     public static final Logger logger = LoggerFactory.getLogger(Database.class);
+
+    public DataGenerator dataGenerator;
 
     @Bean
     CommandLineRunner initDatabase(QuestionRepository questionRepository, ExamRepository examRepository) {
@@ -35,28 +39,12 @@ public class Database {
 
             @Override
             public void run(String... args) throws Exception {
-
-                // fake data inserting
-                // Question questionA = new Question(
-                //         "Which is the non-primitive data type?",
-                //         Arrays.asList("int", "short", "double", "String"), 3, "IT", "Easy");
-                // Question questionB = new Question("Range of int data type?",
-                //         Arrays.asList("0...255", "-32768...32768", "-128...127", "0...65535"), 1, "IT", "Easy");
-                // Question questionC = new Question(
-                //         "Who is the 26th USA President?",
-                //         Arrays.asList("Theodore Roosevelt", "Barack Obama", "Donald Trump", "Joe Biden"), 0, "History",
-                //         "Medium");
-                // Question questionD = new Question("Maximum number of solution of 2-degree equation?",
-                //         Arrays.asList("4", "1", "2", "0"), 2, "Math", "Easy");
-                try {
-                    // questionRepository.save(questionA);
-                    // questionRepository.save(questionB);
-                    // questionRepository.save(questionC);
-                    // questionRepository.save(questionD);
-                    logger.info("Inserted data successfully");
-                } catch (Exception e) {
-                    logger.info("Data duplicated");
-                }
+                // try {
+                //     dataGenerator.dataGenerate();
+                //     logger.info("Data generated");
+                // } catch (Exception e) {
+                //     logger.info("Data duplicated");
+                // }
             }
 
         };

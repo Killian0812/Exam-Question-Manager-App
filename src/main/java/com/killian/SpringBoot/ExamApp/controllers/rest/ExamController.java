@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.killian.SpringBoot.ExamApp.models.Exam;
 import com.killian.SpringBoot.ExamApp.models.ResponseObject;
@@ -81,17 +80,16 @@ public class ExamController {
 
     // view an exam
     @GetMapping("/viewExam/{id}")
-    public ModelAndView index(@PathVariable Long id) {
-        System.out.println("Request to GET index");
-        ModelAndView modelAndView = new ModelAndView("view-exam.html");
+    public ResponseEntity<ResponseObject> viewExam(@PathVariable Long id) {
         Optional<Exam> optionalExam = examRepository.findById(id);
         Exam anExam = new Exam();
         if (optionalExam.isPresent()) {
             anExam = optionalExam.get();
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ResponseObject("OK", "Get exam success", anExam));
         } else {
-            throw new RuntimeException("Exam not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseObject("Fail", "Exam not found", null));
         }
-        modelAndView.addObject("anExam", anExam);
-        return modelAndView;
     }
 }

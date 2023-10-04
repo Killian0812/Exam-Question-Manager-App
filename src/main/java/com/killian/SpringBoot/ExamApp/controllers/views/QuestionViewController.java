@@ -21,16 +21,16 @@ public class QuestionViewController {
 
     @GetMapping("/create-question-page")
     public String createQuestionPage() {
-        System.out.print("Question-creating page");
+        System.out.println("Question-creating page");
         return "create-question";
     }
-    
+
     @PostMapping("/create-question")
     public ModelAndView createQuestion(
             @RequestParam("text") String text,
             @RequestParam("choices") List<String> choices,
             @RequestParam("correctAnswerID") int correctAnswerID,
-            @RequestParam("category") String category,
+            @RequestParam("subject") String subject,
             @RequestParam("difficulty") String difficulty) {
 
         ModelAndView modelAndView = new ModelAndView("create-question.html");
@@ -39,18 +39,18 @@ public class QuestionViewController {
         newQuestion.setText(text);
         newQuestion.setChoices(choices);
         newQuestion.setCorrectAnswerID(correctAnswerID - 1);
-        newQuestion.setCategory(category);
+        newQuestion.setSubject(subject);
         newQuestion.setDifficulty(difficulty);
 
         String message = null;
         try {
             questionRepository.save(newQuestion);
-            message = "Success! Question added to database.";
+            message = "Successful! Question added to database.";
         } catch (Exception e) {
             message = "Failed! Question is already in database.";
         }
-        
         modelAndView.addObject("message", message);
+        
         return modelAndView;
     }
 
@@ -58,16 +58,17 @@ public class QuestionViewController {
     public String getQuestionsByFilterPage(Model model) {
         System.out.println("Question-filtering page");
 
-        List<String> categories = questionRepository.findDistinctCategories();
+        List<String> subjects = questionRepository.findDistinctSubjects();
         List<String> difficulties = questionRepository.findDistinctDifficuties();
 
-        model.addAttribute("categories", categories);
+        model.addAttribute("subjects", subjects);
         model.addAttribute("difficulties", difficulties);
 
-        // Initially, display questions from the first category
-        if (!categories.isEmpty()) {
-            List<Question> questions = questionRepository.findByCategory(categories.get(0));
-            model.addAttribute("selectedCategory", categories.get(0));
+        // Initially, display questions from the first subject
+        if (!subjects.isEmpty()) {
+            List<Question> questions = questionRepository.findBySubjectAndDifficulty(subjects.get(0),
+                    difficulties.get(0));
+            model.addAttribute("selectedSubject", subjects.get(0));
             model.addAttribute("selectedDifficulty", difficulties.get(0));
             model.addAttribute("questions", questions);
         }
@@ -75,23 +76,23 @@ public class QuestionViewController {
         return "questions-by-filter";
     }
 
-    @GetMapping("/get-questions-by-category-and-difficulty")
-    public ModelAndView getQuestionsBySelectedCategory(
-            @RequestParam("selectedCategory") String selectedCategory,
+    @GetMapping("/get-questions-by-subject-and-difficulty")
+    public ModelAndView getQuestionsBySelectedSubjectAndDifficulty(
+            @RequestParam("selectedSubject") String selectedSubject,
             @RequestParam("selectedDifficulty") String selectedDifficulty) {
 
         ModelAndView modelAndView = new ModelAndView("questions-by-filter.html");
-        // Retrieve questions based on the selected category and difficulty
-        List<Question> questions = questionRepository.findByCategoryAndDifficulty(selectedCategory, selectedDifficulty);
+        // Retrieve questions based on the selected subject and difficulty
+        List<Question> questions = questionRepository.findBySubjectAndDifficulty(selectedSubject, selectedDifficulty);
 
-        List<String> categories = questionRepository.findDistinctCategories();
+        List<String> subjects = questionRepository.findDistinctSubjects();
         List<String> difficulties = questionRepository.findDistinctDifficuties();
 
-        modelAndView.addObject("categories", categories);
+        modelAndView.addObject("subjects", subjects);
         modelAndView.addObject("difficulties", difficulties);
 
         // Retrieve all filtered questions
-        modelAndView.addObject("selectedCategory", selectedCategory);
+        modelAndView.addObject("selectedSubject", selectedSubject);
         modelAndView.addObject("selectedDifficulty", selectedDifficulty);
         modelAndView.addObject("questions", questions);
 

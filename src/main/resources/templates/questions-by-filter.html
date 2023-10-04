@@ -6,10 +6,10 @@
 <body>
     <h1>Questions by Filter</h1>
     
-    <form th:action="@{/get-questions-by-category-and-difficulty}" method="get">
-        <select name="selectedCategory">
-            <option th:each="category : ${categories}" th:value="${category}"
-                    th:text="${category}" th:selected="${category == selectedCategory}"></option>
+    <form th:action="@{/get-questions-by-subject-and-difficulty}" method="get">
+        <select name="selectedSubject">
+            <option th:each="subject : ${subjects}" th:value="${subject}"
+                    th:text="${subject}" th:selected="${subject == selectedSubject}"></option>
         </select>
         <select name="selectedDifficulty">
             <option th:each="difficulty : ${difficulties}" th:value="${difficulty}"
@@ -19,9 +19,9 @@
         <input type="submit" value="Filter">
     </form>
     
-    <!-- Display questions based on the selected category -->
+    <!-- Display questions based on the selected subject -->
     <div th:if="${questions}">
-        <h2 th:text="'Questions in Category: ' + ${selectedCategory}"></h2>
+        <h2 th:text="'Questions in Subject: ' + ${selectedSubject}"></h2>
         <h3 th:text="'Difficulty: ' + ${selectedDifficulty}"></h3>
         <ul>
             <li th:each="question : ${questions}">

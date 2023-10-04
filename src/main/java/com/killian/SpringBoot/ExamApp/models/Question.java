@@ -31,7 +31,7 @@ public class Question {
 
     private int correctAnswerID;
 
-    private String category;
+    private String subject;
 
     private String difficulty;
 
@@ -51,11 +51,11 @@ public class Question {
         this.correctAnswerID = correctAnswerID;
     }
 
-    public Question(String text, List<String> choices, int correctAnswerID, String category, String difficulty) {
+    public Question(String text, List<String> choices, int correctAnswerID, String subject, String difficulty) {
         this.text = text;
         this.choices = choices;
         this.correctAnswerID = correctAnswerID;
-        this.category = category;
+        this.subject = subject;
         this.difficulty = difficulty;
     }
 
@@ -87,12 +87,12 @@ public class Question {
         this.correctAnswerID = correctAnswerID;
     }
 
-    public String getCategory() {
-        return category;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getDifficulty() {

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Exam</title>
+</head>
+<body>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+    <h1>Create Exam</h1>
+    
+    <form th:action="@{/create-exam}" method="post">
+
+        <label for="name">Exam Name:</label>
+        <input type="text" id="name" name="name" required />
+        
+        <label for="subject">Subject:</label>
+        <select name="selectedSubject">
+            <option th:each="subject : ${subjects}" th:value="${subject}"
+                    th:text="${subject}" th:selected="${subject == selectedSubject}"></option>
+        </select><br/><br/>
+        
+        <h4>Difficulty distribution:</h4>
+        <table>
+            <tr>
+                <td><label for="easyQuestionCount">Number of easy questions:</label></td>
+                <td><input type="text" id="easyQuestionCount" name="easyQuestionCount" required /></td>
+            </tr>
+            <tr>
+                <td><label for="mediumQuestionCount">Number of medium questions:</label></td>
+                <td><input type="text" id="mediumQuestionCount" name="mediumQuestionCount" required /></td>
+            </tr>
+            <tr>
+                <td><label for="hardQuestionCount">Number of hard questions:</label></td>
+                <td><input type="text" id="hardQuestionCount" name="hardQuestionCount" required /></td>
+            </tr>
+        </table>
+        
+        <br/><br/>
+        <input type="submit" value="Create Exam" />
+    </form>
+
+    <script>
+        setTimeout(function() {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+</body>
+</html>

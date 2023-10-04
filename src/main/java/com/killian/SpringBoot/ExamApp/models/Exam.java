@@ -30,6 +30,8 @@ public class Exam {
     @JoinTable(name = "exam", joinColumns = @JoinColumn(name = "exam_id"), inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<Question> questions;
 
+    private String subject;
+
     public Exam() {
     }
 
@@ -47,6 +49,14 @@ public class Exam {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     @Override
