@@ -13,16 +13,24 @@
     <!-- Button to create a question -->
     <button onclick="createQuestion()">Create Question</button>
 
+</br>
     <!-- Button to create an exam -->
     <button onclick="createExam()">Create Exam</button>
+</br>
+
+<button onclick="viewQuestion()">View Questions from Database</button>
 
     <script>
         function createQuestion() {
-            window.location.href = '/create-question-view'; 
+            window.location.href = '/create-question-page'; 
         }
         
         function createExam() {
-            window.location.href = '/create-exam-view';
+            window.location.href = '/create-exam-page';
+        }
+
+        function viewQuestion() {
+            window.location.href = '/questions-by-filter-page';
         }
 
         setTimeout(function() {
@@ -30,7 +38,7 @@
             if (messageDiv) {
                 messageDiv.style.display = "none";
             }
-        }, 2000); // disapear after 2s
+        }, 2000); // message disapear after 2s
     </script>
 </body>
 </html>

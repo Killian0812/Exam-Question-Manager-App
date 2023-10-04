@@ -38,17 +38,25 @@ public class Question {
     public Question() {
     }
 
+    public Question(Long id, String text, List<String> choices, int correctAnswerID) {
+        this.id = id;
+        this.text = text;
+        this.choices = choices;
+        this.correctAnswerID = correctAnswerID;
+    }
+
     public Question(String text, List<String> choices, int correctAnswerID) {
         this.text = text;
         this.choices = choices;
         this.correctAnswerID = correctAnswerID;
     }
 
-    public Question(Long id, String text, List<String> choices, int correctAnswerID) {
-        this.id = id;
+    public Question(String text, List<String> choices, int correctAnswerID, String category, String difficulty) {
         this.text = text;
         this.choices = choices;
         this.correctAnswerID = correctAnswerID;
+        this.category = category;
+        this.difficulty = difficulty;
     }
 
     public String getText() {

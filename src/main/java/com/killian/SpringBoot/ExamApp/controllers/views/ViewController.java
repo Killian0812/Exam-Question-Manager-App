@@ -13,16 +13,5 @@ public class ViewController {
         ModelAndView modelAndView = new ModelAndView("index.html");
         return modelAndView;
     }
-
-    @GetMapping("/create-question-view")
-    public ModelAndView createQuestionView() {
-        System.out.println("Create question page");
-        ModelAndView modelAndView = new ModelAndView("create-question.html");
-        return modelAndView;
-    }
-
-    // @GetMapping("/all-question")
-    // public ModelAndView allQuestionView() {
-
-    // }
+    
 }
