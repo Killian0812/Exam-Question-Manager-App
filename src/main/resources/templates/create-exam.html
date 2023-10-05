@@ -8,6 +8,9 @@
     <div th:if="${message}" id="messageDiv" class="alert alert-success">
         <p th:text="${message}"></p>
     </div>
+
+    <a href="http://localhost:8080/" class="redirect-button">Back to main page</a>
+
     <h1>Create Exam</h1>
     
     <form th:action="@{/create-exam}" method="post">
@@ -49,5 +52,20 @@
             }
         }, 2000); // message disapear after 2s
     </script>
+
+    <style>
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+    
 </body>
 </html>

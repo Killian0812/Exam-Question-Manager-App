@@ -4,6 +4,9 @@
     <title>Questions from Database</title>
 </head>
 <body>
+
+    <a href="http://localhost:8080/" class="redirect-button">Back to main page</a>
+
     <h1>Questions by Filter</h1>
     
     <form th:action="@{/get-questions-by-subject-and-difficulty}" method="get">
@@ -30,5 +33,20 @@
             </li>
         </ul>
     </div>
+
+    <style>
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+    
 </body>
 </html>

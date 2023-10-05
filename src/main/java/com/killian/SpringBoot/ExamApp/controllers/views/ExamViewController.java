@@ -65,7 +65,7 @@ public class ExamViewController {
             examRepository.save(newExam);
             message = "Successful! Exam added to database.";
         } catch (Exception e) {
-            message = "Failed! Exam is already in database.";
+            message = "Failed! Exam name is taken.";
         }
         modelAndView.addObject("message", message);
 
