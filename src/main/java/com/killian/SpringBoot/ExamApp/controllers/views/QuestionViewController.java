@@ -54,7 +54,7 @@ public class QuestionViewController {
         return modelAndView;
     }
 
-    @GetMapping("/questions-by-filter-page")
+    @GetMapping("/view-questions-by-filter-page")
     public String getQuestionsByFilterPage(Model model) {
         System.out.println("Question-filtering page");
 

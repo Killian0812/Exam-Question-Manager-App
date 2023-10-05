@@ -3,7 +3,7 @@ package com.killian.SpringBoot.ExamApp.database;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,8 @@ public class Database {
 
     public static final Logger logger = LoggerFactory.getLogger(Database.class);
 
-    public DataGenerator dataGenerator;
+    @Autowired
+    DataGenerator dataGenerator;
 
     @Bean
     CommandLineRunner initDatabase(QuestionRepository questionRepository, ExamRepository examRepository) {
@@ -39,12 +40,12 @@ public class Database {
 
             @Override
             public void run(String... args) throws Exception {
-                // try {
-                //     dataGenerator.dataGenerate();
-                //     logger.info("Data generated");
-                // } catch (Exception e) {
-                //     logger.info("Data duplicated");
-                // }
+                try {
+                    // dataGenerator.dataGenerate();
+                    // logger.info("Data generated");
+                } catch (Exception e) {
+                    logger.info("Data duplicated");
+                }
             }
 
         };

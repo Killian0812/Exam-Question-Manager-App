@@ -12,15 +12,13 @@
 
     <h2>Current Features:</h2>
 
-    <!-- Button to create a question -->
-    <button onclick="createQuestion()">Create Question</button></br>
+    <button onclick="createQuestion()">Create Question</button></br></br>
 
-</br>
-    <!-- Button to create an exam -->
-    <button onclick="createExam()">Create Exam</button></br>
-</br>
+    <button onclick="createExam()">Create Exam</button></br></br>
 
-<button onclick="viewQuestion()">View Questions from Database</button></br>
+    <button onclick="viewQuestion()">View Questions from Database</button></br></br>
+
+    <button onclick="viewExam()">View Exams from Database</button></br>
 
     <script>
         function createQuestion() {
@@ -32,7 +30,11 @@
         }
 
         function viewQuestion() {
-            window.location.href = '/questions-by-filter-page';
+            window.location.href = '/view-questions-by-filter-page';
+        }
+
+        function viewExam() {
+            window.location.href = '/view-exams-by-filter-page';
         }
 
         setTimeout(function() {

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Exams from Database</title>
+</head>
+<body>
+    <h1>Exams by Filter</h1>
+    
+    <form th:action="@{/get-exams-by-subject}" method="get">
+        <select name="selectedSubject">
+            <option th:each="subject : ${subjects}" th:value="${subject}"
+                    th:text="${subject}" th:selected="${subject == selectedSubject}"></option>
+        </select>
+        <input type="submit" value="Filter">
+    </form>
+    
+    <!-- Display questions based on the selected subject -->
+    <div th:if="${examNames}">
+        <h2 th:text="'Exams in Subject: ' + ${selectedSubject}"></h2>
+        <ul>
+            <li th:each="examName : ${examNames}">
+                <div>
+                    <span th:text="${examName}"></span>
+                    <form th:action="@{'/get-exam-by-name/' + ${examName}}" method="get" style="display: inline;">
+                        <button type="submit">Get Exam</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+</body>
+</html>

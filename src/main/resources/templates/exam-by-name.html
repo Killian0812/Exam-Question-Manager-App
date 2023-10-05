@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Details</title>
+</head>
+<body>
+    <h1>Exam: <span th:text="${exam.name}"></span></h1>
+    
+    <h2>Subject: <span th:text="${exam.subject}"></span></h2>
+    
+    <!-- Display List of Questions -->
+    <h2>Questions:</h2>
+
+    <ul class="question-list">
+        <li th:each="question, questionIndex : ${exam.questions}">
+            <p th:text="'Question ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
+            <ul>
+                <li th:each="choice, choiceIndex : ${question.choices}">
+                    <p th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></p>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    
+    <style>
+        ul {
+            list-style: none; /* Remove bullets/symbols for all ul elements */
+        }
+        .question-list {
+            margin-left: 0; /* Remove default left margin */
+            padding-left: 10px; /* Add custom padding for indentation */
+        }
+    </style>
+    
+</body>
+</html>

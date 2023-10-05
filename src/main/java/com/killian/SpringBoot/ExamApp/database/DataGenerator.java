@@ -234,11 +234,202 @@ public class DataGenerator {
                                         "IT",
                                         "Hard"));
 
+        List<Question> easyMathQuestions = Arrays.asList(
+                        new Question(
+                                        "What is the result of 2 + 3?",
+                                        Arrays.asList("4", "5", "6", "7"),
+                                        1,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "How many sides does a triangle have?",
+                                        Arrays.asList("2", "3", "4", "5"),
+                                        1,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "What is 8 divided by 2?",
+                                        Arrays.asList("2", "3", "4", "5"),
+                                        0,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "What is 10 multiplied by 5?",
+                                        Arrays.asList("15", "25", "35", "45"),
+                                        1,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "What is the square root of 9?",
+                                        Arrays.asList("1", "2", "3", "4"),
+                                        2,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "What is 12 minus 5?",
+                                        Arrays.asList("3", "5", "7", "12"),
+                                        0,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "How many degrees are in a right angle?",
+                                        Arrays.asList("45", "90", "180", "360"),
+                                        1,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "What is 7 multiplied by 6?",
+                                        Arrays.asList("12", "25", "42", "49"),
+                                        2,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "How many sides does a square have?",
+                                        Arrays.asList("2", "3", "4", "5"),
+                                        2,
+                                        "Math",
+                                        "Easy"),
+                        new Question(
+                                        "What is the sum of 15 and 20?",
+                                        Arrays.asList("30", "35", "40", "45"),
+                                        1,
+                                        "Math",
+                                        "Easy"));
+
+        List<Question> mediumMathQuestions = Arrays.asList(
+                        new Question(
+                                        "Solve for x: 2x + 5 = 15",
+                                        Arrays.asList("x = 5", "x = 7", "x = 8", "x = 10"),
+                                        0,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "What is the value of π (pi) to three decimal places?",
+                                        Arrays.asList("3.142", "3.141", "3.140", "3.145"),
+                                        0,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "What is the area of a rectangle with length 8 and width 6?",
+                                        Arrays.asList("24", "30", "36", "48"),
+                                        2,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "If a triangle has angles measuring 60°, 60°, and 60°, what type of triangle is it?",
+                                        Arrays.asList("Equilateral", "Isosceles", "Scalene", "Right"),
+                                        0,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "What is the value of 5 factorial (5!)?",
+                                        Arrays.asList("20", "60", "120", "720"),
+                                        2,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "What is the next number in the sequence: 1, 3, 6, 10, ...",
+                                        Arrays.asList("12", "13", "14", "15"),
+                                        3,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "If a right triangle has one angle measuring 90°, what are the measures of the other two angles?",
+                                        Arrays.asList("45°, 45°", "30°, 60°", "60°, 30°", "75°, 15°"),
+                                        1,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "What is the value of √16?",
+                                        Arrays.asList("2", "4", "8", "16"),
+                                        1,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "How many degrees are in a circle?",
+                                        Arrays.asList("90°", "180°", "270°", "360°"),
+                                        3,
+                                        "Math",
+                                        "Medium"),
+                        new Question(
+                                        "What is the perimeter of a square with sides of length 12 units?",
+                                        Arrays.asList("24", "36", "48", "60"),
+                                        2,
+                                        "Math",
+                                        "Medium"));
+
+        List<Question> hardMathQuestions = Arrays.asList(
+                        new Question(
+                                        "Solve for x: 2x^2 + 5x - 3 = 0",
+                                        Arrays.asList("x = -3", "x = 1", "x = 2", "x = 3"),
+                                        2,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "What is the derivative of ln(x) with respect to x?",
+                                        Arrays.asList("1/x", "x", "e^x", "0"),
+                                        0,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "What is the volume of a cylinder with radius 4 cm and height 10 cm?",
+                                        Arrays.asList("160π cm³", "320π cm³", "480π cm³", "640π cm³"),
+                                        0,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "If a triangle has sides of lengths 7, 24, and 25, what type of triangle is it?",
+                                        Arrays.asList("Right", "Scalene", "Isosceles", "Equilateral"),
+                                        0,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "What is the value of 10 choose 4 (10C4)?",
+                                        Arrays.asList("210", "252", "420", "504"),
+                                        1,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "What is the sum of the angles in a pentagon?",
+                                        Arrays.asList("360°", "450°", "540°", "720°"),
+                                        2,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "What is the limit of (1 - 1/x) as x approaches infinity?",
+                                        Arrays.asList("0", "1", "∞", "-1"),
+                                        1,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "What is the value of cos(π/3)?",
+                                        Arrays.asList("1/2", "√3/2", "1", "0"),
+                                        1,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "How many degrees are in an obtuse angle?",
+                                        Arrays.asList("45°", "90°", "120°", "135°"),
+                                        2,
+                                        "Math",
+                                        "Hard"),
+                        new Question(
+                                        "What is the perimeter of a regular hexagon with sides of length 8 cm each?",
+                                        Arrays.asList("32 cm", "40 cm", "48 cm", "56 cm"),
+                                        2,
+                                        "Math",
+                                        "Hard"));
+
         public void dataGenerate() {
                 try {
+                        // subject: IT
                         questionRepository.saveAll(easyITQuestions);
                         questionRepository.saveAll(mediumITQuestions);
                         questionRepository.saveAll(hardITQuestions);
+                        // subject: Math
+                        questionRepository.saveAll(easyMathQuestions);
+                        questionRepository.saveAll(mediumMathQuestions);
+                        questionRepository.saveAll(hardMathQuestions);
                 } catch (Exception e) {
                         throw new RuntimeException("Error generating data");
                 }

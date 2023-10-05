@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -71,4 +72,50 @@ public class ExamViewController {
         return modelAndView;
     }
 
+    @GetMapping("/view-exams-by-filter-page")
+    public String getQuestionsByFilterPage(Model model) {
+        System.out.println("Exam-filtering page");
+
+        List<String> subjects = examRepository.findDistinctSubjects();
+
+        model.addAttribute("subjects", subjects);
+
+        // Initially, display questions from the first subject
+        if (!subjects.isEmpty())
+            model.addAttribute("selectedSubject", subjects.get(0));
+
+        return "exams-by-filter";
+    }
+
+    @GetMapping("/get-exams-by-subject")
+    public ModelAndView getExamsBySelectedSubject(
+            @RequestParam("selectedSubject") String selectedSubject) {
+
+        ModelAndView modelAndView = new ModelAndView("exams-by-filter.html");
+        // Retrieve questions based on the selected subject and difficulty
+
+        List<String> subjects = examRepository.findDistinctSubjects();
+
+        List<Exam> exams = examRepository.findBySubject(selectedSubject);
+        List<String> examNames = exams.stream()
+                .map(Exam::getName)
+                .collect(Collectors.toList());
+
+        modelAndView.addObject("subjects", subjects);
+        modelAndView.addObject("selectedSubject", selectedSubject);
+        modelAndView.addObject("examNames", examNames);
+
+        return modelAndView;
+    }
+
+    @GetMapping("/get-exam-by-name/{name}")
+    public ModelAndView viewExam(@PathVariable String name) {
+
+        ModelAndView modelAndView = new ModelAndView("exam-by-name.html");
+        Exam exam = examRepository.findByName(name);
+
+        modelAndView.addObject("exam", exam);
+
+        return modelAndView;
+    }
 }
