@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Exams from Database</title>
 </head>
+
 <body>
 
-    <a href="http://localhost:8080/" class="redirect-button">Back to main page</a>
-    
+    <form th:action="@{/home-page}" method="get">
+        <input type="hidden" id="username" name="username" th:value="${username}" />
+        <input type="hidden" id="password" name="password" th:value="${password}" />
+        <input type="submit" value="Back to main page"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
     <h1>Exams by Filter</h1>
-    
+
     <form th:action="@{/get-exams-by-subject}" method="get">
+        <input type="hidden" id="username" name="username" th:value="${username}" />
+        <input type="hidden" id="password" name="password" th:value="${password}" />
         <select name="selectedSubject">
-            <option th:each="subject : ${subjects}" th:value="${subject}"
-                    th:text="${subject}" th:selected="${subject == selectedSubject}"></option>
+            <option th:each="subject : ${subjects}" th:value="${subject}" th:text="${subject}"
+                th:selected="${subject == selectedSubject}"></option>
         </select>
         <input type="submit" value="Filter">
     </form>
-    
+
     <!-- Display questions based on the selected subject -->
     <div th:if="${examNames}">
         <h2 th:text="'Exams in Subject: ' + ${selectedSubject}"></h2>
@@ -25,13 +34,17 @@
                 <div>
                     <span th:text="${examName}"></span>
                     <form th:action="@{'/get-exam-by-name/' + ${examName}}" method="get" style="display: inline;">
+                        <input type="hidden" id="username" name="username" th:value="${username}" />
+                        <input type="hidden" id="password" name="password" th:value="${password}" />
                         <button type="submit">Get Exam</button>
                     </form>
-                </div>
-            </li>
-        </ul>
+                </div><br>
     </div>
-    
+    </li>
+    </li>
+    </ul>
+    </div>
+
     <style>
         .redirect-button {
             display: inline-block;
@@ -47,4 +60,5 @@
     </style>
 
 </body>
+
 </html>

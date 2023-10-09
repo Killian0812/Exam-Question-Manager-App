@@ -1,29 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Create Exam</title>
 </head>
+
 <body>
 
     <div th:if="${message}" id="messageDiv" class="alert alert-success">
         <p th:text="${message}"></p>
     </div>
 
-    <a href="http://localhost:8080/" class="redirect-button">Back to main page</a>
+    <form th:action="@{/home-page}" method="get">
+        <input type="hidden" id="username" name="username" th:value="${username}" />
+        <input type="hidden" id="password" name="password" th:value="${password}" />
+        <input type="submit" value="Back to main page"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
 
     <h1>Create Exam</h1>
-    
+
     <form th:action="@{/create-exam}" method="post">
+
+        <input type="hidden" id="username" name="username" th:value="${username}" />
+        <input type="hidden" id="password" name="password" th:value="${password}" />
 
         <label for="name">Exam Name:</label>
         <input type="text" id="name" name="name" required />
-        
+
         <label for="subject">Subject:</label>
         <select name="selectedSubject">
-            <option th:each="subject : ${subjects}" th:value="${subject}"
-                    th:text="${subject}" th:selected="${subject == selectedSubject}"></option>
-        </select><br/><br/>
-        
+            <option th:each="subject : ${subjects}" th:value="${subject}" th:text="${subject}"
+                th:selected="${subject == selectedSubject}"></option>
+        </select><br /><br />
+
         <h4>Difficulty distribution:</h4>
         <table>
             <tr>
@@ -39,13 +49,13 @@
                 <td><input type="text" id="hardQuestionCount" name="hardQuestionCount" required /></td>
             </tr>
         </table>
-        
-        <br/><br/>
+
+        <br /><br />
         <input type="submit" value="Create Exam" />
     </form>
 
     <script>
-        setTimeout(function() {
+        setTimeout(function () {
             var messageDiv = document.getElementById("messageDiv");
             if (messageDiv) {
                 messageDiv.style.display = "none";
@@ -66,6 +76,7 @@
             cursor: pointer;
         }
     </style>
-    
+
 </body>
+
 </html>

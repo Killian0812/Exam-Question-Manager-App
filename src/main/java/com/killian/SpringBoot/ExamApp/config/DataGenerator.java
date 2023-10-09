@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.database;
+package com.killian.SpringBoot.ExamApp.config;
 
 import java.util.Arrays;
 import java.util.List;

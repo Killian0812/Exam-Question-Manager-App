@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.database;
+package com.killian.SpringBoot.ExamApp.config;
 
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +41,8 @@ public class Database {
             @Override
             public void run(String... args) throws Exception {
                 try {
-                    // dataGenerator.dataGenerate();
-                    // logger.info("Data generated");
+                    dataGenerator.dataGenerate();
+                    logger.info("Data generated");
                 } catch (Exception e) {
                     logger.info("Data duplicated");
                 }
