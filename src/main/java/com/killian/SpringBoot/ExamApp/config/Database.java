@@ -21,9 +21,12 @@ docker run -d --rm --name mysql-springboot-exam \
 -p 3309:3306 \
 --volume mysql-springboot-exam-volume:/var/lib/mysql \
 mysql:latest
-*/
 /* 
 mysql -h localhost -P 3309 --protocol=tcp -u killian -p
+*/
+// redis for session storage
+/* 
+docker run -d -p 6379:6379 --name redis-springboot-session redis:latest
 */
 
 @Configuration

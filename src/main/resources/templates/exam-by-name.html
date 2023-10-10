@@ -9,10 +9,8 @@
 
 <body>
 
-    <form th:action="@{/home-page}" method="get">
-        <input type="hidden" id="username" name="username" th:value="${username}" />
-        <input type="hidden" id="password" name="password" th:value="${password}" />
-        <input type="submit" value="Back to previous page"
+    <form th:action="@{/user/dashboard}" method="get">
+        <input type="submit" value="Back to main page"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
 

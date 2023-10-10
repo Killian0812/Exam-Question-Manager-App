@@ -4,41 +4,41 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.killian.SpringBoot.ExamApp.models.Question;
 import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
+import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
 public class QuestionViewController {
 
     @Autowired
+    private SessionManagementService sessionManagementService;
+
+    @Autowired
     private QuestionRepository questionRepository;
 
     @GetMapping("/create-question-page")
-    public ModelAndView createQuestionPage(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-        ModelAndView modelAndView = new ModelAndView("create-question.html");
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("password", password);
-        return modelAndView;
+    public String createQuestionPage(Model model) {
+        String username = sessionManagementService.getUsername();
+        String password = sessionManagementService.getPassword();
+        model.addAttribute("username", username);
+        model.addAttribute("password", password);
+        return "create-question";
     }
 
     @PostMapping("/create-question")
-    public ModelAndView createQuestion(
+    public String createQuestion(
             @RequestParam("text") String text,
             @RequestParam("choices") List<String> choices,
             @RequestParam("correctAnswerID") int correctAnswerID,
             @RequestParam("subject") String subject,
             @RequestParam("difficulty") String difficulty,
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-
-        ModelAndView modelAndView = new ModelAndView("create-question.html");
+            Model model) {
 
         Question newQuestion = new Question();
         newQuestion.setText(text);
@@ -54,64 +54,51 @@ public class QuestionViewController {
         } catch (Exception e) {
             message = "Failed! Question is already in database.";
         }
-        modelAndView.addObject("message", message);
-        modelAndView.addObject("password", password);
-        modelAndView.addObject("username", username);
-        return modelAndView;
+        model.addAttribute("message", message);
+        return "create-question";
     }
 
     @GetMapping("/view-questions-by-filter-page")
-    public ModelAndView getQuestionsByFilterPage(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-
-        ModelAndView modelAndView = new ModelAndView("questions-by-filter.html");
-        modelAndView.addObject("password", password);
-        modelAndView.addObject("username", username);
+    public String getQuestionsByFilterPage(Model model) {
 
         List<String> subjects = questionRepository.findDistinctSubjects();
         List<String> difficulties = questionRepository.findDistinctDifficuties();
 
-        modelAndView.addObject("subjects", subjects);
-        modelAndView.addObject("difficulties", difficulties);
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("difficulties", difficulties);
 
         // Initially, display questions from the first subject
         if (!subjects.isEmpty()) {
             List<Question> questions = questionRepository.findBySubjectAndDifficulty(subjects.get(0),
                     difficulties.get(0));
-            modelAndView.addObject("selectedSubject", subjects.get(0));
-            modelAndView.addObject("selectedDifficulty", difficulties.get(0));
-            modelAndView.addObject("questions", questions);
+            model.addAttribute("selectedSubject", subjects.get(0));
+            model.addAttribute("selectedDifficulty", difficulties.get(0));
+            model.addAttribute("questions", questions);
         }
 
-        return modelAndView;
+        return "questions-by-filter";
     }
 
     @GetMapping("/get-questions-by-subject-and-difficulty")
-    public ModelAndView getQuestionsBySelectedSubjectAndDifficulty(
+    public String getQuestionsBySelectedSubjectAndDifficulty(
             @RequestParam("selectedSubject") String selectedSubject,
             @RequestParam("selectedDifficulty") String selectedDifficulty,
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
+            Model model) {
 
-        ModelAndView modelAndView = new ModelAndView("questions-by-filter.html");
-        modelAndView.addObject("password", password);
-        modelAndView.addObject("username", username);
-        
         // Retrieve questions based on the selected subject and difficulty
         List<Question> questions = questionRepository.findBySubjectAndDifficulty(selectedSubject, selectedDifficulty);
 
         List<String> subjects = questionRepository.findDistinctSubjects();
         List<String> difficulties = questionRepository.findDistinctDifficuties();
 
-        modelAndView.addObject("subjects", subjects);
-        modelAndView.addObject("difficulties", difficulties);
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("difficulties", difficulties);
 
         // Retrieve all filtered questions
-        modelAndView.addObject("selectedSubject", selectedSubject);
-        modelAndView.addObject("selectedDifficulty", selectedDifficulty);
-        modelAndView.addObject("questions", questions);
+        model.addAttribute("selectedSubject", selectedSubject);
+        model.addAttribute("selectedDifficulty", selectedDifficulty);
+        model.addAttribute("questions", questions);
 
-        return modelAndView;
+        return "questions-by-filter.html";
     }
 }

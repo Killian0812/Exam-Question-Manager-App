@@ -7,11 +7,11 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.killian.SpringBoot.ExamApp.models.Exam;
 import com.killian.SpringBoot.ExamApp.models.Question;
@@ -28,29 +28,21 @@ public class ExamViewController {
     private QuestionRepository questionRepository;
 
     @GetMapping("/create-exam-page")
-    public ModelAndView createQuestionPage(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
+    public String createQuestionPage(Model model) {
         List<String> subjects = questionRepository.findDistinctSubjects();
-        ModelAndView modelAndView = new ModelAndView("create-exam.html");
-        modelAndView.addObject("subjects", subjects);
-        modelAndView.addObject("selectedSubject", subjects.get(0));
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("password", password);
-        return modelAndView;
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("selectedSubject", subjects.get(0));
+        return "create-exam";
     }
 
     @PostMapping("/create-exam")
-    public ModelAndView createQuestion(
+    public String createQuestion(
             @RequestParam("name") String name,
             @RequestParam("selectedSubject") String subject,
             @RequestParam("easyQuestionCount") int easyQuestionCount,
             @RequestParam("mediumQuestionCount") int mediumQuestionCount,
             @RequestParam("hardQuestionCount") int hardQuestionCount,
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-                
-        ModelAndView modelAndView = new ModelAndView("create-exam.html");
+            Model model) {
 
         Exam newExam = new Exam();
         newExam.setName(name);
@@ -72,40 +64,30 @@ public class ExamViewController {
         } catch (Exception e) {
             message = "Failed! Exam name is taken.";
         }
-        modelAndView.addObject("message", message);
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("password", password);
-        return modelAndView;
+        model.addAttribute("message", message);
+        List<String> subjects = questionRepository.findDistinctSubjects();
+        model.addAttribute("subjects", subjects);
+
+        return "create-exam";
     }
 
     @GetMapping("/view-exams-by-filter-page")
-    public ModelAndView getQuestionsByFilterPage(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-
-        ModelAndView modelAndView = new ModelAndView("exams-by-filter.html");
-
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("password", password);
+    public String getQuestionsByFilterPage(Model model) {
 
         List<String> subjects = examRepository.findDistinctSubjects();
-        modelAndView.addObject("subjects", subjects);
+        model.addAttribute("subjects", subjects);
 
         // Initially, display questions from the first subject
         if (!subjects.isEmpty())
-            modelAndView.addObject("selectedSubject", subjects.get(0));
+            model.addAttribute("selectedSubject", subjects.get(0));
 
-        return modelAndView;
+        return "exams-by-filter";
     }
 
     @GetMapping("/get-exams-by-subject")
-    public ModelAndView getExamsBySelectedSubject(
+    public String getExamsBySelectedSubject(
             @RequestParam("selectedSubject") String selectedSubject,
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
-
-        ModelAndView modelAndView = new ModelAndView("exams-by-filter.html");
-        // Retrieve questions based on the selected subject and difficulty
+            Model model) {
 
         List<String> subjects = examRepository.findDistinctSubjects();
 
@@ -114,28 +96,21 @@ public class ExamViewController {
                 .map(Exam::getName)
                 .collect(Collectors.toList());
 
-        modelAndView.addObject("subjects", subjects);
-        modelAndView.addObject("selectedSubject", selectedSubject);
-        modelAndView.addObject("examNames", examNames);
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("password", password);
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("selectedSubject", selectedSubject);
+        model.addAttribute("examNames", examNames);
 
-        return modelAndView;
+        return "exams-by-filter";
     }
 
     @GetMapping("/get-exam-by-name/{name}")
-    public ModelAndView viewExam(
+    public String viewExam(
             @PathVariable String name,
-            @RequestParam("username") String username,
-            @RequestParam("password") String password) {
+            Model model) {
 
-        ModelAndView modelAndView = new ModelAndView("exam-by-name.html");
         Exam exam = examRepository.findByName(name);
+        model.addAttribute("exam", exam);
 
-        modelAndView.addObject("exam", exam);
-        modelAndView.addObject("username", username);
-        modelAndView.addObject("password", password);
-
-        return modelAndView;
+        return "exam-by-name";
     }
 }

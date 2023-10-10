@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Exam Manager</title>
+</head>
+
+<body>
+    <!-- Content for Teacher Role -->
+    <div th:if="${role == 'Teacher'}">
+        <h1>Teacher Dashboard</h1>
+        <p th:text="'Welcome, ' + ${username} + '!'">Welcome, {username}!</p>
+        <ul>
+
+            <form th:action="@{/create-question-page}" method="get">
+                <input type="submit" value="Create Question" />
+            </form><br>
+
+            <form th:action="@{/create-exam-page}" method="get">
+                <input type="submit" value="Create Exam" />
+            </form><br>
+
+            <form th:action="@{/view-questions-by-filter-page}" method="get">
+                <input type="submit" value="View Questions" />
+            </form><br>
+
+            <form th:action="@{/view-exams-by-filter-page}" method="get">
+                <input type="submit" value="View Exams" />
+            </form><br>
+        </ul>
+    </div>
+    
+    <!-- Common Content (for both roles) -->
+    <form th:action="@{/user/logout}" method="get">
+        <input type="submit" value="Logout" class="redirect-button"/>
+    </form><br>
+
+    <script></script>
+
+    <style>
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+
+</body>
+
+</html>
