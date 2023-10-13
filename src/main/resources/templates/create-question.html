@@ -6,7 +6,6 @@
 </head>
 
 <body>
-
     <div th:if="${message}" id="messageDiv" class="alert alert-success">
         <p th:text="${message}"></p>
     </div>
@@ -22,19 +21,29 @@
         <label for="text">Question Text:</label>
         <input type="text" id="text" name="text" required /><br /><br />
 
-        <div id="choices-container">
-            <!-- Initially, include one input field for a choice -->
-            <input type="text" name="choices" required />
+        <div>
+            <label>Question Type:</label>
+            <input type="radio" id="questionType" name="questionType" value="multiple-choice" checked /> Multiple-Choice
+            <input type="radio" id="questionType" name="questionType" value="type-in" /> Type-In
+        </div><br>
+
+        <button type="button" id="add-choice">Add more choice</button>
+
+        <div id="choices-container" style="display: none">
+            <br>Choices:
+            <input type="text" id="choices" name="choices" style="display: none" />
         </div>
 
-        <button type="button" id="add-choice">Add Choice</button>
-        <button type="button" id="remove-choice">Remove Choice</button>
-
-        <label for="correctAnswerID">Correct Answer ID:</label>
-        <input type="number" id="correctAnswerID" name="correctAnswerID" required /><br /><br />
+        <div id="answer-container" style="display: none">
+            <label for="answer">Answer:</label>
+            <input type="text" id="answer" name="answer" required />
+        </div><br>
 
         <label for="subject">Subject:</label>
         <input type="text" id="subject" name="subject" required /><br /><br />
+
+        <label for="chapter">Chapter:</label>
+        <input type="text" id="chapter" name="chapter" required /><br /><br />
 
         <label for="difficulty">Difficulty:</label>
         <input type="text" id="difficulty" name="difficulty" required /><br /><br />
@@ -43,36 +52,88 @@
     </form>
 
     <script th:inline="javascript">
-
         // JavaScript to add/remove choice input fields
+        const questionTypeRadios = document.querySelectorAll('input[name="questionType"]');
         const choicesContainer = document.getElementById('choices-container');
+        const answerContainer = document.getElementById('answer-container');
         const addChoiceButton = document.getElementById('add-choice');
-        const removeChoiceButton = document.getElementById('remove-choice');
+        const choiceRadio = document.getElementsByName('correctChoice');
+        const choicesInput = document.getElementsByName('choices');
 
-        addChoiceButton.addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = 'choices';
-            input.required = true;
-            choicesContainer.appendChild(input);
+        // Function to handle radio button change
+        function handleQuestionTypeChange() {
+            if (questionTypeRadios[0].checked) {
+                choicesContainer.style.display = 'block';
+                addChoiceButton.style.display = 'block';
+                answerContainer.style.display = 'none';
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            } else {
+                choicesContainer.style.display = 'none';
+                addChoiceButton.style.display = 'none';
+                answerContainer.style.display = 'block';
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            }
+        }
+
+        // Add event listener to radio buttons
+        questionTypeRadios.forEach(function (radio) {
+            radio.addEventListener('change', handleQuestionTypeChange);
         });
 
-        removeChoiceButton.addEventListener('click', () => {
-            const inputFields = choicesContainer.getElementsByTagName('input');
-            if (inputFields.length > 1) {
-                choicesContainer.removeChild(inputFields[inputFields.length - 1]);
-            }
+        // Initial state based on the default selected question type
+        handleQuestionTypeChange();
+
+        addChoiceButton.addEventListener('click', () => {
+            const newChoiceDiv = document.createElement('div');
+            const newChoiceInput = document.createElement('input');
+            newChoiceInput.type = 'text';
+            newChoiceInput.name = 'choices';
+            newChoiceInput.required = true;
+
+            const newRadio = document.createElement('input');
+            newRadio.type = 'radio';
+            newRadio.name = 'correctChoice';
+            newRadio.value = choicesContainer.children.length; // Assign a unique value
+            newRadio.required = true; // Make it required
+            newRadio.addEventListener('change', function () {
+                if (newRadio.checked) {
+                    document.getElementById('answer').value = newChoiceInput.value;
+                }
+            });
+
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'remove-choice';
+            removeButton.textContent = 'Remove';
+            removeButton.addEventListener('click', function () {
+                newChoiceDiv.remove();
+            });
+
+            newChoiceDiv.appendChild(newRadio);
+            newChoiceDiv.appendChild(newChoiceInput);
+            newChoiceDiv.appendChild(removeButton);
+
+            choicesContainer.appendChild(newChoiceDiv);
         });
 
         setTimeout(function () {
             var messageDiv = document.getElementById("messageDiv");
             if (messageDiv) {
                 messageDiv.style.display = "none";
+                messageDiv.parentElement.removeChild(messageDiv);
             }
         }, 2000); // message disappears after 2s
     </script>
 
     <style>
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .redirect-button {
             display: inline-block;
             padding: 5px 10px;

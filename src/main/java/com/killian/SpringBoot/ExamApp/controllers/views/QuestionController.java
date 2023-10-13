@@ -14,7 +14,7 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
-public class QuestionViewController {
+public class QuestionController {
 
     @Autowired
     private SessionManagementService sessionManagementService;
@@ -22,12 +22,16 @@ public class QuestionViewController {
     @Autowired
     private QuestionRepository questionRepository;
 
+    private String message;
+
     @GetMapping("/create-question-page")
     public String createQuestionPage(Model model) {
         String username = sessionManagementService.getUsername();
         String password = sessionManagementService.getPassword();
         model.addAttribute("username", username);
         model.addAttribute("password", password);
+        model.addAttribute("message", message);
+        message = null;
         return "create-question";
     }
 
@@ -35,27 +39,36 @@ public class QuestionViewController {
     public String createQuestion(
             @RequestParam("text") String text,
             @RequestParam("choices") List<String> choices,
-            @RequestParam("correctAnswerID") int correctAnswerID,
+            @RequestParam("answer") String answer,
             @RequestParam("subject") String subject,
             @RequestParam("difficulty") String difficulty,
+            @RequestParam("chapter") String chapter,
+            @RequestParam("questionType") String questionType,
             Model model) {
 
+        if (!choices.isEmpty()) {
+            choices.remove(0);
+        }
+        
         Question newQuestion = new Question();
         newQuestion.setText(text);
         newQuestion.setChoices(choices);
-        newQuestion.setCorrectAnswerID(correctAnswerID - 1);
+        newQuestion.setAnswer(answer);
         newQuestion.setSubject(subject);
         newQuestion.setDifficulty(difficulty);
+        newQuestion.setChapter(chapter);
+        newQuestion.setQuestionType(questionType);
 
-        String message = null;
-        try {
-            questionRepository.save(newQuestion);
-            message = "Successful! Question added to database.";
-        } catch (Exception e) {
-            message = "Failed! Question is already in database.";
-        }
-        model.addAttribute("message", message);
-        return "create-question";
+        if (questionType.equals("multiple-choice") && choices.size() < 2)
+            message = "Number of choices must be >= 2";
+        else
+            try {
+                questionRepository.save(newQuestion);
+                message = "Successful! Question added to database.";
+            } catch (Exception e) {
+                message = "Failed! Question is already in database.";
+            }
+        return "redirect:/create-question-page";
     }
 
     @GetMapping("/view-questions-by-filter-page")

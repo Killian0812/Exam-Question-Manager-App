@@ -23,7 +23,7 @@ import com.killian.SpringBoot.ExamApp.services.ExamService;
 @RestController
 @RequestMapping(path = "/api/v1/exams")
 // Request: http://localhost:8080/api/v1/exams
-public class ExamController {
+public class ExamRestController {
 
     // Dependency Injection
     @Autowired

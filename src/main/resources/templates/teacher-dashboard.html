@@ -12,20 +12,12 @@
         <p th:text="'Welcome, ' + ${username} + '!'">Welcome, {username}!</p>
         <ul>
 
-            <form th:action="@{/create-question-page}" method="get">
-                <input type="submit" value="Create Question" />
+            <form th:action="@{exam/create-exam-page}" method="get">
+                <input type="submit" value="Tạo Đề thi" />
             </form><br>
 
-            <form th:action="@{/create-exam-page}" method="get">
-                <input type="submit" value="Create Exam" />
-            </form><br>
-
-            <form th:action="@{/view-questions-by-filter-page}" method="get">
-                <input type="submit" value="View Questions" />
-            </form><br>
-
-            <form th:action="@{/view-exams-by-filter-page}" method="get">
-                <input type="submit" value="View Exams" />
+            <form th:action="@{exam/view-exams-by-filter-page}" method="get">
+                <input type="submit" value="Xem Đề thi" />
             </form><br>
         </ul>
     </div>

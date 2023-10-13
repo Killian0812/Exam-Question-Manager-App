@@ -3,7 +3,6 @@ package com.killian.SpringBoot.ExamApp.models;
 import java.util.List;
 
 import jakarta.persistence.Column;
-// import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,15 +21,18 @@ public class Exam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // validate = constraint
+    private String subject;
+
+    private int grade;
+
     @Column(unique = true)
     private String name;
+
+    private int examCode;
 
     @ManyToMany
     @JoinTable(name = "exam", joinColumns = @JoinColumn(name = "exam_id"), inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<Question> questions;
-
-    private String subject;
 
     public Exam() {
     }
@@ -57,6 +59,22 @@ public class Exam {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public int getExamCode() {
+        return examCode;
+    }
+
+    public void setExamCode(int examCode) {
+        this.examCode = examCode;
     }
 
     @Override

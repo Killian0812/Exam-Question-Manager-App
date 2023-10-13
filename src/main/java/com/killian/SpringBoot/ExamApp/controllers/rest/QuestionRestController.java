@@ -22,7 +22,7 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 @RestController
 @RequestMapping(path = "/api/v1/questions")
 // Request: http://localhost:8080/api/v1/questions
-public class QuestionController {
+public class QuestionRestController {
 
     // Dependency Injection
     @Autowired
@@ -61,6 +61,13 @@ public class QuestionController {
         }
     }
 
+    @DeleteMapping("/deleteAllQuestions")
+    ResponseEntity<ResponseObject> deleteAll() {
+        questionRepository.deleteAll();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseObject("Ok", "Delete question successfully", null));
+    }
+
     // Insert new question
     @PostMapping("/insertQuestion")
     ResponseEntity<ResponseObject> insertQuestion(@RequestBody Question newQuestion) {
@@ -83,7 +90,7 @@ public class QuestionController {
                 .map(question -> {
                     question.setText(newQuestion.getText());
                     question.setChoices(newQuestion.getChoices());
-                    question.setCorrectAnswerID(newQuestion.getCorrectAnswerID());
+                    question.setAnswer(newQuestion.getAnswer());
                     return questionRepository.save(question); // Return the updated question
                 })
                 .orElseGet(() -> {

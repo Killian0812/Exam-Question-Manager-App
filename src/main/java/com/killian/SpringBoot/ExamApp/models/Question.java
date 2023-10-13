@@ -12,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 
-// A POJO 
 @Entity
 @Table(name = "tblQuestion")
 public class Question {
@@ -21,7 +20,6 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // validate = constraint
     @Column(nullable = false, unique = true, length = 300)
     private String text;
 
@@ -29,34 +27,30 @@ public class Question {
     @CollectionTable(name = "choices", joinColumns = @JoinColumn(name = "question_id"))
     private List<String> choices;
 
-    private int correctAnswerID;
+    private String answer;
 
     private String subject;
 
     private String difficulty;
 
+    private String chapter;
+
+    private int grade;
+
+    private String questionType;
+
     public Question() {
     }
 
-    public Question(Long id, String text, List<String> choices, int correctAnswerID) {
-        this.id = id;
+    public Question(String text, List<String> choices, String answer, String subject, String chapter, int grade,
+            String questionType) {
         this.text = text;
         this.choices = choices;
-        this.correctAnswerID = correctAnswerID;
-    }
-
-    public Question(String text, List<String> choices, int correctAnswerID) {
-        this.text = text;
-        this.choices = choices;
-        this.correctAnswerID = correctAnswerID;
-    }
-
-    public Question(String text, List<String> choices, int correctAnswerID, String subject, String difficulty) {
-        this.text = text;
-        this.choices = choices;
-        this.correctAnswerID = correctAnswerID;
+        this.answer = answer;
         this.subject = subject;
-        this.difficulty = difficulty;
+        this.chapter = chapter;
+        this.grade = grade;
+        this.questionType = questionType;
     }
 
     public String getText() {
@@ -75,16 +69,12 @@ public class Question {
         this.choices = choices;
     }
 
-    public void setChoicesByOrder(String newChoice, int idx) {
-        this.choices.set(idx, newChoice);
+    public String getAnswer() {
+        return answer;
     }
 
-    public int getCorrectAnswerID() {
-        return correctAnswerID;
-    }
-
-    public void setCorrectAnswerID(int correctAnswerID) {
-        this.correctAnswerID = correctAnswerID;
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     public String getSubject() {
@@ -101,6 +91,30 @@ public class Question {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(String chapter) {
+        this.chapter = chapter;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public String getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        this.questionType = questionType;
     }
 
     @Override
