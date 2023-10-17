@@ -1,5 +1,6 @@
 package com.killian.SpringBoot.ExamApp.models;
 
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -67,6 +68,10 @@ public class Question {
 
     public void setChoices(List<String> choices) {
         this.choices = choices;
+    }
+
+    public void shuffleChoices() {
+        Collections.shuffle(choices);
     }
 
     public String getAnswer() {

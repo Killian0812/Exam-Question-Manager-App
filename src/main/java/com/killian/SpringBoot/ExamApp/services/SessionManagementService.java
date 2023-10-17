@@ -25,6 +25,18 @@ public class SessionManagementService {
         httpSession.invalidate();
     }
 
+    public void setMessage(String message) {
+        httpSession.setAttribute("message", message);
+    }
+
+    public String getMessage() {
+        return (String) httpSession.getAttribute("message");
+    }
+
+    public void clearMessage() {
+        httpSession.setAttribute("message", null);
+    }
+
     public String getUsername() {
         return (String) httpSession.getAttribute("username");
     }

@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.killian.SpringBoot.ExamApp.models.User;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
+import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
 public class RegistrationController {
@@ -16,37 +17,44 @@ public class RegistrationController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SessionManagementService sessionManagementService;
+
     @GetMapping("/register-page")
     public ModelAndView showRegistrationForm() {
-        return new ModelAndView("register");
+        ModelAndView modelAndView = new ModelAndView("register.html");
+        modelAndView.addObject("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+        return modelAndView;
     }
 
     @PostMapping("/register")
-    public ModelAndView registerUser(
+    public String registerUser(
             @RequestParam("username") String username,
             @RequestParam("email") String email,
+            @RequestParam("name") String name,
             @RequestParam("password") String password,
             @RequestParam("confirmPassword") String confirmPassword,
             @RequestParam("role") String role) {
 
-        ModelAndView modelAndView = new ModelAndView("register.html");
-
         User user = userRepository.findByUsername(username);
         String message = null;
         if (user != null)
-            message = "Failed. Username taken.";
+            message = "Tên người dùng đã được sử dụng. Hãy thử tên khác.";
         else if (email != null) {
             user = userRepository.findByEmail(email);
             if (user != null)
-                message = "Failed. Email already taken.";
+                message = "Email đã được sử dụng.";
+            else {
+                if (password.equals(confirmPassword) == false)
+                    message = "Mật khẩu xác nhận không chính xác.";
+                else {
+                    message = "Đăng ký thành công. Hãy quay về trang đăng nhập.";
+                    userRepository.save(new User(username, password, email, name, role));
+                }
+            }
         }
-        if (password.equals(confirmPassword) == false)
-            message = "Failed! Confirm Password not matching.";
-        else {
-            message = "Registration successful!. Please go to login page.";
-            userRepository.save(new User(username, password, email, role));
-        }
-        modelAndView.addObject("message", message);
-        return modelAndView;
+        sessionManagementService.setMessage(message);
+        return "redirect:/register-page";
     }
 }

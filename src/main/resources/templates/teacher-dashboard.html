@@ -6,10 +6,15 @@
 </head>
 
 <body>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
     <!-- Content for Teacher Role -->
     <div th:if="${role == 'Teacher'}">
-        <h1>Teacher Dashboard</h1>
-        <p th:text="'Welcome, ' + ${username} + '!'">Welcome, {username}!</p>
+        <h1>Trang chủ</h1>
+        <p th:text="'Xin chào, ' + ${username} + '!'">Xin chào, {username}!</p>
         <ul>
 
             <form th:action="@{exam/create-exam-page}" method="get">
@@ -21,13 +26,20 @@
             </form><br>
         </ul>
     </div>
-    
+
     <!-- Common Content (for both roles) -->
     <form th:action="@{/user/logout}" method="get">
-        <input type="submit" value="Logout" class="redirect-button"/>
+        <input type="submit" value="Đăng xuất" class="redirect-button" />
     </form><br>
 
-    <script></script>
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
 
     <style>
         .redirect-button {

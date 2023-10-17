@@ -14,9 +14,7 @@
 
     <h1>Exams by Filter</h1>
 
-    <form th:action="@{/get-exams-by-subject}" method="get">
-        <input type="hidden" id="username" name="username" th:value="${username}" />
-        <input type="hidden" id="password" name="password" th:value="${password}" />
+    <form th:action="@{/user/exam/get-exams-by-subject}" method="get">
         <select name="selectedSubject">
             <option th:each="subject : ${subjects}" th:value="${subject}" th:text="${subject}"
                 th:selected="${subject == selectedSubject}"></option>
@@ -32,15 +30,9 @@
                 <div>
                     <span th:text="${examName}"></span>
                     <form th:action="@{'/get-exam-by-name/' + ${examName}}" method="get" style="display: inline;">
-                        <input type="hidden" id="username" name="username" th:value="${username}" />
-                        <input type="hidden" id="password" name="password" th:value="${password}" />
                         <button type="submit">Get Exam</button>
                     </form>
                 </div><br>
-    </div>
-    </li>
-    </li>
-    </ul>
     </div>
 
     <style>

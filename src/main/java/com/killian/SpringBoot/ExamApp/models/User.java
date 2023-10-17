@@ -17,14 +17,25 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    @Column(unique = true)
+    private String email;
+
     private String password;
 
-    private String email;
+    private String name;
 
     private String role;
 
     public User() {
 
+    }
+
+    public User(String username, String password, String email, String name, String role) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.role = role;
     }
 
     public User(String username, String password, String email, String role) {
@@ -56,6 +67,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getRole() {

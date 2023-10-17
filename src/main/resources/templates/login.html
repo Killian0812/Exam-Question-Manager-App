@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Exam Manager v1.0.0-alpha</title>
+    <title>Exam Manager v0.1</title>
 </head>
 
 <body>
@@ -10,20 +10,24 @@
         <p th:text="${message}"></p>
     </div>
 
-    <h1>Login</h1>
+    <h1>Đăng nhập</h1>
     <form action="/user/login" method="get">
-        <label for="username">Username:</label>
+        <label for="username">Tên đăng nhập:</label>
         <input type="text" id="username" name="username" required><br><br>
 
-        <label for="password">Password:</label>
+        <label for="password">Mật khẩu:</label>
         <input type="password" id="password" name="password" required><br><br>
 
-        <input type="submit" value="Login">
+        <input type="submit" value="Đăng nhập">
     </form><br>
 
-    <div>No Account? Register Now</div>
+    <form action="/forget-password" method="get">
+        <input type="submit" value="Quên mật khẩu?">
+    </form><br>
+
+    <div>Chưa có tài khoản? Đăng ký tại đây</div>
     <form action="/register-page" method="get">
-        <input type="submit" value="Register">
+        <input type="submit" value="Đăng ký">
     </form>
 
     <script>

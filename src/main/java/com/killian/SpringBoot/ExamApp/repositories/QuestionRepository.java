@@ -33,6 +33,10 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findBySubjectAndDifficulty(@Param("subject") String subject,
             @Param("difficulty") String difficulty);
 
+    @Query("SELECT q FROM Question q WHERE q.chapter = :chapter AND q.grade = :grade AND q.subject = :subject ORDER BY RAND() LIMIT :numberOfQuestions")
+    List<Question> findRandomQuestionsByChapterGradeSubject(@Param("chapter") String chapter, @Param("subject") String subject,
+            @Param("grade") int grade, int numberOfQuestions);
+
     @Query("SELECT q FROM Question q WHERE q.difficulty = 'Easy' ORDER BY RAND() LIMIT :numberOfQuestions")
     List<Question> findRandomEasyQuestions(int numberOfQuestions);
 

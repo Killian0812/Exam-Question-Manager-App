@@ -10,31 +10,34 @@
         <p th:text="${message}"></p>
     </div>
     <form th:action="@{/}" method="get">
-        <input type="submit" value="Back to login page"
+        <input type="submit" value="Quay về trang đăng nhập"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
 
-    <h1>Registration Form</h1>
+    <h1>Đăng ký tài khoản mới</h1>
     <form action="/register" method="post">
-        <label for="username">Username:</label>
+        <label for="username">Tên đăng nhập:</label>
         <input type="text" id="username" name="username" required /><br /><br />
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required /><br /><br />
 
-        <label for="password">Password:</label>
+        <label for="name">Họ và tên:</label>
+        <input type="name" id="name" name="name" required /><br /><br />
+
+        <label for="password">Mật khẩu:</label>
         <input type="password" id="password" name="password" required /><br /><br />
 
-        <label for="confirmPassword">Confirm Password:</label>
+        <label for="confirmPassword">Nhập lại mật khẩu:</label>
         <input type="password" id="confirmPassword" name="confirmPassword" required /><br /><br />
 
-        <label for="role">Role:</label>
+        <label for="role">Bạn là:</label>
         <select id="role" name="role">
-            <option value="Student">Student</option>
-            <option value="Teacher">Teacher</option>
+            <option value="Student">Học sinh</option>
+            <option value="Teacher">Giáo viên</option>
         </select><br /><br />
 
-        <input type="submit" value="Register" />
+        <input type="submit" value="Đăng ký" />
     </form>
 
     <script>

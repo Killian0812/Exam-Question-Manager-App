@@ -1,5 +1,7 @@
 package com.killian.SpringBoot.ExamApp.controllers.views;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,12 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.killian.SpringBoot.ExamApp.models.Exam;
+import com.killian.SpringBoot.ExamApp.models.Question;
 import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
+import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
 @RequestMapping(path = "/user/exam")
 public class ExamController {
+
+    @Autowired
+    private SessionManagementService sessionManagementService;
 
     @Autowired
     private ExamRepository examRepository;
@@ -38,6 +45,8 @@ public class ExamController {
         List<Integer> grades = questionRepository.findDistinctGrades();
         model.addAttribute("subjects", subjects);
         model.addAttribute("grades", grades);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
         return "select-subject-and-grade";
     }
 
@@ -66,35 +75,37 @@ public class ExamController {
             @RequestParam("questionCountForEachChapter") List<Integer> questionCountForEachChapter,
             Model model) {
 
-        Exam newExam = new Exam();
-        newExam.setName(name);
-        newExam.setSubject(subject);
-
-        // List<Question> easyQuestions =
-        // questionRepository.findRandomEasyQuestions(easyQuestionCount);
-        // List<Question> mediumQuestions =
-        // questionRepository.findRandomMediumQuestions(mediumQuestionCount);
-        // List<Question> hardQuestions =
-        // questionRepository.findRandomHardQuestions(hardQuestionCount);
-
-        // List<Question> questions = Stream.of(easyQuestions, mediumQuestions,
-        // hardQuestions)
-        // .flatMap(Collection::stream)
-        // .collect(Collectors.toList());
-        // newExam.setQuestions(questions);
-
-        String message = null;
-        try {
-            examRepository.save(newExam);
-            message = "Successful! Exam added to database.";
-        } catch (Exception e) {
-            message = "Failed! Exam name is taken.";
+        if (!examRepository.findByNameAndOwner(name, sessionManagementService.getUsername()).isEmpty()) {
+            sessionManagementService.setMessage("Failed! Inappropriate exam.");
+            return "redirect:/user/exam/select-subject-and-grade";
         }
-        model.addAttribute("message", message);
-        List<String> subjects = questionRepository.findDistinctSubjects();
-        model.addAttribute("subjects", subjects);
+        for (int j = 0; j < amount; j++) {
 
-        return "create-exam";
+            Exam newExam = new Exam();
+            newExam.setName(name);
+            newExam.setSubject(subject);
+            newExam.setGrade(grade);
+            newExam.setExamCode(j);
+            newExam.setOwner(sessionManagementService.getUsername());
+
+            List<Question> questions = new ArrayList<>();
+            List<String> chapters = questionRepository.findDistinctChaptersBySubjectAndGrade(subject, grade);
+            for (int i = 0; i < chapters.size(); i++) {
+                String chapter = chapters.get(i);
+                List<Question> newQuestions = questionRepository.findRandomQuestionsByChapterGradeSubject(chapter,
+                        subject, grade, questionCountForEachChapter.get(i));
+                for (Question q : newQuestions) {
+                    q.shuffleChoices();
+                }
+                questions.addAll(newQuestions);
+            }
+            Collections.shuffle(questions); // shuffle questions
+            newExam.setQuestions(questions);
+
+            examRepository.save(newExam);
+        }
+        sessionManagementService.setMessage("Successful! Exam added to database.");
+        return "redirect:/user/exam/view-exams-by-filter-page";
     }
 
     @GetMapping("/view-exams-by-filter-page")
@@ -107,6 +118,7 @@ public class ExamController {
         if (!subjects.isEmpty())
             model.addAttribute("selectedSubject", subjects.get(0));
 
+        model.addAttribute("message", sessionManagementService.getMessage());
         return "exams-by-filter";
     }
 
@@ -117,7 +129,7 @@ public class ExamController {
 
         List<String> subjects = examRepository.findDistinctSubjects();
 
-        List<Exam> exams = examRepository.findBySubject(selectedSubject);
+        List<Exam> exams = examRepository.findBySubjectAndCode(selectedSubject, 0);
         List<String> examNames = exams.stream()
                 .map(Exam::getName)
                 .collect(Collectors.toList());

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.killian.SpringBoot.ExamApp.models.Exam;
 
 public interface ExamRepository extends JpaRepository<Exam, Long> {
-    
+
     @Query("SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END FROM Exam e WHERE e.name = :examName")
     boolean existsByExamName(String examName);
 
@@ -18,6 +18,12 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
 
     @Query("SELECT e FROM Exam e WHERE e.subject = :subject")
     List<Exam> findBySubject(@Param("subject") String subject);
+
+    @Query("SELECT e FROM Exam e WHERE e.subject = :subject AND e.examCode = :examCode")
+    List<Exam> findBySubjectAndCode(@Param("subject") String subject, @Param("examCode") int examCode);
+
+    @Query("SELECT e FROM Exam e WHERE e.name = :name AND e.owner = :owner")
+    List<Exam> findByNameAndOwner(@Param("name") String name, @Param("owner") String owner);
 
     @Query("SELECT e FROM Exam e WHERE e.name = :name")
     Exam findByName(@Param("name") String name);

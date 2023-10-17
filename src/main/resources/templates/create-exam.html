@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Create Exam</title>
+    <title>Tạo đề thi</title>
 </head>
 
 <body>
@@ -12,11 +12,11 @@
     </div>
 
     <form th:action="@{/user/dashboard}" method="get">
-        <input type="submit" value="Back to main page"
+        <input type="submit" value="Quay về trang chủ"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
 
-    <h1>Create Exam</h1>
+    <h1>Tạo đề thi</h1>
 
     <form th:action="@{/user/exam/select-subject-and-grade}" method="get">
         <input type="submit" value="Tạo Đề thi từ Ngân hàng câu hỏi" />
