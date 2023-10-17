@@ -44,8 +44,8 @@ public class Database {
             @Override
             public void run(String... args) throws Exception {
                 try {
-                    dataGenerator.dataGenerate();
-                    logger.info("Data generated");  
+                    // dataGenerator.dataGenerate();
+                    // logger.info("Data generated");  
                 } catch (Exception e) {
                     logger.info("Data duplicated");
                 }

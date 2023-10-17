@@ -60,7 +60,9 @@ public class UserController {
             return "redirect:/forget-password";
         }
         try {
-            emailService.sendEmail(email, "Quên mật khẩu", "Tên đăng nhập");
+            String emailBody = "Tên đăng nhập: " + user.getUsername() + "<br>" + "Mật khẩu: " + user.getPassword();
+            emailService.sendEmail(email, "Quên mật khẩu", emailBody);
+            sessionManagementService.setMessage("Thông tin đăng nhập đã được gửi về email của bạn.");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
