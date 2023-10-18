@@ -51,6 +51,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/profile")
+    public String profile(Model model) {
+
+        // String username = sessionManagementService.getUsername();
+        return "profile";
+    }
+
     @PostMapping("/forget")
     public String forget(@RequestParam("email") String email, Model model) {
 
@@ -81,7 +88,8 @@ public class UserController {
         model.addAttribute("password", password);
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
-
+        sessionManagementService.clearMessage();
+        
         if (role.equals("Teacher"))
             return "teacher-dashboard";
         else

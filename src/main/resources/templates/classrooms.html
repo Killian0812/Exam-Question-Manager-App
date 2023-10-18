@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Các lớp học</title>
+</head>
+
+<body>
+
+    <form th:action="@{/user/dashboard}" method="get">
+        <input type="submit" value="Quay lại trang chủ"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h1>Các lớp học</h1>
+
+    <div th:if="${classNames}">
+        <h2 th:text="'Các lớp hiện tại: '"></h2>
+        <ul>
+            <li th:each="className : ${classNames}">
+                <div>
+                    <span th:text="${className}"></span>
+                    <form th:action="@{'view-classroom/' + ${className}}" method="get" style="display: inline;">
+                        <button type="submit">Xem lớp</button>
+                    </form>
+                </div><br>
+            </li>
+        </ul>
+    </div>
+
+    <form th:action="@{/user/classroom/create-classroom-page}" method="get">
+        <input type="submit" value="Tạo Lớp học mới" />
+    </form><br>
+
+    <style>
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+
+</body>
+
+</html>

@@ -2,37 +2,47 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Exams from Database</title>
+    <title>Các đề thi</title>
 </head>
 
 <body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
 
     <form th:action="@{/user/dashboard}" method="get">
-        <input type="submit" value="Back to main page"
+        <input type="submit" value="Quay về trang chủ"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
 
-    <h1>Exams by Filter</h1>
+    <h1>Các đề kiểm tra:</h1>
 
-    <form th:action="@{/user/exam/get-exams-by-subject}" method="get">
-        <select name="selectedSubject">
-            <option th:each="subject : ${subjects}" th:value="${subject}" th:text="${subject}"
-                th:selected="${subject == selectedSubject}"></option>
-        </select>
-        <input type="submit" value="Filter">
-    </form>
+    <div style="display: inline-block;">
+        <h2 style="display: inline;">Chọn môn học: </h2>
+        <form th:action="@{/user/exam/get-exams-by-subject}" method="get" style="display: inline;">
+            <select name="selectedSubject">
+                <option th:each="subject : ${subjects}" th:value="${subject}" th:text="${subject}"
+                    th:selected="${subject == selectedSubject}"></option>
+            </select>
+            <input type="submit" value="Tìm kiếm">
+        </form>
+    </div>
 
     <!-- Display questions based on the selected subject -->
     <div th:if="${examNames}">
-        <h2 th:text="'Exams in Subject: ' + ${selectedSubject}"></h2>
+        <h3 th:text="'Các bài kiểm tra môn: ' + ${selectedSubject}"></h3>
         <ul>
             <li th:each="examName : ${examNames}">
                 <div>
                     <span th:text="${examName}"></span>
-                    <form th:action="@{'/get-exam-by-name/' + ${examName}}" method="get" style="display: inline;">
-                        <button type="submit">Get Exam</button>
+                    <form th:action="@{/user/exam/get-exam-by-name}" method="get" style="display: inline;">
+                        <input th:type="hidden" th:id="name" th:name="name" th:value="${examName}">
+                        <input th:type="hidden" th:id="selectedCode" th:name="selectedCode" th:value=0> 
+                        <button type="submit" >Xem đề</button>
                     </form>
                 </div><br>
+            </li>
+        </ul>
     </div>
 
     <style>
@@ -48,6 +58,15 @@
             cursor: pointer;
         }
     </style>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
 
 </body>
 

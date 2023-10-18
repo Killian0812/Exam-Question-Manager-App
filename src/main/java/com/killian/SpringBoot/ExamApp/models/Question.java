@@ -70,8 +70,11 @@ public class Question {
         this.choices = choices;
     }
 
-    public void shuffleChoices() {
-        Collections.shuffle(choices);
+    public Question shuffleChoices() {
+        Question newQuestion = new Question();
+        newQuestion = this;
+        Collections.shuffle(newQuestion.choices);
+        return newQuestion;
     }
 
     public String getAnswer() {

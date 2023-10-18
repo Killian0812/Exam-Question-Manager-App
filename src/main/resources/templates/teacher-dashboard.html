@@ -17,6 +17,14 @@
         <p th:text="'Xin chào, ' + ${username} + '!'">Xin chào, {username}!</p>
         <ul>
 
+            <form th:action="@{user/profile}" method="get">
+                <input type="submit" value="Xem hồ sơ" />
+            </form><br>
+
+            <form th:action="@{classroom/classrooms-page}" method="get">
+                <input type="submit" value="Xem các Lớp học" />
+            </form><br>
+
             <form th:action="@{exam/create-exam-page}" method="get">
                 <input type="submit" value="Tạo Đề thi" />
             </form><br>

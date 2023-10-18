@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -76,7 +75,7 @@ public class ExamController {
             Model model) {
 
         if (!examRepository.findByNameAndOwner(name, sessionManagementService.getUsername()).isEmpty()) {
-            sessionManagementService.setMessage("Failed! Inappropriate exam.");
+            sessionManagementService.setMessage("Tên đề thi không hợp lệ!");
             return "redirect:/user/exam/select-subject-and-grade";
         }
         for (int j = 0; j < amount; j++) {
@@ -94,8 +93,8 @@ public class ExamController {
                 String chapter = chapters.get(i);
                 List<Question> newQuestions = questionRepository.findRandomQuestionsByChapterGradeSubject(chapter,
                         subject, grade, questionCountForEachChapter.get(i));
-                for (Question q : newQuestions) {
-                    q.shuffleChoices();
+                for (int k = 0; k < newQuestions.size(); k++) {
+                    newQuestions.set(k, newQuestions.get(k).shuffleChoices());
                 }
                 questions.addAll(newQuestions);
             }
@@ -104,7 +103,7 @@ public class ExamController {
 
             examRepository.save(newExam);
         }
-        sessionManagementService.setMessage("Successful! Exam added to database.");
+        sessionManagementService.setMessage("Tạo đề thi thành công!");
         return "redirect:/user/exam/view-exams-by-filter-page";
     }
 
@@ -119,6 +118,7 @@ public class ExamController {
             model.addAttribute("selectedSubject", subjects.get(0));
 
         model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
         return "exams-by-filter";
     }
 
@@ -141,14 +141,18 @@ public class ExamController {
         return "exams-by-filter";
     }
 
-    @GetMapping("/get-exam-by-name/{name}")
+    @GetMapping("/get-exam-by-name")
     public String viewExam(
-            @PathVariable String name,
+            @RequestParam String name,
+            @RequestParam int selectedCode,
             Model model) {
 
-        Exam exam = examRepository.findByName(name);
+        String owner = sessionManagementService.getUsername();
+        Exam exam = examRepository.findByNameAndOwner(name, owner).get(selectedCode);
+        List<Integer> examCodes = examRepository.findDistinctExamCode(name, owner);
         model.addAttribute("exam", exam);
-
+        model.addAttribute("examCodes", examCodes);
+        model.addAttribute("selectedCode", selectedCode);
         return "exam-by-name";
     }
 }
