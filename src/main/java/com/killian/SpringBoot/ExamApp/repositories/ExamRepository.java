@@ -16,11 +16,15 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     @Query("SELECT DISTINCT e.subject FROM Exam e")
     List<String> findDistinctSubjects();
 
+    @Query("SELECT DISTINCT e.grade FROM Exam e")
+    List<Integer> findDistinctGrades();
+
     @Query("SELECT e FROM Exam e WHERE e.subject = :subject")
     List<Exam> findBySubject(@Param("subject") String subject);
 
-    @Query("SELECT e FROM Exam e WHERE e.subject = :subject AND e.examCode = :examCode")
-    List<Exam> findBySubjectAndCode(@Param("subject") String subject, @Param("examCode") int examCode);
+    @Query("SELECT e FROM Exam e WHERE e.subject = :subject AND e.grade = :grade AND e.examCode = :examCode")
+    List<Exam> findBySubjectGradeAndCode(@Param("subject") String subject, @Param("grade") int grade,
+            @Param("examCode") int examCode);
 
     @Query("SELECT e FROM Exam e WHERE e.name = :name AND e.owner = :owner")
     List<Exam> findByNameAndOwner(@Param("name") String name, @Param("owner") String owner);

@@ -28,6 +28,8 @@ public class Exam {
 
     private String name;
 
+    private int duration;
+
     private int examCode;
 
     @ManyToMany
@@ -67,6 +69,14 @@ public class Exam {
 
     public void setSubject(String subject) {
         this.subject = subject;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public int getGrade() {

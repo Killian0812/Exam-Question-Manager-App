@@ -1,5 +1,6 @@
 package com.killian.SpringBoot.ExamApp.models;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,11 +71,12 @@ public class Question {
         this.choices = choices;
     }
 
-    public Question shuffleChoices() {
-        Question newQuestion = new Question();
-        newQuestion = this;
-        Collections.shuffle(newQuestion.choices);
-        return newQuestion;
+    public void shuffleChoices()
+    {
+        List<String> newChoices = new ArrayList<>();
+        newChoices.addAll(this.choices);
+        Collections.shuffle(newChoices);
+        this.choices = newChoices;
     }
 
     public String getAnswer() {
