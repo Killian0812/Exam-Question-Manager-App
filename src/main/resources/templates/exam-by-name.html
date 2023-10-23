@@ -43,7 +43,7 @@
 
     <ul class="question-list">
         <li th:each="question, questionIndex : ${exam.questions}">
-            <p th:text="'Question ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
+            <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
             <ul>
                 <li th:each="choice, choiceIndex : ${question.choices}">
                     <p th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></p>

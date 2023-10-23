@@ -24,11 +24,11 @@
         <h3 th:text="'Môn học: '+${selectedSubject}"></h3>
 
         <input type="hidden" name="subject" th:value="${selectedSubject}" />
-        <input type="number" name="grade" th:value="${selectedGrade}" style="display: none"/>        
-        
+        <input type="number" name="grade" th:value="${selectedGrade}" style="display: none" />
+
         <label for="name">Tên bộ đề:</label>
         <input type="text" id="name" name="name" th:value="${typedName}" required />
-        
+
         <label for="amount">Số mã đề:</label>
         <input type="number" id="amount" name="amount" th:value="1" required /><br><br>
 
@@ -36,11 +36,13 @@
         <input type="number" id="duration" name="duration" required />
 
         <h4>Phân chia số câu:</h4>
-        <div th:each="chapter : ${chapters}">
-            <label th:text="${chapter} + ':'"></label>
-            <input type="text" id="questionCountForEachChapter" name="questionCountForEachChapter" required />
+        <div th:each="chapter, chapterIndex : ${chapters}">
+            <label th:text="${chapter} + ' - '"></label>
+            <input type="number" id="questionCountForEachChapter" name="questionCountForEachChapter" required
+                th:value="0" th:max="${limit.get(chapterIndex.index)}" th:min="0" />
             <br><br>
         </div><br />
+
         <input type="submit" value="Tạo đề thi" />
     </form>
 

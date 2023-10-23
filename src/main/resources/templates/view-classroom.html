@@ -8,6 +8,9 @@
 </head>
 
 <body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
 
     <form th:action="@{/user/classroom/classrooms-page}" method="get">
         <input type="submit" value="Quay lại trang trước"
@@ -18,8 +21,7 @@
     <h2>Môn học: <span th:text="${classroom.subject}"></span></h2>
     <h2>Khối lớp: <span th:text="${classroom.grade}"></span></h2>
 
-    <!-- Display List of Questions -->
-    <h2>Questions:</h2>
+    <h2>Các bài tập:</h2>
 
     <style>
         ul {
@@ -27,6 +29,14 @@
             /* Remove bullets/symbols for all ul elements */
         }
     </style>
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
 </body>
 
 </html>

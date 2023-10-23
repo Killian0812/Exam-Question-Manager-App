@@ -46,6 +46,8 @@ public class ClassroomController {
         Classroom classroom = classroomRepository.findByNameAndTeacher(className,
                 sessionManagementService.getUsername());
         model.addAttribute("classroom", classroom);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
         return "view-classroom";
     }
 

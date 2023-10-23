@@ -73,6 +73,12 @@ public class ExamController {
         model.addAttribute("selectedSubject", selectedSubject);
         model.addAttribute("chapters", chapters);
 
+        List<Integer> limit = new ArrayList<>();
+        for (String chapter : chapters) {
+            limit.add(questionRepository.findNumberOfDistinctQuestionsByChapterAndGrade(chapter, selectedGrade));
+        }
+        model.addAttribute("limit", limit);
+
         return "create-exam-from-bank";
     }
 
@@ -107,14 +113,26 @@ public class ExamController {
                 if (count == 0)
                     continue;
                 String chapter = chapters.get(i);
-                List<Question> newQuestions = questionRepository.findRandomQuestionsByChapterGradeSubject(chapter,
+                List<String> newQuestionTexts = questionRepository.findDistinctRandomQuestionTextsByChapterGradeSubject(
+                        chapter,
                         subject, grade, count);
-                questions.addAll(newQuestions);
+                for (String text : newQuestionTexts) {
+                    Question newQuestion = questionRepository.findFirstQuestionByText(text);
+                    questions.add(newQuestion);
+                }
             }
-            Collections.shuffle(questions); // shuffle questions
-
+            if (j > 0) {
+                Collections.shuffle(questions); // shuffle questions
+                for (int i = 0; i < questions.size(); i++) {
+                    Question oldQuestion = questions.get(i);
+                    Question newQuestion = new Question(oldQuestion.getText(), oldQuestion.getChoices(),
+                            oldQuestion.getAnswer(), oldQuestion.getSubject(), oldQuestion.getChapter(),
+                            oldQuestion.getGrade(), oldQuestion.getQuestionType());
+                    newQuestion.shuffleChoices();
+                    questions.set(i, questionRepository.save(newQuestion));
+                }
+            }
             newExam.setQuestions(questions);
-
             examRepository.save(newExam);
         }
         sessionManagementService.setMessage("Tạo đề thi thành công!");
@@ -198,9 +216,8 @@ public class ExamController {
             Exam exam = examRepository.findByNameAndCode(name, examCode);
 
             ClassPathResource fontResource = new ClassPathResource("fonts/arial-unicode-ms.ttf");
-            PDType0Font font = PDType0Font.load(document, fontResource.getFile());
-
             ClassPathResource BoldFontResource = new ClassPathResource("fonts/arial-unicode-ms-bold.ttf");
+            PDType0Font font = PDType0Font.load(document, fontResource.getFile());
             PDType0Font boldFont = PDType0Font.load(document, BoldFontResource.getFile());
 
             // Exam details
@@ -224,26 +241,25 @@ public class ExamController {
 
             List<Question> questions = exam.getQuestions();
             for (int i = 0; i < questions.size(); i++) {
-
                 Question question = questions.get(i);
-                // Add the question text
-                contentStream.showText("Câu " + (i+1) + ": " + question.getText());
-                contentStream.newLineAtOffset(0, -20); // Move to the next line
+                String fullQuestionText = "Câu " + (i + 1) + ": " + question.getText();
 
+                List<String> lines = splitTextManually(fullQuestionText, font, 12, 400); // Adjust the width as needed
+                for (String line : lines) {
+                    contentStream.showText(line);
+                    contentStream.newLineAtOffset(0, -20); // next line
+                }
+
+                contentStream.newLineAtOffset(10, 0);
                 for (int j = 0; j < question.getChoices().size(); j++) {
                     // Add each choice
                     contentStream.showText(labelGenerator.getLabel(j) + " " + question.getChoices().get(j));
-                    contentStream.newLineAtOffset(0, -20); // Move to the next line
+                    contentStream.newLineAtOffset(0, -20);
                 }
-
-                // Add some space between questions
-                contentStream.newLineAtOffset(0, -40);
+                contentStream.newLineAtOffset(-10, -20);
             }
 
-            // End the text block
             contentStream.endText();
-
-            // Close the content stream
             contentStream.close();
 
             // Save the PDF to the response output stream
@@ -253,4 +269,29 @@ public class ExamController {
             e.printStackTrace();
         }
     }
+
+    public static List<String> splitTextManually(String text, PDType0Font font, float fontSize, float maxWidth) {
+        List<String> lines = new ArrayList<>();
+        String[] words = text.split(" ");
+        StringBuilder line = new StringBuilder();
+        float lineWidth = 0;
+
+        for (String word : words) {
+            try {
+                float wordWidth = font.getStringWidth(word) / 1000 * fontSize;
+                if (lineWidth + wordWidth > maxWidth) {
+                    lines.add(line.toString());
+                    line = new StringBuilder();
+                    lineWidth = 0;
+                }
+                line.append(word).append(" ");
+                lineWidth += wordWidth;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        lines.add(line.toString());
+        return lines;
+    }
+
 }
