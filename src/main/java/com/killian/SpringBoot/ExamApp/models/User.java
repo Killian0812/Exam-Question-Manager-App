@@ -26,16 +26,19 @@ public class User {
 
     private String role;
 
+    private String dob;
+
     public User() {
 
     }
 
-    public User(String username, String password, String email, String name, String role) {
+    public User(String username, String password, String email, String name, String role, String dob) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.role = role;
+        this.dob = dob;
     }
 
     public User(String username, String password, String email, String role) {
@@ -83,6 +86,14 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
 }

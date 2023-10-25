@@ -37,6 +37,14 @@ public class SessionManagementService {
         httpSession.setAttribute("message", null);
     }
 
+    public void setUsername(String username) {
+        httpSession.setAttribute("username", username);
+    }
+
+    public void clearUsername() {
+        httpSession.setAttribute("username", null);
+    }
+
     public String getUsername() {
         return (String) httpSession.getAttribute("username");
     }

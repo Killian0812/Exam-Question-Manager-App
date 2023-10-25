@@ -13,7 +13,7 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 
 // Connect to mysql with JPA
 /*
-docker run -d --rm --name mysql-container \
+docker run -d --name mysql-container \
 -e MYSQL_ROOT_PASSWORD=123456 \
 -e MYSQL_USER=admin \
 -e MYSQL_PASSWORD=1 \

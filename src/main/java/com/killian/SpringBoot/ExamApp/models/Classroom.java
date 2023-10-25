@@ -9,6 +9,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @Entity
@@ -26,17 +27,21 @@ public class Classroom {
 
     private String teacher;
 
-    private List<String> students;
+    private String classCode;
 
     @OneToMany
     @JoinTable(name = "classroom", joinColumns = @JoinColumn(name = "classroom_id"), inverseJoinColumns = @JoinColumn(name = "assignment_id"))
     private List<Assignment> assignments;
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static SecureRandom random = new SecureRandom();
 
     public Classroom(String name, String subject, String grade, String teacher) {
         this.name = name;
         this.subject = subject;
         this.grade = grade;
         this.teacher = teacher;
+        this.classCode = classCodeGenerate();
     }
 
     public Classroom() {
@@ -73,17 +78,13 @@ public class Classroom {
     public void setTeacher(String teacher) {
         this.teacher = teacher;
     }
-
-    public List<String> getStudents() {
-        return students;
+    
+    public String getClassCode() {
+        return classCode;
     }
 
-    public void addStudent(String student) {
-        this.students.add(student);
-    }
-
-    public void setStudents(List<String> students) {
-        this.students = students;
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
     }
 
     public List<Assignment> getAssignments() {
@@ -98,6 +99,15 @@ public class Classroom {
         // for (String student : students) {
         // assignment.addStudentScore(student, -1);
         // }
+    }
+
+    public static String classCodeGenerate() {
+        StringBuilder code = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            code.append(CHARACTERS.charAt(randomIndex));
+        }
+        return code.toString();
     }
 
 }

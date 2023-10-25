@@ -20,14 +20,15 @@
             <li th:each="className : ${classNames}">
                 <div>
                     <span th:text="${className}"></span>
-                    <form th:action="@{'view-classroom/' + ${className}}" method="get" style="display: inline;">
+                    <form action="/user/classroom/view-classroom" method="get" style="display: inline;">
+                        <input type="hidden" th:id="className" th:name="className" th:value="${className}">
                         <button type="submit">Xem lớp</button>
                     </form>
                 </div><br>
             </li>
         </ul>
     </div>
-
+    
     <form th:action="@{/user/classroom/create-classroom-page}" method="get">
         <input type="submit" value="Tạo Lớp học mới" />
     </form><br>

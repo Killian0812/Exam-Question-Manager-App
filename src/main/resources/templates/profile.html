@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Trang cá nhân</title>
+</head>
+<body>
+
+    <form th:action="@{/user/dashboard}" method="get">
+        <input type="submit" value="Quay lại trang chủ"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h2>Hồ sơ người dùng</h2>
+    
+    <div>
+        <label for="username">Tên đăng nhập:</label>
+        <span th:text="${user.username}"></span>
+    </div>
+
+    <div>
+        <label for="name">Họ và tên:</label>
+        <span th:text="${user.name}"></span>
+    </div>
+    
+    <div>
+        <label for="dob">Ngày sinh:</label>
+        <span th:text="${user.dob}"></span>
+    </div>
+    
+    <div>
+        <label for="email">Email:</label>
+        <span th:text="${user.email}"></span>
+    </div><br>  
+    
+    <form th:action="@{change-password-page}" method="get">
+        <input type="submit" value="Đổi mật khẩu" />
+    </form><br>
+
+</body>
+</html>

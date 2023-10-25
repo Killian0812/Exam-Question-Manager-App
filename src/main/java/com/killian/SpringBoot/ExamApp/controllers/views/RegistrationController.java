@@ -35,7 +35,8 @@ public class RegistrationController {
             @RequestParam("name") String name,
             @RequestParam("password") String password,
             @RequestParam("confirmPassword") String confirmPassword,
-            @RequestParam("role") String role) {
+            @RequestParam("role") String role,
+            @RequestParam("dob") String dob) {
 
         User user = userRepository.findByUsername(username);
         String message = null;
@@ -50,7 +51,7 @@ public class RegistrationController {
                     message = "Mật khẩu xác nhận không chính xác.";
                 else {
                     message = "Đăng ký thành công. Hãy quay về trang đăng nhập.";
-                    userRepository.save(new User(username, password, email, name, role));
+                    userRepository.save(new User(username, password, email, name, role, dob));
                 }
             }
         }

@@ -15,6 +15,9 @@ public interface ClassroomRepository extends JpaRepository<Classroom, Long> {
     @Query("SELECT c FROM Classroom c WHERE c.name = :name")
     Classroom findByName(@Param("name") String name);
 
+    @Query("SELECT c.classCode FROM Classroom c WHERE c.name = :name")
+    String classCodeByName(@Param("name") String name);
+
     @Query("SELECT c FROM Classroom c WHERE c.teacher = :teacher")
     List<Classroom> findByTeacher(@Param("teacher") String teacher);
 }

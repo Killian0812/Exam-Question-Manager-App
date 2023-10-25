@@ -136,7 +136,7 @@ public class ExamController {
             examRepository.save(newExam);
         }
         sessionManagementService.setMessage("Tạo đề thi thành công!");
-        return "redirect:/user/exam/view-exams-by-filter-page";
+        return "redirect:/user/exam/get-exam-by-name?name=" + name + "&selectedCode=0";
     }
 
     @GetMapping("/view-exams-by-filter-page")
@@ -193,11 +193,13 @@ public class ExamController {
         model.addAttribute("exam", exam);
         model.addAttribute("examCodes", examCodes);
         model.addAttribute("selectedCode", selectedCode);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
         return "exam-by-name";
     }
 
     @GetMapping("/export-pdf")
-    public void exportExamToPDF(
+    public void exportExamPDF(
             HttpServletResponse response,
             @RequestParam("name") String name,
             @RequestParam("examCode") int examCode) {

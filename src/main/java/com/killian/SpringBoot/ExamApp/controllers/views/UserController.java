@@ -43,6 +43,7 @@ public class UserController {
             if (password.equals(user.getPassword()) == false) {
                 message = "Sai mật khẩu.";
                 sessionManagementService.setMessage(message);
+                sessionManagementService.setUsername(username);
                 return "redirect:/";
             } else {
                 sessionManagementService.createUserSession(username, password, user.getRole());
@@ -54,8 +55,37 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model) {
 
-        // String username = sessionManagementService.getUsername();
+        User user = userRepository.findByUsername(sessionManagementService.getUsername());
+        model.addAttribute("user", user);
         return "profile";
+    }
+
+    @GetMapping("/change-password-page")
+    public String changePasswordPage(Model model) {
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+        return "change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            @RequestParam("confirmPassword") String confirmPassword,
+            Model model) {
+        String password = sessionManagementService.getPassword();
+        if (currentPassword.equals(password)) {
+            if (newPassword.equals(confirmPassword)) {
+                sessionManagementService.setMessage("Đổi mật khẩu thành công.");
+                String username = sessionManagementService.getUsername();
+                User user = userRepository.findByUsername(username);
+                user.setPassword(newPassword);
+                userRepository.save(user);
+            } else {
+                sessionManagementService.setMessage("Mật khẩu xác nhận không đúng.");
+            }
+        } else
+            sessionManagementService.setMessage("Mật khẩu hiện tại không đúng");
+        return "redirect:/user/change-password-page";
     }
 
     @PostMapping("/forget")
@@ -89,7 +119,7 @@ public class UserController {
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        
+
         if (role.equals("Teacher"))
             return "teacher-dashboard";
         else

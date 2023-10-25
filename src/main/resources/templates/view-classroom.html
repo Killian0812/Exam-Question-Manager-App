@@ -20,15 +20,15 @@
     <h1>Lớp: <span th:text="${classroom.name}"></span></h1>
     <h2>Môn học: <span th:text="${classroom.subject}"></span></h2>
     <h2>Khối lớp: <span th:text="${classroom.grade}"></span></h2>
+    <h2>Mã lớp: <span th:text="${classroom.classCode}"></span></h2>
+
+    <form action="/user/classroom/student-list" method="get">
+        <input type="hidden" id="className" name="className" th:value="${classroom.name}">
+        <input type="submit" value="Danh sách học sinh">
+    </form>
 
     <h2>Các bài tập:</h2>
 
-    <style>
-        ul {
-            list-style: none;
-            /* Remove bullets/symbols for all ul elements */
-        }
-    </style>
     <script>
         setTimeout(function () {
             var messageDiv = document.getElementById("messageDiv");

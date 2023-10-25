@@ -2,23 +2,26 @@ package com.killian.SpringBoot.ExamApp.controllers.views;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
-public class ViewController {
+public class LoginController {
 
     @Autowired
     private SessionManagementService sessionManagementService;
 
     @GetMapping("/")
-    public ModelAndView login() {
-        ModelAndView modelAndView = new ModelAndView("login.html");
-        modelAndView.addObject("message", sessionManagementService.getMessage());
+    public String login(Model model) {
+        model.addAttribute("message", sessionManagementService.getMessage());
+        String username = sessionManagementService.getUsername();
+        model.addAttribute("lastUsername", username);
+        sessionManagementService.clearUsername();
         sessionManagementService.clearMessage();
-        return modelAndView;
+        return "login";
     }
 
     @GetMapping("/forget-password")
