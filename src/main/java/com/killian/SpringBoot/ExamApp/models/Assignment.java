@@ -5,10 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-
-import java.util.Date;
 
 @Entity
 @Table(name = "tblAssignment")
@@ -20,18 +16,20 @@ public class Assignment {
 
     private String name;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date deadline;
+    private String deadline;
 
-    private String examName;
+    private String examId;
+
+    private String className;
 
     public Assignment() {
     }
 
-    public Assignment(String name, Date deadline, String examName) {
+    public Assignment(String name, String deadline, String examId, String className) {
         this.name = name;
         this.deadline = deadline;
-        this.examName = examName;
+        this.examId = examId;
+        this.className = className;
     }
 
     public String getName() {
@@ -42,19 +40,27 @@ public class Assignment {
         this.name = name;
     }
 
-    public Date getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 
-    public String getExamName() {
-        return examName;
+    public String getExamId() {
+        return examId;
     }
 
-    public void setExamName(String examName) {
-        this.examName = examName;
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 }

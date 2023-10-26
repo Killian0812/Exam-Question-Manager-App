@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm bài tập</title>
+
+    <style>
+        /* Style for button placement */
+        .button-container {
+            display: flex;
+        }
+
+        .button-container button {
+            margin-left: 10px;
+            /* Add some spacing between the input and button */
+        }
+
+        /* Style for the "Exam exists" message (green) */
+        .exists {
+            color: green;
+        }
+
+        /* Style for the "Exam does not exist" message (red) */
+        .not-exists {
+            color: red;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/teacher/classroom/assignment}" method="get">
+        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="submit" value="Quay lại trang trước"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h1>Thêm Đề tập mới</h1>
+
+    <form action="add-assignment" method="post">
+        <label for="assignmentName">Tên bài tập:</label>
+        <input type="text" id="assignmentName" name="assignmentName" required><br><br>
+
+        <label for="deadline">Hạn chót:</label>
+        <input type="datetime-local" id="deadline" name="deadline" required><br><br>
+
+        <label for="examId">ID Đề:</label>
+        <div class="button-container">
+            <input type="text" id="examId" name="examId" required>
+            <button type="button" id="checkExamId">Kiểm tra</button>
+        </div>
+        <p id="examStatus" class=""></p>
+
+        <input type="hidden" id="className" name="className" th:value="${className}" />
+
+        <input type="submit" value="Thêm bài tập">
+    </form><br>
+
+    <button id="viewExamsButton">Xem các đề hiện có tại đây</button><br><br>
+    <label for="createExamButton">Không tìm thấy đề phù hợp? </label>
+    <button id="createExamButton">Tự tạo đề tại đây</button>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+
+        document.getElementById("checkExamId").addEventListener("click", function () {
+            var examId = document.getElementById("examId").value;
+
+            // Implement AJAX to check if the examId exists
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/api/exam/check-exam?examId=" + examId, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = xhr.responseText;
+                    var className = response === "Tồn tại bài kiểm tra." ? "exists" : "not-exists";
+                    document.getElementById("examStatus").className = className;
+                    document.getElementById("examStatus").textContent = response;
+                }
+            };
+            xhr.send();
+        });
+
+        document.getElementById("createExamButton").addEventListener("click", function () {
+            var url = "/teacher/exam/create-exam-page";
+            var newTab = window.open(url, '_blank');
+            newTab.focus();
+        });
+
+        document.getElementById("viewExamsButton").addEventListener("click", function () {
+            var url = "/teacher/exam/view-exams-by-filter-page";
+            var newTab = window.open(url, '_blank');
+            newTab.focus();
+        });
+    </script>
+
+</body>
+
+</html>

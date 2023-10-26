@@ -21,7 +21,7 @@ import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.services.ExamService;
 
 @RestController
-@RequestMapping(path = "/api/v1/exams")
+@RequestMapping(path = "/api/exam")
 // Request: http://localhost:8080/api/v1/exams
 public class ExamRestController {
 
@@ -90,6 +90,16 @@ public class ExamRestController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ResponseObject("Fail", "Exam not found", null));
+        }
+    }
+
+    @GetMapping("/check-exam")
+    public String checkExam(@RequestParam String examId) {
+        List<Exam> exams = examRepository.findByExamId(examId);
+        if (!exams.isEmpty()) {
+            return "Tồn tại bài kiểm tra.";
+        } else {
+            return "Không tồn tại bài kiểm tra trong hệ thống. Hãy kiểm tra lại ID.";
         }
     }
 }

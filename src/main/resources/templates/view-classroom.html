@@ -25,20 +25,12 @@
     <form action="student-list" method="get">
         <input type="hidden" id="className" name="className" th:value="${classroom.name}">
         <input type="submit" value="Danh sách học sinh">
-    </form>
+    </form><br>
 
-    <h2>Các bài tập:</h2>
-    <ul id="assignmentList">
-        <li th:each="assignment : ${assignments}">
-            <span th:text="${assignment.name}"></span>
-            <form th:action="@{/user/classroom/remove-student}" method="post" style="display: inline;">
-                <input type="hidden" id="name" name="name" th:value=${student} />
-                <input type="hidden" id="className" name="className" th:value="${className}" />
-                <input type="submit" value="Xóa khỏi lớp"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa học sinh này khỏi lớp?')" />
-            </form>
-        </li>
-    </ul>
+    <form action="assignment" method="get">
+        <input type="hidden" id="className" name="className" th:value="${classroom.name}">
+        <input type="submit" value="Danh sách bài tập">
+    </form><br>
 
     <form action="/teacher/classroom/remove-classroom" method="post">
         <input type="hidden" id="className" name="className" th:value="${classroom.name}">

@@ -96,6 +96,8 @@ public class ExamController {
             sessionManagementService.setMessage("Tên đề thi không hợp lệ!");
             return "redirect:/teacher/exam/select-subject-and-grade";
         }
+
+        String tmp = null;
         for (int j = 0; j < amount; j++) {
 
             Exam newExam = new Exam();
@@ -105,7 +107,12 @@ public class ExamController {
             newExam.setExamCode(j);
             newExam.setDuration(duration);
             newExam.setOwner(sessionManagementService.getUsername());
-
+            if (tmp != null)
+                newExam.setExamId(tmp);
+            else {
+                newExam.setExamId();
+                tmp = newExam.getExamId();
+            }
             List<Question> questions = new ArrayList<>();
             List<String> chapters = questionRepository.findDistinctChaptersBySubjectAndGrade(subject, grade);
             for (int i = 0; i < chapters.size(); i++) {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Student List</title>
+</head>
+
+<body>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{view-classroom}" method="get">
+        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="submit" value="Quay lại trang trước"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h2 th:text="'Lớp: ' + ${className}"></h2>
+    <h2>Danh sách bài tập:</h2>
+
+    <ul id="assignmentList">
+        <li th:each="assignment : ${assignments}">
+            <span th:text="${assignment.name}"></span>
+            <form th:action="@{assignment/remove-assignment}" method="post" style="display: inline;">
+                <input type="hidden" id="className" name="className" th:value="${className}" />
+                <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
+                <input type="submit" value="Xóa bài tập"
+                    onclick="return confirm('Bạn có chắc chắn muốn xóa bài tập này?')" />
+            </form>
+        </li>
+    </ul>
+
+    <form th:action="@{assignment/add-assignment-page}" method="get">
+        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="submit" value="Thêm bài tập" />
+    </form>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+
+</body>
+
+</html>
