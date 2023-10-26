@@ -28,7 +28,7 @@ import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping(path = "/user/exam")
+@RequestMapping(path = "/teacher/exam")
 public class ExamController {
 
     @Autowired
@@ -94,7 +94,7 @@ public class ExamController {
 
         if (!examRepository.findByNameAndOwner(name, sessionManagementService.getUsername()).isEmpty()) {
             sessionManagementService.setMessage("Tên đề thi không hợp lệ!");
-            return "redirect:/user/exam/select-subject-and-grade";
+            return "redirect:/teacher/exam/select-subject-and-grade";
         }
         for (int j = 0; j < amount; j++) {
 
@@ -136,7 +136,7 @@ public class ExamController {
             examRepository.save(newExam);
         }
         sessionManagementService.setMessage("Tạo đề thi thành công!");
-        return "redirect:/user/exam/get-exam-by-name?name=" + name + "&selectedCode=0";
+        return "redirect:/teacher/exam/get-exam-by-name?name=" + name + "&selectedCode=0";
     }
 
     @GetMapping("/view-exams-by-filter-page")

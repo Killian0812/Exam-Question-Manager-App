@@ -11,7 +11,7 @@
         <p th:text="${message}"></p>
     </div>
 
-    <form th:action="@{/user/classroom/view-classroom}" method="get">
+    <form th:action="@{view-classroom}" method="get">
         <input type="hidden" id="className" name="className" th:value="${className}" />
         <input type="submit" value="Quay lại trang trước"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
@@ -23,7 +23,7 @@
     <ul id="studentList">
         <li th:each="student : ${students}">
             <span th:text="${student}"></span>
-            <form th:action="@{/user/classroom/remove-student}" method="post" style="display: inline;">
+            <form th:action="@{/teacher/classroom/remove-student}" method="post" style="display: inline;">
                 <input type="hidden" id="name" name="name" th:value=${student} />
                 <input type="hidden" id="className" name="className" th:value="${className}" />
                 <input type="submit" value="Xóa khỏi lớp"
@@ -32,7 +32,7 @@
         </li>
     </ul>
 
-    <form th:action="@{/user/classroom/add-student}" method="post">
+    <form th:action="@{/teacher/classroom/add-student}" method="post">
         <input type="text" id="student" name="student" required />
         <input type="hidden" id="className" name="className" th:value="${className}" />
         <input type="submit" value="Thêm học sinh" />

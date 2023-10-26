@@ -11,13 +11,12 @@
         <p th:text="${message}"></p>
     </div>
 
-    <!-- Content for Teacher Role -->
     <div th:if="${role == 'Teacher'}">
         <h1>Trang chủ</h1>
         <p th:text="'Xin chào, ' + ${username} + '!'">Xin chào, {username}!</p>
         <ul>
 
-            <form th:action="@{profile}" method="get">
+            <form th:action="@{/profile}" method="get">
                 <input type="submit" value="Xem hồ sơ" />
             </form><br>
 
@@ -35,8 +34,7 @@
         </ul>
     </div>
 
-    <!-- Common Content (for both roles) -->
-    <form th:action="@{/user/logout}" method="get">
+    <form th:action="@{/logout}" method="get">
         <input type="submit" value="Đăng xuất" class="redirect-button" />
     </form><br>
 

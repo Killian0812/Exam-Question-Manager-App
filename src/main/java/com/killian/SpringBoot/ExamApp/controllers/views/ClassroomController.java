@@ -20,7 +20,7 @@ import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
-@RequestMapping(path = "/user/classroom")
+@RequestMapping(path = "/teacher/classroom")
 public class ClassroomController {
 
     @Autowired
@@ -45,6 +45,8 @@ public class ClassroomController {
                 .map(Classroom::getName)
                 .collect(Collectors.toList());
         model.addAttribute("classNames", classNames);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
         return "classrooms";
     }
 
@@ -58,6 +60,17 @@ public class ClassroomController {
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
         return "view-classroom";
+    }
+
+    @PostMapping("/remove-classroom")
+    public String removeClassroom(
+            @RequestParam("className") String className) {
+        List<StudentClassroom> studentClassrooms = studentClassroomRepository.findAllRecordByClass(className);
+        studentClassroomRepository.deleteAll(studentClassrooms);
+        Classroom classroom = classroomRepository.findByName(className);
+        classroomRepository.delete(classroom);
+        sessionManagementService.setMessage("Bạn đã xóa lớp " + className);
+        return "redirect:/teacher/classroom/classrooms-page";
     }
 
     @GetMapping("/student-list")
@@ -89,7 +102,7 @@ public class ClassroomController {
                 sessionManagementService.setMessage("Không tồn tại người dùng!");
             }
         }
-        return "redirect:/user/classroom/student-list?className=" + className;
+        return "redirect:/teacher/classroom/student-list?className=" + className;
     }
 
     @PostMapping("/remove-student")
@@ -98,7 +111,7 @@ public class ClassroomController {
             @RequestParam("className") String className) {
         StudentClassroom studentClassroom = studentClassroomRepository.findRecord(name, className);
         studentClassroomRepository.delete(studentClassroom);
-        return "redirect:/user/classroom/student-list?className=" + className;
+        return "redirect:/teacher/classroom/student-list?className=" + className;
     }
 
     @GetMapping("/create-classroom-page")
@@ -125,10 +138,10 @@ public class ClassroomController {
         if (classroom == null) {
             classroomRepository.save(newClassroom);
             sessionManagementService.setMessage("Tạo lớp thành công");
-            return "redirect:/user/classroom/view-classroom/" + name;
+            return "redirect:/teacher/classroom/view-classroom?className=" + name;
         } else {
             sessionManagementService.setMessage("Tên lớp đã tồn tại");
-            return "redirect:/user/classroom/create-classroom-page";
+            return "redirect:/teacher/classroom/create-classroom-page";
         }
     }
 }

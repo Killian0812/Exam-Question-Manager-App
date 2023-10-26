@@ -11,14 +11,14 @@
         <p th:text="${message}"></p>
     </div>
 
-    <form th:action="@{/user/dashboard}" method="get">
-        <input type="submit" value="Quay về trang chủ"
+    <form th:action="@{create-exam-page}" method="get">
+        <input type="submit" value="Quay lại trang trước"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
 
     <h1>Tạo Đề thi</h1>
     
-    <form th:action="@{/user/exam/create-exam-from-bank-page}" method="get">
+    <form th:action="@{create-exam-from-bank-page}" method="get">
     
     <label for="subject">Môn học:</label>
     <select name="selectedSubject">

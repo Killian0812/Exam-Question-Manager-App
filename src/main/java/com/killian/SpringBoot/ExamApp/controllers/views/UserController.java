@@ -14,7 +14,6 @@ import com.killian.SpringBoot.ExamApp.services.EmailService;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
-@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -47,7 +46,7 @@ public class UserController {
                 return "redirect:/";
             } else {
                 sessionManagementService.createUserSession(username, password, user.getRole());
-                return "redirect:/user/dashboard";
+                return "redirect:/" + user.getRole().toLowerCase() + "/dashboard";
             }
         }
     }
@@ -85,7 +84,7 @@ public class UserController {
             }
         } else
             sessionManagementService.setMessage("Mật khẩu hiện tại không đúng");
-        return "redirect:/user/change-password-page";
+        return "redirect:/change-password-page";
     }
 
     @PostMapping("/forget")
@@ -106,7 +105,12 @@ public class UserController {
         return "redirect:/forget-password";
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping("/back-to-dashboard")
+    public String backToDashboard() {
+        return "redirect:/" + sessionManagementService.getRole().toLowerCase() + "/dashboard";
+    }
+
+    @GetMapping("/teacher/dashboard")
     public String dashboard(Model model) {
         // Retrieve user data from the session
         String username = sessionManagementService.getUsername();

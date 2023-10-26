@@ -12,7 +12,7 @@
         <p th:text="${message}"></p>
     </div>
 
-    <form th:action="@{/user/classroom/classrooms-page}" method="get">
+    <form th:action="@{classrooms-page}" method="get">
         <input type="submit" value="Quay lại trang trước"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
@@ -22,12 +22,28 @@
     <h2>Khối lớp: <span th:text="${classroom.grade}"></span></h2>
     <h2>Mã lớp: <span th:text="${classroom.classCode}"></span></h2>
 
-    <form action="/user/classroom/student-list" method="get">
+    <form action="student-list" method="get">
         <input type="hidden" id="className" name="className" th:value="${classroom.name}">
         <input type="submit" value="Danh sách học sinh">
     </form>
 
     <h2>Các bài tập:</h2>
+    <ul id="assignmentList">
+        <li th:each="assignment : ${assignments}">
+            <span th:text="${assignment.name}"></span>
+            <form th:action="@{/user/classroom/remove-student}" method="post" style="display: inline;">
+                <input type="hidden" id="name" name="name" th:value=${student} />
+                <input type="hidden" id="className" name="className" th:value="${className}" />
+                <input type="submit" value="Xóa khỏi lớp"
+                    onclick="return confirm('Bạn có chắc chắn muốn xóa học sinh này khỏi lớp?')" />
+            </form>
+        </li>
+    </ul>
+
+    <form action="/teacher/classroom/remove-classroom" method="post">
+        <input type="hidden" id="className" name="className" th:value="${classroom.name}">
+        <input type="submit" value="Xóa lớp" onclick="return confirm('Bạn có chắc chắn muốn xóa lớp học này?')" />
+    </form>
 
     <script>
         setTimeout(function () {

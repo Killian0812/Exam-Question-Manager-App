@@ -4,14 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "tblAssignment")
@@ -23,27 +20,18 @@ public class Assignment {
 
     private String name;
 
-    private List<String> students;
-
-    private List<Double> scores;
-
-    private int duration;
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date deadline;
 
-    @ManyToOne
-    @JoinColumn(name = "exam_id")
-    private Exam exam;
+    private String examName;
 
     public Assignment() {
     }
 
-    public Assignment(String name, int duration, Date deadline, Exam exam) {
+    public Assignment(String name, Date deadline, String examName) {
         this.name = name;
-        this.duration = duration;
         this.deadline = deadline;
-        this.exam = exam;
+        this.examName = examName;
     }
 
     public String getName() {
@@ -54,30 +42,6 @@ public class Assignment {
         this.name = name;
     }
 
-    public List<String> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<String> students) {
-        this.students = students;
-    }
-
-    public List<Double> getScores() {
-        return scores;
-    }
-
-    public void setScores(List<Double> scores) {
-        this.scores = scores;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
     public Date getDeadline() {
         return deadline;
     }
@@ -86,16 +50,11 @@ public class Assignment {
         this.deadline = deadline;
     }
 
-    public Exam getExam() {
-        return exam;
+    public String getExamName() {
+        return examName;
     }
 
-    public void setExam(Exam exam) {
-        this.exam = exam;
-    }
-
-    public void addStudentScore(String student, double score) {
-        students.add(student);
-        scores.add(score);
+    public void setExamName(String examName) {
+        this.examName = examName;
     }
 }

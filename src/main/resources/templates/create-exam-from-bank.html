@@ -11,14 +11,14 @@
         <p th:text="${message}"></p>
     </div>
 
-    <form th:action="@{/user/exam/select-subject-and-grade}" method="get">
+    <form th:action="@{select-subject-and-grade}" method="get">
         <input type="submit" value="Chọn lại môn học / Khối lớp"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
 
     <h1>Tạo Đề thi</h1>
 
-    <form th:action="@{/user/exam/create-exam-from-bank}" method="post">
+    <form th:action="@{create-exam-from-bank}" method="post">
 
         <h3 th:text="'Khối lớp: '+${selectedGrade}"></h3>
         <h3 th:text="'Môn học: '+${selectedSubject}"></h3>

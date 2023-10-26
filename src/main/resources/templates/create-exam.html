@@ -11,18 +11,18 @@
         <p th:text="${message}"></p>
     </div>
 
-    <form th:action="@{/user/dashboard}" method="get">
+    <form th:action="@{/back-to-dashboard}" method="get">
         <input type="submit" value="Quay về trang chủ"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
 
     <h1>Tạo đề thi</h1>
 
-    <form th:action="@{/user/exam/select-subject-and-grade}" method="get">
+    <form th:action="@{select-subject-and-grade}" method="get">
         <input type="submit" value="Tạo Đề thi từ Ngân hàng câu hỏi" />
     </form><br>
     
-    <form th:action="@{/user/exam/create-own-exam}" method="get">
+    <form th:action="@{create-own-exam}" method="get">
         <input type="submit" value="Tự tạo Đề thi" />
     </form><br>
 
