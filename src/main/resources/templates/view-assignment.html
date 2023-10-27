@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết bài tập</title>
+</head>
+
+<body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/teacher/classroom/assignment}" method="get">
+        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="submit" value="Quay lại các bài tập"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form><br>
+
+    <h1>Bài tập: <span th:text="${assignment.name}"></span></h1>
+
+    <h1>Hạn chót: <span th:text="${assignmentDeadline}"></span></h1>
+
+    <h2>Đề kiểm tra: <button id="viewExamButton" 
+        th:attr="data-exam-url=@{/teacher/exam/get-exam-by-examId(examId=${assignment.examId})}">Xem tại đây</button></h2>
+
+    <form th:action="@{remove-assignment}" method="post" style="display: inline;">
+        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
+        <input type="submit" value="Xóa bài tập" onclick="return confirm('Bạn có chắc chắn muốn xóa bài tập này?')" />
+    </form>
+
+    <style>
+        ul {
+            list-style: none;
+            /* Remove bullets/symbols for all ul elements */
+        }
+
+        .question-list {
+            margin-left: 0;
+            /* Remove default left margin */
+            padding-left: 10px;
+            /* Add custom padding for indentation */
+        }
+
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Style for the export PDF button */
+        .export-pdf-button {
+            background-color: #000000;
+            /* Button background color */
+            color: #fff;
+            /* Text color */
+            padding: 10px 20px;
+            /* Padding around the text */
+            border: none;
+            /* Remove the button border */
+            border-radius: 4px;
+            /* Rounded corners */
+            cursor: pointer;
+            /* Show a hand cursor on hover */
+        }
+
+        /* Add hover effect for the button */
+        .export-pdf-button:hover {
+            background-color: #464e57;
+            /* Darker background color on hover */
+        }
+    </style>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+
+        document.getElementById("viewExamButton").addEventListener("click", function () {
+            var examUrl = this.getAttribute("data-exam-url");
+            var newTab = window.open(examUrl, '_blank');
+            newTab.focus();
+        });
+    </script>
+
+</body>
+
+</html>

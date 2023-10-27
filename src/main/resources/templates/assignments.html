@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Student List</title>
+    <title>Danh sách bài tập</title>
 </head>
 
 <body>
@@ -23,11 +23,10 @@
     <ul id="assignmentList">
         <li th:each="assignment : ${assignments}">
             <span th:text="${assignment.name}"></span>
-            <form th:action="@{assignment/remove-assignment}" method="post" style="display: inline;">
+            <form th:action="@{assignment/view-assignment}" method="get" style="display: inline;">
                 <input type="hidden" id="className" name="className" th:value="${className}" />
                 <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
-                <input type="submit" value="Xóa bài tập"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa bài tập này?')" />
+                <input type="submit" value="Xem">
             </form>
         </li>
     </ul>
@@ -44,6 +43,13 @@
                 messageDiv.style.display = "none";
             }
         }, 2000); // message disapear after 2s
+
+        document.querySelectorAll(".viewAssignmentButton").forEach(function (button) {
+            button.addEventListener("click", function () {
+                var assignmentUrl = this.getAttribute("data-assignment-url");
+                window.open(assignmentUrl, '_blank');
+            });
+        });
     </script>
 
 </body>

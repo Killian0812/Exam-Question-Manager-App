@@ -189,8 +189,8 @@ public class ExamController {
 
     @GetMapping("/get-exam-by-name")
     public String viewExam(
-            @RequestParam String name,
-            @RequestParam int selectedCode,
+            @RequestParam("name") String name,
+            @RequestParam("selectedCode") int selectedCode,
             Model model) {
 
         String owner = sessionManagementService.getUsername();
@@ -203,6 +203,12 @@ public class ExamController {
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
         return "exam-by-name";
+    }
+
+    @GetMapping("/get-exam-by-examId")
+    public String viewExambyId(@RequestParam("examId") String examId) {
+        Exam exam = examRepository.findByExamId(examId).get(0);
+        return "redirect:/teacher/exam/get-exam-by-name?name=" + exam.getName() + "&selectedCode=0";
     }
 
     @GetMapping("/export-pdf")
