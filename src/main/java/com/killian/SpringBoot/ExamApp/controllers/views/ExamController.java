@@ -45,7 +45,7 @@ public class ExamController {
 
     @GetMapping("/create-exam-page")
     public String createExamPage(Model model) {
-        return "create-exam";
+        return "teacher/create-exam";
     }
 
     @GetMapping("/select-subject-and-grade")
@@ -57,7 +57,7 @@ public class ExamController {
         model.addAttribute("grades", grades);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "select-subject-and-grade";
+        return "teacher/select-subject-and-grade";
     }
 
     @GetMapping("/create-exam-from-bank-page")
@@ -79,7 +79,7 @@ public class ExamController {
         }
         model.addAttribute("limit", limit);
 
-        return "create-exam-from-bank";
+        return "teacher/create-exam-from-bank";
     }
 
     @PostMapping("/create-exam-from-bank")
@@ -163,7 +163,7 @@ public class ExamController {
 
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "exams-by-filter";
+        return "teacher/exams-by-filter";
     }
 
     @GetMapping("/get-exams-by-subject-and-grade")
@@ -184,7 +184,7 @@ public class ExamController {
         model.addAttribute("selectedGrade", selectedGrade);
         model.addAttribute("exams", exams);
 
-        return "exams-by-filter";
+        return "teacher/exams-by-filter";
     }
 
     @GetMapping("/get-exam-by-name")
@@ -202,7 +202,7 @@ public class ExamController {
         model.addAttribute("selectedCode", selectedCode);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "exam-by-name";
+        return "teacher/exam-by-name";
     }
 
     @GetMapping("/get-exam-by-examId")

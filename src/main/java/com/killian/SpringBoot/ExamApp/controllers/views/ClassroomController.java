@@ -47,7 +47,7 @@ public class ClassroomController {
         model.addAttribute("classNames", classNames);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "classrooms";
+        return "teacher/classrooms";
     }
 
     @GetMapping("/view-classroom")
@@ -59,7 +59,7 @@ public class ClassroomController {
         model.addAttribute("classroom", classroom);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "view-classroom";
+        return "teacher/view-classroom";
     }
 
     @PostMapping("/remove-classroom")
@@ -83,7 +83,7 @@ public class ClassroomController {
         model.addAttribute("students", students);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "student-list";
+        return "teacher/student-list";
     }
 
     @PostMapping("/add-student")
@@ -122,7 +122,7 @@ public class ClassroomController {
         model.addAttribute("grades", grades);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "create-classroom";
+        return "teacher/create-classroom";
     }
 
     @PostMapping("/create-classroom")

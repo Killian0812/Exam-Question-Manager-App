@@ -38,7 +38,7 @@ public class AssignmentController {
         model.addAttribute("className", className);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "assignments";
+        return "teacher/assignments";
     }
 
     @GetMapping("add-assignment-page")
@@ -48,7 +48,7 @@ public class AssignmentController {
         model.addAttribute("className", className);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "add-assignment";
+        return "teacher/add-assignment";
     }
 
     @PostMapping("add-assignment")
@@ -104,6 +104,6 @@ public class AssignmentController {
 
         model.addAttribute("className", className);
 
-        return "view-assignment";
+        return "teacher/view-assignment";
     }
 }

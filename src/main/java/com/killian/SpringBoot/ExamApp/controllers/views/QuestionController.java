@@ -32,7 +32,7 @@ public class QuestionController {
         model.addAttribute("password", password);
         model.addAttribute("message", message);
         message = null;
-        return "create-question";
+        return "teacher/create-question";
     }
 
     @PostMapping("/create-question")
@@ -89,7 +89,7 @@ public class QuestionController {
             model.addAttribute("questions", questions);
         }
 
-        return "questions-by-filter";
+        return "teacher/questions-by-filter";
     }
 
     @GetMapping("/get-questions-by-subject-and-difficulty")
@@ -112,6 +112,6 @@ public class QuestionController {
         model.addAttribute("selectedDifficulty", selectedDifficulty);
         model.addAttribute("questions", questions);
 
-        return "questions-by-filter.html";
+        return "teacher/questions-by-filter.html";
     }
 }

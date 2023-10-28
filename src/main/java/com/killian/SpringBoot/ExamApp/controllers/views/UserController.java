@@ -110,7 +110,7 @@ public class UserController {
     }
 
     @GetMapping("/teacher/dashboard")
-    public String dashboard(Model model) {
+    public String teacherDashboard(Model model) {
         // Retrieve user data from the session
         String username = sessionManagementService.getUsername();
         String password = sessionManagementService.getPassword();
@@ -123,10 +123,24 @@ public class UserController {
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
 
-        if (role.equals("Teacher"))
-            return "teacher-dashboard";
-        else
-            return "student-dashboard";
+        return "teacher/teacher-dashboard";
+    }
+
+    @GetMapping("/student/dashboard")
+    public String studentDashboard(Model model) {
+        // Retrieve user data from the session
+        String username = sessionManagementService.getUsername();
+        String password = sessionManagementService.getPassword();
+        String role = sessionManagementService.getRole();
+
+        // Use the data as needed
+        model.addAttribute("username", username);
+        model.addAttribute("password", password);
+        model.addAttribute("role", role);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+
+        return "student-dashboard";
     }
 
     @GetMapping("/logout")
