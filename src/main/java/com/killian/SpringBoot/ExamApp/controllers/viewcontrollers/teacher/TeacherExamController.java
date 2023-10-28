@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.controllers.views;
+package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers.teacher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(path = "/teacher/exam")
-public class ExamController {
+public class TeacherExamController {
 
     @Autowired
     private SessionManagementService sessionManagementService;

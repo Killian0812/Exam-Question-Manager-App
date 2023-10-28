@@ -15,6 +15,12 @@ public interface StudentClassroomRepository extends JpaRepository<StudentClassro
     @Query("SELECT sc FROM StudentClassroom sc WHERE sc.className = :className AND sc.student = :student")
     StudentClassroom findRecord(@Param("student") String student, @Param("className") String className);
 
+    @Query("SELECT sc FROM StudentClassroom sc WHERE sc.classCode = :classCode AND sc.student = :student")
+    StudentClassroom findRecordByClasscode(@Param("student") String student, @Param("classCode") String classCode);
+
     @Query("SELECT sc FROM StudentClassroom sc WHERE sc.className = :className")
     List<StudentClassroom> findAllRecordByClass(@Param("className") String className);
+
+    @Query("SELECT sc FROM StudentClassroom sc WHERE sc.student = :student")
+    List<StudentClassroom> findAllClassByStudent(@Param("student") String student);
 }

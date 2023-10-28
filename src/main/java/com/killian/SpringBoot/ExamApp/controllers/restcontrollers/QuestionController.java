@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.controllers.rest;
+package com.killian.SpringBoot.ExamApp.controllers.restcontrollers;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 @RestController
 @RequestMapping(path = "/api/v1/questions")
 // Request: http://localhost:8080/api/v1/questions
-public class QuestionRestController {
+public class QuestionController {
 
     // Dependency Injection
     @Autowired

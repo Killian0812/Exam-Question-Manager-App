@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.controllers.views;
+package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

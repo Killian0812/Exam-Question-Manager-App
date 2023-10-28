@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.controllers.rest;
+package com.killian.SpringBoot.ExamApp.controllers.restcontrollers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

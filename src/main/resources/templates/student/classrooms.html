@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Các lớp học</title>
+</head>
+
+<body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/back-to-dashboard}" method="get">
+        <input type="submit" value="Quay lại trang chủ"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h1>Các lớp học</h1>
+
+    <div th:if="${classrooms}">
+        <h2 th:text="'Các lớp hiện tại: '"></h2>
+        <ul>
+            <li th:each="classroom : ${classrooms}">
+                <div>
+                    <span th:text="${classroom.name}"></span>
+                    <form action="view-classroom" method="get" style="display: inline;">
+                        <input type="hidden" th:id="classCode" th:name="classCode" th:value="${classroom.classCode}">
+                        <button type="submit">Xem lớp</button>
+                    </form>
+                </div><br>
+            </li>
+        </ul>
+    </div>
+
+    <form th:action="@{join-classroom-page}" method="get">
+        <input type="submit" value="Tham gia Lớp học mới" />
+    </form><br>
+
+    <style>
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+
+</body>
+
+</html>

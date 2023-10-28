@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.controllers.views;
+package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers.teacher;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
-public class QuestionController {
+public class TeacherQuestionController {
 
     @Autowired
     private SessionManagementService sessionManagementService;

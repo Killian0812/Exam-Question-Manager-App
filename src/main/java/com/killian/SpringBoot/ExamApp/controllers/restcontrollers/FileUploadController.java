@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.controllers.rest;
+package com.killian.SpringBoot.ExamApp.controllers.restcontrollers;
 
 import java.util.List;
 import java.util.stream.Collectors;

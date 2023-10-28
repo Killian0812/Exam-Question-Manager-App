@@ -1,4 +1,4 @@
-package com.killian.SpringBoot.ExamApp.controllers.views;
+package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers.teacher;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -18,7 +18,7 @@ import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
 @RequestMapping(path = "/teacher/classroom/assignment")
-public class AssignmentController {
+public class TeacherAssignmentController {
 
     @Autowired
     private AssignmentRepository assignmentRepository;

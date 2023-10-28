@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Exam Manager</title>
+</head>
+
+<body>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <div th:if="${role == 'Student'}">
+        <h1>Trang chủ</h1>
+        <p th:text="'Xin chào, ' + ${username} + '!'">Xin chào, {username}!</p>
+        <ul>
+
+            <form th:action="@{/profile}" method="get">
+                <input type="submit" value="Xem hồ sơ" />
+            </form><br>
+
+            <form th:action="@{classroom/classrooms-page}" method="get">
+                <input type="submit" value="Xem các Lớp học" />
+            </form><br>
+
+            <form th:action="@{exam/view-exams-by-filter-page}" method="get">
+                <input type="submit" value="Xem Đề thi tự luyện" />
+            </form><br>
+        </ul>
+    </div>
+
+    <form th:action="@{/logout}" method="get">
+        <input type="submit" value="Đăng xuất" class="redirect-button" />
+    </form><br>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+
+    <style>
+        .redirect-button {
+            display: inline-block;
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #000000;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+
+</body>
+
+</html>
