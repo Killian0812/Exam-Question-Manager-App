@@ -23,7 +23,7 @@
     <h2>Giáo viên: <span th:text="${classroom.teacher}"></span></h2>
 
     <form action="assignment" method="get">
-        <input type="hidden" id="className" name="className" th:value="${classroom.name}">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}">
         <input type="submit" value="Danh sách bài tập">
     </form><br>
 

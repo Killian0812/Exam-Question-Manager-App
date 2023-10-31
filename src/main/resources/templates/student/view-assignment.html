@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" th:debug="true">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết bài tập</title>
+    <style>
+        /* Define a style for the disabled button */
+        .start-button[disabled] {
+            background-color: lightgray;
+            color: gray;
+            cursor: not-allowed;
+        }
+
+        .start-button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/student/classroom/assignment}" method="get">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+        <input type="submit" value="Quay lại các bài tập"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form><br>
+
+    <h1>Bài tập: <span th:text="${assignment.name}"></span></h1>
+
+    <h1>Hạn chót: <span th:text="${assignmentDeadline}"></span></h1>
+
+    <h1>Thời gian: <span th:text="${examDuration} + ' phút'"></span></h1>
+
+    <form id="assignmentForm" action="/student/classroom/assignment/do-assignment" method="get">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+        <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
+        <input type="hidden" id="expired" name="expired" th:value="${expired}">
+        <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button" disabled
+            onclick="return confirm('Bài tập sẽ tính giờ làm bài. Bạn có chắc chắn muốn bắt đầu làm?')" />
+    </form><br>
+
+    <form action="/student/classroom/assignment/result" method="get">
+        <input type="hidden" id="submitted" name="submitted" th:value="${submitted}">
+        <input type="hidden" id="submissionId" name="submissionId" th:value="${submissionId}">
+        <input type="submit" id="viewResultButton" value="Xem kết quả" class="start-button" disabled>
+    </form>
+
+    <script>
+
+        var viewResultButton = document.getElementById("viewResultButton");
+        var startExamButton = document.getElementById("startExamButton");
+
+        var submittedStatus = document.getElementById("submitted").value;
+        var expiredStatus = document.getElementById("expired").value;
+        if (submittedStatus == 1) {
+            viewResultButton.removeAttribute("disabled"); // Enable view result button
+        } else {
+            if (expiredStatus == 0)
+                startExamButton.removeAttribute("disabled"); // Enable start exam button
+        }
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+
+</body>
+
+</html>

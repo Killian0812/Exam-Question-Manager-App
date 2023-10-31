@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:debug="true">
+
+<head>
+    <title>Exam Page</title>
+</head>
+
+<body>
+    <h1>Lớp: <span th:text=" ${className}"></span></h1>
+    <h3>Bài tập: <span th:text=" ${assignmentName}"></span></h3>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <ul class="question-list">
+        <li th:each="question, questionIndex : ${exam.questions}">
+            <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
+            <ul>
+                <li th:each="choice, choiceIndex : ${question.choices}">
+                    <label>
+                        <input type="radio" th:name="'selectedChoice' + ${questionIndex.index}" th:value="${choice}"
+                            th:checked="${choiceIndex.index==selected.get(questionIndex.index)}"
+                            th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])" />
+                        <span th:text="' ' + ${choice}"></span>
+                    </label>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <button id="submitButton" onclick="SubmitAnswer()">Nộp bài</button>
+
+    <script th:inline="javascript">
+
+        var submissionId = /*[[${submissionId}]]*/ 0;
+
+        function SubmitChoice(questionIndex, newChoice) {
+
+            var url = `/api/submission/submit-choice?submissionId=${submissionId}&questionIndex=${questionIndex}&newChoice=${newChoice}`;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('SubmitChoice successful');
+                        // You can add additional handling here
+                    } else {
+                        console.error('SubmitChoice failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+                });
+        }
+
+        function SubmitAnswer() {
+            var choices = [];
+            var questionCount = /*[[${exam.questions.size()}]]*/ 0;
+            for (var questionIndex = 0; questionIndex < questionCount; questionIndex++) {
+                // Retrieve the selected choice for the current question
+                var selectedChoice = document.querySelector('input[name="selectedChoice' + questionIndex + '"]:checked');
+                if (selectedChoice) {
+                    choices.push(selectedChoice.value);
+                } else {
+                    choices.push(null);
+                }
+            }
+            var choicesJsonString = JSON.stringify(choices);
+
+            // Construct the URL with query parameters
+            var url = '/api/submission/submit-assignment?' +
+                'choicesJsonString=' + encodeURIComponent(choicesJsonString) +
+                '&submissionId=' + encodeURIComponent(submissionId);
+
+            // Send the POST request
+            fetch(url, {
+                method: 'POST',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Check the response text
+                        response.text().then(text => {
+                            if (text === 'OK') {
+                                window.location.href = '/student/classroom/assignment/result?submissionId=' + submissionId;
+                            } else {
+                                console.log('Response is not "OK":', text);
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    // Handle fetch error if needed
+                    console.error('An error occurred:', error);
+                });
+        }
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+
+    <style>
+        ul {
+            list-style: none;
+        }
+
+        .question-list {
+            margin-left: 0;
+            /* Remove default left margin */
+            padding-left: 10px;
+            /* Add custom padding for indentation */
+        }
+    </style>
+</body>
+
+</html>

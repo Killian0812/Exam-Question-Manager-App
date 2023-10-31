@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xem kết quả</title>
+    <style>
+        .correct-answer {
+            color: green;
+        }
+
+        .incorrect-answer {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <form th:action="@{/student/classroom/assignment/view-assignment}" method="get">
+        <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignmentName}" />
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+        <input type="submit" value="Quay lại trang trước"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <header>
+        <h1>Kết quả bài làm</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2>Thông tin bài nộp:</h2>
+            <p><strong>Điểm số:</strong> <span th:text="${submission.score} + ' / 10'"></span></p>
+            <p><strong>Thời gian bắt đầu:</strong> <span th:text="${submission.startedTime}"></span></p>
+            <p><strong>Thời gian nộp bài:</strong> <span th:text="${submission.submittedTime}"></span></p>
+        </section>
+
+        <section>
+            <h2>Chi tiết câu hỏi</h2>
+            <ul>
+                <li th:each="question, questionIndex : ${questions}">
+                    <p><strong th:text="'Câu ' + (${questionIndex.index + 1}) + ': '"></strong>
+                        <span th:text="${question.text}"></span>
+                        <span th:if="${question.answer == choices.get(questionIndex.index)}"
+                            class="correct-answer">✓</span>
+                        <span th:if="${question.answer != choices.get(questionIndex.index)}"
+                            class="incorrect-answer">✗</span>
+                    </p>
+                    <p><strong>Đáp án của bạn:</strong> <span th:text="${choices.get(questionIndex.index)}"></span></p>
+                    <p><strong>Đáp án đúng:</strong> <span th:text="${question.answer}"></span></p>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+</body>
+
+</html>

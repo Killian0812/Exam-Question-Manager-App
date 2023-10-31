@@ -1,5 +1,6 @@
 package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers.teacher;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.killian.SpringBoot.ExamApp.models.Assignment;
+import com.killian.SpringBoot.ExamApp.models.Classroom;
 import com.killian.SpringBoot.ExamApp.repositories.AssignmentRepository;
+import com.killian.SpringBoot.ExamApp.repositories.ClassroomRepository;
 import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
@@ -29,11 +32,16 @@ public class TeacherAssignmentController {
     @Autowired
     private SessionManagementService sessionManagementService;
 
+    @Autowired
+    private ClassroomRepository classroomRepository;
+
     @GetMapping("")
     public String assignmentList(
             @RequestParam("className") String className,
             Model model) {
-        List<Assignment> assignments = assignmentRepository.findAssignmentsByClassname(className);
+        Classroom classroom = classroomRepository.findByNameAndTeacher(className,
+                sessionManagementService.getUsername());
+        List<Assignment> assignments = assignmentRepository.findAssignmentsByClasscode(classroom.getClassCode());
         model.addAttribute("assignments", assignments);
         model.addAttribute("className", className);
         model.addAttribute("message", sessionManagementService.getMessage());
@@ -58,15 +66,27 @@ public class TeacherAssignmentController {
             @RequestParam("examId") String examId,
             @RequestParam("className") String className) {
 
-        if (assignmentRepository.findAssignmentByName(className, assignmentName)
+        Classroom classroom = classroomRepository.findByNameAndTeacher(className,
+                sessionManagementService.getUsername());
+        if (assignmentRepository.findAssignmentByNameAndClasscode(classroom.getClassCode(), assignmentName)
                 .isEmpty()) {
             if (examRepository.findByExamId(examId).isEmpty()) {
                 sessionManagementService.setMessage("Không tìm thấy đề thi với ID đã cung cấp!");
                 return "redirect:/teacher/classroom/assignment/add-assignment-page?className=" + className;
             }
-            Assignment newAssignment = new Assignment(assignmentName, deadline, examId, className);
-            assignmentRepository.save(newAssignment);
-            sessionManagementService.setMessage("Thêm bài tập thành công!");
+            // 2023-10-27T13:43
+            SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            SimpleDateFormat myFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+            String reformattedDeadline;
+            try {
+                reformattedDeadline = myFormat.format(fromUser.parse(deadline));
+                Assignment newAssignment = new Assignment(assignmentName, reformattedDeadline, examId, className,
+                        classroom.getClassCode());
+                assignmentRepository.save(newAssignment);
+                sessionManagementService.setMessage("Thêm bài tập thành công!");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             return "redirect:/teacher/classroom/assignment?className=" + className;
         } else {
             sessionManagementService.setMessage("Trùng tên bài tập!");

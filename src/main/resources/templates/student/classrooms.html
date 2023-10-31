@@ -25,6 +25,7 @@
                     <span th:text="${classroom.name}"></span>
                     <form action="view-classroom" method="get" style="display: inline;">
                         <input type="hidden" th:id="classCode" th:name="classCode" th:value="${classroom.classCode}">
+                        <!-- <input type="hidden" th:id="className" th:name="className" th:value="${classroom.name}"> -->
                         <button type="submit">Xem lớp</button>
                     </form>
                 </div><br>

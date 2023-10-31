@@ -37,6 +37,9 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     @Query("SELECT e FROM Exam e WHERE e.name = :name AND e.examCode = :examCode")
     Exam findByNameAndCode(@Param("name") String name, @Param("examCode") int examCode);
 
+    @Query("SELECT e FROM Exam e WHERE e.examId = :examId AND e.examCode = :examCode")
+    Exam findByExamIdAndCode(@Param("examId") String examId, @Param("examCode") int examCode);
+
     @Query("SELECT DISTINCT e.examCode FROM Exam e WHERE e.name = :name AND e.owner = :owner")
     List<Integer> findDistinctExamCode(@Param("name") String name, @Param("owner") String owner);
 }

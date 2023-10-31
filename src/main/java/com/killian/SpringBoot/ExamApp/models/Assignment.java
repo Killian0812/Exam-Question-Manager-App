@@ -1,5 +1,7 @@
 package com.killian.SpringBoot.ExamApp.models;
 
+import java.security.SecureRandom;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,14 +24,23 @@ public class Assignment {
 
     private String className;
 
+    private String classCode;
+
+    private String assignmentId;
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static SecureRandom random = new SecureRandom();
+
     public Assignment() {
     }
 
-    public Assignment(String name, String deadline, String examId, String className) {
+    public Assignment(String name, String deadline, String examId, String className, String classCode) {
         this.name = name;
         this.deadline = deadline;
         this.examId = examId;
         this.className = className;
+        this.classCode = classCode;
+        this.assignmentId = assignmentIdGenerate();
     }
 
     public String getName() {
@@ -62,5 +73,30 @@ public class Assignment {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public String getClassCode() {
+        return classCode;
+    }
+
+    public void setClassCode(String classCode) {
+        this.classCode = classCode;
+    }
+
+    public String getAssignmentId() {
+        return assignmentId;
+    }
+
+    public void setAssignmentId(String assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
+    public static String assignmentIdGenerate() {
+        StringBuilder code = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            code.append(CHARACTERS.charAt(randomIndex));
+        }
+        return code.toString();
     }
 }
