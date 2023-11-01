@@ -230,8 +230,8 @@ public class TeacherExamController {
 
             Exam exam = examRepository.findByNameAndCode(name, examCode);
 
-            ClassPathResource fontResource = new ClassPathResource("fonts/arial-unicode-ms.ttf");
-            ClassPathResource BoldFontResource = new ClassPathResource("fonts/arial-unicode-ms-bold.ttf");
+            ClassPathResource fontResource = new ClassPathResource("/static/fonts/arial-unicode-ms.ttf");
+            ClassPathResource BoldFontResource = new ClassPathResource("/static/fonts/arial-unicode-ms-bold.ttf");
             PDType0Font font = PDType0Font.load(document, fontResource.getFile());
             PDType0Font boldFont = PDType0Font.load(document, BoldFontResource.getFile());
 
