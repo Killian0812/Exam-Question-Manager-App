@@ -3,68 +3,180 @@
 
 <head>
     <title>Registration Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style1.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+/* *{
+    
+    font-family: 'Roboto', sans-serif; }
+        input.dangky{
+            all: unset;
+            padding: 9px 0 7px 8px;
+            border: 1px solid rgb(219,219,219);
+            margin-top: 10px;
+            background-color: white;
+            font-size: 14px;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Quicksand', sans-serif;
+            width: 93%;
+        }
+       
+        a{
+            text-decoration: none;
+        }
+        img{
+            height: 100%;
+            top: -7px;
+        } */
+    </style>
 </head>
 
-<body>
-    <div th:if="${message}" id="messageDiv" class="alert alert-success">
-        <p th:text="${message}"></p>
-    </div>
+<body style="
+        background-color: rgb(241 245 249);
+        height: 100vh;
+        
+        ">
+    
     <form th:action="@{/}" method="get">
-        <input type="submit" value="Quay về trang đăng nhập"
-            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+        <input class="Back-homepage" type="submit" value="Quay về trang đăng nhập"
+            
+            style="background-color: #96120f; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: 700; " />
     </form>
+    <div 
+        style="
+            width: 100%;
+            align-items: center;
+            position: relative;
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+            top: 40px;
+            ">
+        <div 
+            style="
+                display: flex;
+                align-content: center;
+                justify-content: center;
+                flex-wrap: nowrap;
+                align-items: stretch;
+                flex-direction: column;
+                background-color: white;
+                width: 460px;
+                background-position: center;
+                border-radius: 5px;
+                padding: 20px;
+                margin: 10px ;
+                margin-top: 0px;
+                box-shadow: 0 3px 20px #0000000b;">
+            <div style="width: 100%;height: 36px; padding: 10px;">
+                <img src="https://asso.hust.edu.vn/adfs/portal/logo/logo.png?id=A8E33BA95D4C63D8147636CEE88614D90A44EA48DD6B131351C1B97BA71F6E89" alt="">
+            </div>
+            <div
+                style="
+                    color: black;
+                    font-size: 30px;
+                    text-align: center;
+                    font-weight: 700;
+                    margin-top: 0px;
+                    padding: 10px;
+                    align-items: center;
+                    "
+            >Đăng ký tài khoản mới</div>
+            <form style="padding: 10px;" action="/register" method="post">
+            <input class="dangky" type="text" id="username" name="username" placeholder="Tên đăng nhập" required /><br />
+            <input class="dangky"  type="email" id="email" name="email" placeholder="Email" required /><br />
+            <input class="dangky"  type="name" id="name" name="name" placeholder="Họ và tên" required /><br />
+            <input class="dangky"  type="password" id="password" name="password" placeholder="Mật khẩu" required /><br />
+            <input class="dangky"  type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu" required /><br /><br />
 
-    <h1>Đăng ký tài khoản mới</h1>
-    <form action="/register" method="post">
-        <label for="username">Tên đăng nhập:</label>
-        <input type="text" id="username" name="username" required /><br /><br />
+            <label for="role">Bạn là:</label>
+            <select 
+                style="
+                    border: 1px solid black; 
+                    border-radius: 5px; 
+                    cursor: pointer;
+                    
+                    
+                    " 
+                id="role" name="role">
+                <option value="Student">Học sinh</option>
+                <option value="Teacher">Giáo viên</option>
+            </select><br />
+            <div style="font-size: 15px; color: #96120f; font-weight: 500; " th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+            <button
+                    style="
+                        background-color: #96120f;
+                        width: 100%;
+                        text-align: center;
+                        color: white;
+                        border-radius: 5px;
+                        margin-top: 10px;
+                        padding: 12px;
+                        font-size: 15px;
+                        border: none;
+                        font-weight: 600;
+                        cursor: pointer;"
+                            >
+                            Đăng ký
+            </button>
+            </form>
+            <div 
+                style="
+                    padding: 15px;
+                    width: 100%;
+                    position: relative;
+                    flex-direction: row;
+                    display: flex;
+                    margin-left: 127px;
+                    font-size: 16px;
+                    "
+                >Đã có tài khoản? 
+                <form action="/" method="get">
+                <button 
+                    style="
+                        background-color: white;
+                        border: none;
+                        cursor: pointer;
+                        color: #96120f;
+                        font-weight: 700;
+                        font-size: 14px;
+                        "
+                >Đăng nhập</button>
+            </form> 
+            </div>
+            <script>
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 2000); // message disapear after 2s
+            </script>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required /><br /><br />
-
-        <label for="name">Họ và tên:</label>
-        <input type="name" id="name" name="name" required /><br /><br />
-
-        <label for="password">Mật khẩu:</label>
-        <input type="password" id="password" name="password" required /><br /><br />
-
-        <label for="confirmPassword">Nhập lại mật khẩu:</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required /><br /><br />
-
-        <label for="role">Bạn là:</label>
-        <select id="role" name="role">
-            <option value="Student">Học sinh</option>
-            <option value="Teacher">Giáo viên</option>
-        </select><br /><br />
-
-        <label for="dob">Ngày sinh:</label>
-        <input type="date" id="dob" name="dob" required><br><br>
-
-        <input type="submit" value="Đăng ký" />
-    </form>
-
-    <script>
-        setTimeout(function () {
-            var messageDiv = document.getElementById("messageDiv");
-            if (messageDiv) {
-                messageDiv.style.display = "none";
-            }
-        }, 2000); // message disapear after 2s
-    </script>
-
-    <style>
-        .redirect-button {
-            display: inline-block;
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: #000000;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+            <style>
+                .redirect-button {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    font-size: 14px;
+                    background-color: #000000;
+                    color: #fff;
+                    text-decoration: none;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            </style>
+        </div>
+    </div>
+    
 
 </body>
 
