@@ -12,7 +12,7 @@
     </div>
 
     <form th:action="@{view-classroom}" method="get">
-        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="submit" value="Quay lại trang trước"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
@@ -25,7 +25,7 @@
             <span th:text="${student}"></span>
             <form th:action="@{/teacher/classroom/remove-student}" method="post" style="display: inline;">
                 <input type="hidden" id="name" name="name" th:value=${student} />
-                <input type="hidden" id="className" name="className" th:value="${className}" />
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                 <input type="submit" value="Xóa khỏi lớp"
                     onclick="return confirm('Bạn có chắc chắn muốn xóa học sinh này khỏi lớp?')" />
             </form>
@@ -34,7 +34,7 @@
 
     <form th:action="@{/teacher/classroom/add-student}" method="post">
         <input type="text" id="student" name="student" required />
-        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="submit" value="Thêm học sinh" />
     </form>
 

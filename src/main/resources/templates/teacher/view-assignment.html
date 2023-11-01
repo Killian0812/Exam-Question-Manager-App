@@ -13,20 +13,20 @@
     </div>
 
     <form th:action="@{/teacher/classroom/assignment}" method="get">
-        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="submit" value="Quay lại các bài tập"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form><br>
 
     <h1>Bài tập: <span th:text="${assignment.name}"></span></h1>
 
-    <h1>Hạn chót: <span th:text="${assignmentDeadline}"></span></h1>
+    <h1>Hạn chót: <span th:text="${assignment.deadline}"></span></h1>
 
     <h2>Đề kiểm tra: <button id="viewExamButton" 
-        th:attr="data-exam-url=@{/teacher/exam/get-exam-by-examId(examId=${assignment.examId})}">Xem tại đây</button></h2>
+        th:attr="data-exam-url=@{/teacher/exam/get-exam-by-examId(examId=${assignment.examId},selectedCode=0)}">Xem tại đây</button></h2>
 
     <form th:action="@{remove-assignment}" method="post" style="display: inline;">
-        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
         <input type="submit" value="Xóa bài tập" onclick="return confirm('Bạn có chắc chắn muốn xóa bài tập này?')" />
     </form>

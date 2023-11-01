@@ -46,7 +46,7 @@ public class StudentAssignmentController {
     public String assignmentList(
             @RequestParam("classCode") String classCode,
             Model model) {
-        Classroom classroom = classroomRepository.findByClasscode(classCode).get(0);
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
         List<Assignment> assignments = assignmentRepository.findAssignmentsByClassname(classroom.getName());
         model.addAttribute("assignments", assignments);
         model.addAttribute("className", classroom.getName());
@@ -61,8 +61,8 @@ public class StudentAssignmentController {
             @RequestParam("assignmentName") String assignmentName,
             @RequestParam("classCode") String classCode,
             Model model) {
-        String className = classroomRepository.findByClasscode(classCode).get(0).getName();
-        Assignment assignment = assignmentRepository.findAssignmentByNameAndClasscode(classCode, assignmentName).get(0);
+        String className = classroomRepository.findByClasscode(classCode).getName();
+        Assignment assignment = assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName);
         model.addAttribute("assignment", assignment);
         model.addAttribute("assignmentDeadline", assignment.getDeadline());
 
@@ -85,6 +85,7 @@ public class StudentAssignmentController {
             model.addAttribute("submitted", 0);
             LocalDateTime currentDateTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+            // 00:49 24/11/2023
             LocalDateTime deadline = LocalDateTime.parse(assignment.getDeadline(), formatter);
             int comparison = deadline.compareTo(currentDateTime);
             if (comparison < 0)
@@ -101,7 +102,7 @@ public class StudentAssignmentController {
             @RequestParam("classCode") String classCode,
             Model model) {
 
-        Classroom classroom = classroomRepository.findByClasscode(classCode).get(0);
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
         String className = classroom.getName();
         Assignment assignment = assignmentRepository.findAssignmentByName(className, assignmentName).get(0);
         List<Exam> exams = examRepository.findByExamId(assignment.getExamId());

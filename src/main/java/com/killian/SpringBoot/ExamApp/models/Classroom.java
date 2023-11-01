@@ -4,13 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.security.SecureRandom;
-import java.util.List;
 
 @Entity
 @Table(name = "tblClassroom")
@@ -28,10 +24,6 @@ public class Classroom {
     private String teacher;
 
     private String classCode;
-
-    @OneToMany
-    @JoinTable(name = "classroom", joinColumns = @JoinColumn(name = "classroom_id"), inverseJoinColumns = @JoinColumn(name = "assignment_id"))
-    private List<Assignment> assignments;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static SecureRandom random = new SecureRandom();
@@ -78,21 +70,13 @@ public class Classroom {
     public void setTeacher(String teacher) {
         this.teacher = teacher;
     }
-    
+
     public String getClassCode() {
         return classCode;
     }
 
     public void setClassCode(String classCode) {
         this.classCode = classCode;
-    }
-
-    public List<Assignment> getAssignments() {
-        return assignments;
-    }
-
-    public void setAssignments(List<Assignment> assignments) {
-        this.assignments = assignments;
     }
 
     public void addAssignment(Assignment assignment) {

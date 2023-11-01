@@ -28,11 +28,6 @@ public class StudentClassroom {
         this.className = className;
     }
 
-    public StudentClassroom(String student, String className) {
-        this.student = student;
-        this.className = className;
-    }
-
     public String getStudent() {
         return student;
     }

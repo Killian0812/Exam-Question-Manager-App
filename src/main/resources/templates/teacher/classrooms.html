@@ -20,11 +20,12 @@
     <div th:if="${classNames}">
         <h2 th:text="'Các lớp hiện tại: '"></h2>
         <ul>
-            <li th:each="className : ${classNames}">
+            <li th:each="className, classNameIndex : ${classNames}">
                 <div>
                     <span th:text="${className}"></span>
                     <form action="view-classroom" method="get" style="display: inline;">
-                        <input type="hidden" th:id="className" th:name="className" th:value="${className}">
+                        <input type="hidden" th:id="classCode" th:name="classCode"
+                            th:value="${classCodes.get(classNameIndex.index)}">
                         <button type="submit">Xem lớp</button>
                     </form>
                 </div><br>

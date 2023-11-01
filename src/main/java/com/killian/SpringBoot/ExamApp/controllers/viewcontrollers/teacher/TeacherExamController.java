@@ -143,7 +143,7 @@ public class TeacherExamController {
             examRepository.save(newExam);
         }
         sessionManagementService.setMessage("Tạo đề thi thành công!");
-        return "redirect:/teacher/exam/get-exam-by-name?name=" + name + "&selectedCode=0";
+        return "redirect:/teacher/exam/get-exam-by-examId?examId=" + tmp + "&selectedCode=0";
     }
 
     @GetMapping("/view-exams-by-filter-page")
@@ -187,35 +187,29 @@ public class TeacherExamController {
         return "teacher/exams-by-filter";
     }
 
-    @GetMapping("/get-exam-by-name")
+    @GetMapping("/get-exam-by-examId")
     public String viewExam(
-            @RequestParam("name") String name,
+            @RequestParam("examId") String examId,
             @RequestParam("selectedCode") int selectedCode,
             Model model) {
 
-        String owner = sessionManagementService.getUsername();
-        List<Exam> exams = examRepository.findByNameAndOwner(name, owner);
+        List<Exam> exams = examRepository.findByExamId(examId);
         Exam exam = exams.get(selectedCode);
-        List<Integer> examCodes = examRepository.findDistinctExamCode(name, owner);
+        List<Integer> examCodes = examRepository.findDistinctExamCode(examId);
         model.addAttribute("exam", exam);
         model.addAttribute("examCodes", examCodes);
         model.addAttribute("selectedCode", selectedCode);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        return "teacher/exam-by-name";
-    }
-
-    @GetMapping("/get-exam-by-examId")
-    public String viewExambyId(@RequestParam("examId") String examId) {
-        Exam exam = examRepository.findByExamId(examId).get(0);
-        return "redirect:/teacher/exam/get-exam-by-name?name=" + exam.getName() + "&selectedCode=0";
+        return "teacher/exam-by-examId";
     }
 
     @GetMapping("/export-pdf")
     public void exportExamPDF(
             HttpServletResponse response,
-            @RequestParam("name") String name,
+            @RequestParam("examId") String examId,
             @RequestParam("examCode") int examCode) {
+
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=exam.pdf");
 
@@ -228,7 +222,7 @@ public class TeacherExamController {
             // Create a content stream for the page
             PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
-            Exam exam = examRepository.findByNameAndCode(name, examCode);
+            Exam exam = examRepository.findByExamIdAndCode(examId, examCode);
 
             ClassPathResource fontResource = new ClassPathResource("/static/fonts/arial-unicode-ms.ttf");
             ClassPathResource BoldFontResource = new ClassPathResource("/static/fonts/arial-unicode-ms-bold.ttf");

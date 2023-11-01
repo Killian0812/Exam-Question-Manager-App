@@ -44,7 +44,11 @@ public class TeacherClassroomController {
         List<String> classNames = classrooms.stream()
                 .map(Classroom::getName)
                 .collect(Collectors.toList());
+        List<String> classCodes = classrooms.stream()
+                .map(Classroom::getClassCode)
+                .collect(Collectors.toList());
         model.addAttribute("classNames", classNames);
+        model.addAttribute("classCodes", classCodes);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
         return "teacher/classrooms";
@@ -52,10 +56,9 @@ public class TeacherClassroomController {
 
     @GetMapping("/view-classroom")
     public String viewClassroom(
-            @RequestParam("className") String className,
+            @RequestParam("classCode") String classCode,
             Model model) {
-        Classroom classroom = classroomRepository.findByNameAndTeacher(className,
-                sessionManagementService.getUsername());
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
         model.addAttribute("classroom", classroom);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
@@ -64,22 +67,23 @@ public class TeacherClassroomController {
 
     @PostMapping("/remove-classroom")
     public String removeClassroom(
-            @RequestParam("className") String className) {
-        List<StudentClassroom> studentClassrooms = studentClassroomRepository.findAllRecordByClass(className);
+            @RequestParam("classCode") String classCode) {
+        List<StudentClassroom> studentClassrooms = studentClassroomRepository.findAllRecordByClasscode(classCode);
         studentClassroomRepository.deleteAll(studentClassrooms);
-        Classroom classroom = classroomRepository.findByName(className);
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
+        sessionManagementService.setMessage("Bạn đã xóa lớp " + classroom.getName());
         classroomRepository.delete(classroom);
-        sessionManagementService.setMessage("Bạn đã xóa lớp " + className);
         return "redirect:/teacher/classroom/classrooms-page";
     }
 
     @GetMapping("/student-list")
     public String studentList(
-            @RequestParam("className") String className,
+            @RequestParam("classCode") String classCode,
             Model model) {
-        List<String> students = studentClassroomRepository.findAllStudentsByClassname(className);
-        // Classroom classroom = classroomRepository.findByName(className);
+        List<String> students = studentClassroomRepository.findAllStudentsByClasscode(classCode);
+        String className = classroomRepository.findByClasscode(classCode).getName();
         model.addAttribute("className", className);
+        model.addAttribute("classCode", classCode);
         model.addAttribute("students", students);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
@@ -89,29 +93,30 @@ public class TeacherClassroomController {
     @PostMapping("/add-student")
     public String addStudent(
             @RequestParam("student") String student,
-            @RequestParam("className") String className) {
-        List<String> students = studentClassroomRepository.findAllStudentsByClassname(className);
+            @RequestParam("classCode") String classCode) {
+        List<String> students = studentClassroomRepository.findAllStudentsByClasscode(classCode);
+        String className = classroomRepository.findByClasscode(classCode).getName();
         if (students.contains(student)) {
-            sessionManagementService.setMessage("Học sinh hiện đã được thêm vào lớp");
+            sessionManagementService.setMessage("Học sinh hiện đã ở trong lớp");
         } else {
             if (userRepository.existsByUsername(student)) {
                 sessionManagementService.setMessage("Thêm học sinh thành công");
                 studentClassroomRepository
-                        .save(new StudentClassroom(student, className, classroomRepository.classCodeByName(className)));
+                        .save(new StudentClassroom(student, className, classCode));
             } else {
                 sessionManagementService.setMessage("Không tồn tại người dùng!");
             }
         }
-        return "redirect:/teacher/classroom/student-list?className=" + className;
+        return "redirect:/teacher/classroom/student-list?classCode=" + classCode;
     }
 
     @PostMapping("/remove-student")
     public String removeStudent(
             @RequestParam("name") String name,
-            @RequestParam("className") String className) {
-        StudentClassroom studentClassroom = studentClassroomRepository.findRecord(name, className);
+            @RequestParam("classCode") String classCode) {
+        StudentClassroom studentClassroom = studentClassroomRepository.findRecord(name, classCode);
         studentClassroomRepository.delete(studentClassroom);
-        return "redirect:/teacher/classroom/student-list?className=" + className;
+        return "redirect:/teacher/classroom/student-list?classCode=" + classCode;
     }
 
     @GetMapping("/create-classroom-page")
@@ -138,7 +143,7 @@ public class TeacherClassroomController {
         if (classroom == null) {
             classroomRepository.save(newClassroom);
             sessionManagementService.setMessage("Tạo lớp thành công");
-            return "redirect:/teacher/classroom/view-classroom?className=" + name;
+            return "redirect:/teacher/classroom/view-classroom?classCode=" + newClassroom.getClassCode();
         } else {
             sessionManagementService.setMessage("Tên lớp đã tồn tại");
             return "redirect:/teacher/classroom/create-classroom-page";

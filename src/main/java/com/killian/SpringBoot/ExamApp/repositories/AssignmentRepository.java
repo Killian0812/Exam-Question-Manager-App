@@ -23,5 +23,5 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     List<Assignment> findAssignmentByName(@Param("className") String className, @Param("name") String name);
 
     @Query("SELECT a FROM Assignment a WHERE a.classCode = :classCode AND a.name = :name")
-    List<Assignment> findAssignmentByNameAndClasscode(@Param("classCode") String classCode, @Param("name") String name);
+    Assignment findAssignmentByClasscodeAndName(@Param("classCode") String classCode, @Param("name") String name);
 }

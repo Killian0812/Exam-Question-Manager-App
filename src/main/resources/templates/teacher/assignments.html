@@ -12,7 +12,7 @@
     </div>
 
     <form th:action="@{view-classroom}" method="get">
-        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="submit" value="Quay lại trang trước"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form>
@@ -24,7 +24,7 @@
         <li th:each="assignment : ${assignments}">
             <span th:text="${assignment.name}"></span>
             <form th:action="@{assignment/view-assignment}" method="get" style="display: inline;">
-                <input type="hidden" id="className" name="className" th:value="${className}" />
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                 <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
                 <input type="submit" value="Xem">
             </form>
@@ -32,7 +32,7 @@
     </ul>
 
     <form th:action="@{assignment/add-assignment-page}" method="get">
-        <input type="hidden" id="className" name="className" th:value="${className}" />
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="submit" value="Thêm bài tập" />
     </form>
 

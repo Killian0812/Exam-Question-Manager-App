@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "tblQuestion")
 public class Question {
-    // this is "primary key"
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -71,8 +71,7 @@ public class Question {
         this.choices = choices;
     }
 
-    public void shuffleChoices()
-    {
+    public void shuffleChoices() {
         List<String> newChoices = new ArrayList<>();
         newChoices.addAll(this.choices);
         Collections.shuffle(newChoices);

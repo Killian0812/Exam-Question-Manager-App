@@ -1,5 +1,8 @@
 package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +54,13 @@ public class RegistrationController {
                     message = "Mật khẩu xác nhận không chính xác.";
                 else {
                     message = "Đăng ký thành công. Hãy quay về trang đăng nhập.";
-                    userRepository.save(new User(username, password, email, name, role, dob));
+
+                    DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate date = LocalDate.parse(dob, inputFormat);
+                    DateTimeFormatter desiredFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+                    String formattedDob = date.format(desiredFormat);
+                    
+                    userRepository.save(new User(username, password, email, name, role, formattedDob));
                 }
             }
         }

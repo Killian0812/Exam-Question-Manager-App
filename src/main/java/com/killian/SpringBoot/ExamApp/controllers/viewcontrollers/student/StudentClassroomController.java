@@ -40,7 +40,7 @@ public class StudentClassroomController {
                 .collect(Collectors.toList());
         List<Classroom> classrooms = new ArrayList<>();
         for (String code : classCodes) {
-            classrooms.addAll(classroomRepository.findByClasscode(code));
+            classrooms.add(classroomRepository.findByClasscode(code));
         }
         model.addAttribute("classrooms", classrooms);
         model.addAttribute("message", sessionManagementService.getMessage());
@@ -52,7 +52,7 @@ public class StudentClassroomController {
     public String viewClassroom(
             @RequestParam("classCode") String classCode,
             Model model) {
-        Classroom classroom = classroomRepository.findByClasscode(classCode).get(0);
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
         model.addAttribute("classroom", classroom);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
@@ -69,10 +69,9 @@ public class StudentClassroomController {
     public String joinClassroom(
             @RequestParam("classCode") String classCode,
             Model model) {
-        List<Classroom> classrooms = classroomRepository.findByClasscode(classCode);
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
         String student = sessionManagementService.getUsername();
-        if (!classrooms.isEmpty()) {
-            Classroom classroom = classrooms.get(0);
+        if (classroom != null) {
             StudentClassroom studentClassroom = studentClassroomRepository.findRecordByClasscode(student, classCode);
             if (studentClassroom != null) {
                 sessionManagementService.setMessage("Bạn đã tham gia lớp từ trước đó.");

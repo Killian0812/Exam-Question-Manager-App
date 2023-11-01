@@ -6,8 +6,34 @@
 </head>
 
 <body>
+
     <h1>Lớp: <span th:text=" ${className}"></span></h1>
     <h3>Bài tập: <span th:text=" ${assignmentName}"></span></h3>
+
+    <table>
+        <tr style="font-size:40px">
+            <td id="hour">
+                <center>00</center>
+            </td>
+            <td id="min">
+                <center>00</center>
+            </td>
+            <td id="sec">
+                <center>00</center>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <center>Giờ</center>
+            </td>
+            <td>
+                <center>Phút</center>
+            </td>
+            <td>
+                <center>Giây</center>
+            </td>
+        </tr>
+    </table>
 
     <div th:if="${message}" id="messageDiv" class="alert alert-success">
         <p th:text="${message}"></p>
@@ -32,6 +58,37 @@
     <button id="submitButton" onclick="SubmitAnswer()">Nộp bài</button>
 
     <script th:inline="javascript">
+
+        var endTime = new Date("24:00:00 11/01/2023").getTime();
+        var x = setInterval(function () {
+            var now = new Date();
+            var currentTime = now.getTime();
+
+            var s, m, h;
+            var diff = endTime - currentTime;
+
+            s = Math.floor(diff / 1000);
+            m = Math.floor(s / 60);
+            h = Math.floor(m / 60);
+
+            s = s % 60;
+            m = m % 60;
+            h = h % 24;
+
+            if (diff < 0) {
+                clearInterval(x);
+                h = m = s = 0;
+            }
+
+            h = (h < 10) ? "0" + h : h;
+            m = (m < 10) ? "0" + m : m;
+            s = (s < 10) ? "0" + s : s;
+
+            document.getElementById("hour").innerHTML = h;
+            document.getElementById("min").innerHTML = m;
+            document.getElementById("sec").innerHTML = s;
+
+        }, 1000);
 
         var submissionId = /*[[${submissionId}]]*/ 0;
 

@@ -18,8 +18,8 @@
     </form><br>
 
     <span th:text="'Mã đề: '"></span>
-    <form th:action="@{get-exam-by-name}" method="get" style="display: inline;">
-        <input th:type="hidden" th:id="name" th:name="name" th:value="${exam.name}">
+    <form th:action="@{get-exam-by-examId}" method="get" style="display: inline;">
+        <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
         <select name="selectedCode">
             <option th:each="code : ${examCodes}" th:value="${code}" th:text="${code+1}"
                 th:selected="${code == selectedCode}"></option>
@@ -28,7 +28,7 @@
     </form><br><br>
 
     <form th:action="@{export-pdf}" method="get">
-        <input th:type="hidden" th:id="name" th:name="name" th:value="${exam.name}">
+        <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
         <input th:type="hidden" th:id="examCode" th:name="examCode" th:value="${exam.examCode}">
         <button type="submit" class="export-pdf-button">Xuất file pdf đề thi</button>
     </form>

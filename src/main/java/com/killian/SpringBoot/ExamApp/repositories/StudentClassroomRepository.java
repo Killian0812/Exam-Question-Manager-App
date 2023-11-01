@@ -9,17 +9,17 @@ import org.springframework.data.repository.query.Param;
 import com.killian.SpringBoot.ExamApp.models.StudentClassroom;
 
 public interface StudentClassroomRepository extends JpaRepository<StudentClassroom, Long> {
-    @Query("SELECT DISTINCT sc.student FROM StudentClassroom sc WHERE sc.className = :className")
-    List<String> findAllStudentsByClassname(@Param("className") String className);
+    @Query("SELECT DISTINCT sc.student FROM StudentClassroom sc WHERE sc.classCode = :classCode")
+    List<String> findAllStudentsByClasscode(@Param("classCode") String classCode);
 
-    @Query("SELECT sc FROM StudentClassroom sc WHERE sc.className = :className AND sc.student = :student")
-    StudentClassroom findRecord(@Param("student") String student, @Param("className") String className);
+    @Query("SELECT sc FROM StudentClassroom sc WHERE sc.classCode = :classCode AND sc.student = :student")
+    StudentClassroom findRecord(@Param("student") String student, @Param("classCode") String classCode);
 
     @Query("SELECT sc FROM StudentClassroom sc WHERE sc.classCode = :classCode AND sc.student = :student")
     StudentClassroom findRecordByClasscode(@Param("student") String student, @Param("classCode") String classCode);
 
-    @Query("SELECT sc FROM StudentClassroom sc WHERE sc.className = :className")
-    List<StudentClassroom> findAllRecordByClass(@Param("className") String className);
+    @Query("SELECT sc FROM StudentClassroom sc WHERE sc.classCode = :classCode")
+    List<StudentClassroom> findAllRecordByClasscode(@Param("classCode") String classCode);
 
     @Query("SELECT sc FROM StudentClassroom sc WHERE sc.student = :student")
     List<StudentClassroom> findAllClassByStudent(@Param("student") String student);

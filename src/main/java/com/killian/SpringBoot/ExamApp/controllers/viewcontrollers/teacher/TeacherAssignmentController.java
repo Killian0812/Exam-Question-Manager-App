@@ -37,13 +37,13 @@ public class TeacherAssignmentController {
 
     @GetMapping("")
     public String assignmentList(
-            @RequestParam("className") String className,
+            @RequestParam("classCode") String classCode,
             Model model) {
-        Classroom classroom = classroomRepository.findByNameAndTeacher(className,
-                sessionManagementService.getUsername());
-        List<Assignment> assignments = assignmentRepository.findAssignmentsByClasscode(classroom.getClassCode());
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
+        List<Assignment> assignments = assignmentRepository.findAssignmentsByClasscode(classCode);
         model.addAttribute("assignments", assignments);
-        model.addAttribute("className", className);
+        model.addAttribute("classCode", classCode);
+        model.addAttribute("className", classroom.getName());
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
         return "teacher/assignments";
@@ -51,8 +51,10 @@ public class TeacherAssignmentController {
 
     @GetMapping("add-assignment-page")
     public String addAssignmentPage(
-            @RequestParam("className") String className,
+            @RequestParam("classCode") String classCode,
             Model model) {
+        String className = classroomRepository.findByClasscode(classCode).getName();
+        model.addAttribute("classCode", classCode);
         model.addAttribute("className", className);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
@@ -64,15 +66,14 @@ public class TeacherAssignmentController {
             @RequestParam("assignmentName") String assignmentName,
             @RequestParam("deadline") String deadline,
             @RequestParam("examId") String examId,
-            @RequestParam("className") String className) {
+            @RequestParam("classCode") String classCode) {
 
-        Classroom classroom = classroomRepository.findByNameAndTeacher(className,
-                sessionManagementService.getUsername());
-        if (assignmentRepository.findAssignmentByNameAndClasscode(classroom.getClassCode(), assignmentName)
-                .isEmpty()) {
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
+        String className = classroom.getName();
+        if (assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName) == null) {
             if (examRepository.findByExamId(examId).isEmpty()) {
                 sessionManagementService.setMessage("Không tìm thấy đề thi với ID đã cung cấp!");
-                return "redirect:/teacher/classroom/assignment/add-assignment-page?className=" + className;
+                return "redirect:/teacher/classroom/assignment/add-assignment-page?classCode=" + classCode;
             }
             // 2023-10-27T13:43
             SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -81,48 +82,38 @@ public class TeacherAssignmentController {
             try {
                 reformattedDeadline = myFormat.format(fromUser.parse(deadline));
                 Assignment newAssignment = new Assignment(assignmentName, reformattedDeadline, examId, className,
-                        classroom.getClassCode());
+                        classCode);
                 assignmentRepository.save(newAssignment);
                 sessionManagementService.setMessage("Thêm bài tập thành công!");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            return "redirect:/teacher/classroom/assignment?className=" + className;
+            return "redirect:/teacher/classroom/assignment?classCode=" + classCode;
         } else {
             sessionManagementService.setMessage("Trùng tên bài tập!");
-            return "redirect:/teacher/classroom/assignment/add-assignment-page?className=" + className;
+            return "redirect:/teacher/classroom/assignment/add-assignment-page?classCode=" + classCode;
         }
     }
 
     @PostMapping("remove-assignment")
     public String removeAssignment(
             @RequestParam("assignmentName") String assignmentName,
-            @RequestParam("className") String className) {
-        List<Assignment> assignments = assignmentRepository.findAssignmentByName(className, assignmentName);
-        assignmentRepository.deleteAll(assignments);
+            @RequestParam("classCode") String classCode) {
+        Assignment assignment = assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName);
+        assignmentRepository.delete(assignment);
         sessionManagementService.setMessage("Đã xóa bài tập: " + assignmentName);
-        return "redirect:/teacher/classroom/assignment?className=" + className;
+        return "redirect:/teacher/classroom/assignment?classCode=" + classCode;
     }
 
     @GetMapping("view-assignment")
     public String viewAssignment(
             @RequestParam("assignmentName") String assignmentName,
-            @RequestParam("className") String className,
+            @RequestParam("classCode") String classCode,
             Model model) {
-        Assignment assignment = assignmentRepository.findAssignmentByName(className, assignmentName).get(0);
+
+        Assignment assignment = assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName);
         model.addAttribute("assignment", assignment);
-
-        // 2023-10-27T13:43
-        SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-        SimpleDateFormat myFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-        try {
-            String reformattedDeadline = myFormat.format(fromUser.parse(assignment.getDeadline()));
-            model.addAttribute("assignmentDeadline", reformattedDeadline);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        model.addAttribute("className", className);
+        model.addAttribute("classCode", classCode);
 
         return "teacher/view-assignment";
     }

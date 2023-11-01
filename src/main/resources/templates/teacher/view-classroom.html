@@ -23,17 +23,17 @@
     <h2>Mã lớp: <span th:text="${classroom.classCode}"></span></h2>
 
     <form action="student-list" method="get">
-        <input type="hidden" id="className" name="className" th:value="${classroom.name}">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}">
         <input type="submit" value="Danh sách học sinh">
     </form><br>
 
     <form action="assignment" method="get">
-        <input type="hidden" id="className" name="className" th:value="${classroom.name}">
+        <input type="hidden" id="className" name="classCode" th:value="${classroom.classCode}">
         <input type="submit" value="Danh sách bài tập">
     </form><br>
 
     <form action="/teacher/classroom/remove-classroom" method="post">
-        <input type="hidden" id="className" name="className" th:value="${classroom.name}">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}">
         <input type="submit" value="Xóa lớp" onclick="return confirm('Bạn có chắc chắn muốn xóa lớp học này?')" />
     </form>
 
