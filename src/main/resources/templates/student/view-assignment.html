@@ -36,7 +36,7 @@
 
     <h1>Thời gian: <span th:text="${examDuration} + ' phút'"></span></h1>
 
-    <input type="hidden" id="expired" name="expired" th:value="${expired}">
+    <p th:if="${expired}">Đã quá thời hạn làm bài</p>
     <form id="assignmentForm" action="/student/classroom/assignment/do-assignment" method="get">
         <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
@@ -45,18 +45,18 @@
     </form><br>
 
     <form action="/student/classroom/assignment/result" method="get">
-        <input type="hidden" id="submitted" name="submitted" th:value="${submitted}">
         <input type="hidden" id="submissionId" name="submissionId" th:value="${submissionId}">
         <input type="submit" id="viewResultButton" value="Xem kết quả" class="start-button" disabled>
     </form>
 
-    <script>
+    <script th:inline="javascript">
 
         var viewResultButton = document.getElementById("viewResultButton");
         var startExamButton = document.getElementById("startExamButton");
 
-        var submittedStatus = document.getElementById("submitted").value;
-        var expiredStatus = document.getElementById("expired").value;
+        var submittedStatus = /*[[${submitted}]]*/ 0;
+        var expiredStatus = /*[[${expired}]]*/ 0;
+
         if (submittedStatus == 1) {
             viewResultButton.removeAttribute("disabled"); // Enable view result button
         } else {
