@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.killian.SpringBoot.ExamApp.models.Assignment;
 import com.killian.SpringBoot.ExamApp.models.Classroom;
 import com.killian.SpringBoot.ExamApp.models.StudentClassroom;
+import com.killian.SpringBoot.ExamApp.repositories.AssignmentRepository;
 import com.killian.SpringBoot.ExamApp.repositories.ClassroomRepository;
 import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 import com.killian.SpringBoot.ExamApp.repositories.StudentClassroomRepository;
+import com.killian.SpringBoot.ExamApp.repositories.SubmissionRepository;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
@@ -34,6 +37,12 @@ public class TeacherClassroomController {
 
     @Autowired
     private StudentClassroomRepository studentClassroomRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private SubmissionRepository submissionRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -70,6 +79,11 @@ public class TeacherClassroomController {
             @RequestParam("classCode") String classCode) {
         List<StudentClassroom> studentClassrooms = studentClassroomRepository.findAllRecordByClasscode(classCode);
         studentClassroomRepository.deleteAll(studentClassrooms);
+        List<Assignment> assignments = assignmentRepository.findAssignmentsByClasscode(classCode);
+        for (Assignment assignment : assignments) {
+            submissionRepository.deleteByAssignmentId(assignment.getAssignmentId());
+            assignmentRepository.deleteByAssignmentId(assignment.getAssignmentId());
+        }
         Classroom classroom = classroomRepository.findByClasscode(classCode);
         sessionManagementService.setMessage("Bạn đã xóa lớp " + classroom.getName());
         classroomRepository.delete(classroom);

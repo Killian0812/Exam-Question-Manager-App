@@ -36,7 +36,7 @@ public class Exam {
     private String examId;
 
     @ManyToMany
-    @JoinTable(name = "exam", joinColumns = @JoinColumn(name = "exam_id"), inverseJoinColumns = @JoinColumn(name = "question_id"))
+    @JoinTable(name = "exam_to_question", joinColumns = @JoinColumn(name = "exam_id"), inverseJoinColumns = @JoinColumn(name = "question_id"))
     private List<Question> questions;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
