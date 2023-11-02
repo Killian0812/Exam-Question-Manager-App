@@ -116,13 +116,15 @@ public class StudentAssignmentController {
             int randomIndex = random.nextInt(exams.size());
             Exam exam = exams.get(randomIndex);
             Submission newSubmission = new Submission(student, assignment.getAssignmentId(), randomIndex,
-                    exam.getQuestions().size());
+                    exam.getQuestions().size(), exam.getDuration());
             submissionRepository.save(newSubmission);
+            model.addAttribute("endTime", newSubmission.getEndTime());
             model.addAttribute("selected", newSubmission.getSelected());
             model.addAttribute("submissionId", newSubmission.getSubmissionId());
             model.addAttribute("exam", exam);
         } else {
             Exam exam = exams.get(submission.getExamCode());
+            model.addAttribute("endTime", submission.getEndTime());
             model.addAttribute("exam", exam);
             model.addAttribute("submissionId", submission.getSubmissionId());
             model.addAttribute("selected", submission.getSelected());
@@ -143,8 +145,17 @@ public class StudentAssignmentController {
         List<Question> questions = exam.getQuestions();
         List<Integer> choiceIndexes = submission.getSelected();
         List<String> choices = new ArrayList<>();
-        for (int i = 0; i < questions.size(); i++)
-            choices.add(questions.get(i).getChoices().get(choiceIndexes.get(i)));
+        for (int i = 0; i < questions.size(); i++) {
+            if (choiceIndexes.get(i) == null)
+                choices.add("Không trả lời");
+            else
+                choices.add(questions.get(i).getChoices().get(choiceIndexes.get(i)));
+        }
+        // Thời gian bắt đầu: 17:30:38 11/02/2023
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss MM/dd/yyyy");
+        DateTimeFormatter desiredformat = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+        LocalDateTime startedTime = LocalDateTime.parse(submission.getStartedTime(), format);
+        model.addAttribute("startedTime", desiredformat.format(startedTime));
         model.addAttribute("choices", choices);
         model.addAttribute("questions", questions);
         model.addAttribute("submission", submission);

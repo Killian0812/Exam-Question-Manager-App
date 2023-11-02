@@ -70,7 +70,7 @@ public class SubmissionController {
             List<String> selectedChoices = mapper.readValue(choicesJsonString, new TypeReference<List<String>>() {
             });
             for (int i = 0; i < answers.size(); i++) {
-                if (selectedChoices.get(i).equals(answers.get(i)))
+                if (selectedChoices.get(i) != null && selectedChoices.get(i).equals(answers.get(i)))
                     countCorrectAnswer++;
             }
         } catch (JsonMappingException e) {

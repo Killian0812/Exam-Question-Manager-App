@@ -10,30 +10,20 @@
     <h1>Lớp: <span th:text=" ${className}"></span></h1>
     <h3>Bài tập: <span th:text=" ${assignmentName}"></span></h3>
 
-    <table>
-        <tr style="font-size:40px">
-            <td id="hour">
-                <center>00</center>
-            </td>
-            <td id="min">
-                <center>00</center>
-            </td>
-            <td id="sec">
-                <center>00</center>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <center>Giờ</center>
-            </td>
-            <td>
-                <center>Phút</center>
-            </td>
-            <td>
-                <center>Giây</center>
-            </td>
-        </tr>
-    </table>
+    <div class="countdown-clock">
+        <div class="time-block">
+            <span class="time" id="hour">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="label">Giờ</span>
+        </div>
+        <div class="time-block">
+            <span class="time" id="min">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="label">Phút</span>
+        </div>
+        <div class="time-block">
+            <span class="time" id="sec">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="label">Giây</span>
+        </div>
+    </div>
 
     <div th:if="${message}" id="messageDiv" class="alert alert-success">
         <p th:text="${message}"></p>
@@ -59,7 +49,9 @@
 
     <script th:inline="javascript">
 
-        var endTime = new Date("24:00:00 11/01/2023").getTime();
+        // "17:31:00 11/25/2023"
+        var submissionEndTime = /*[[${endTime}]]*/ 0;
+        var endTime = new Date(submissionEndTime).getTime();
         var x = setInterval(function () {
             var now = new Date();
             var currentTime = now.getTime();
@@ -78,6 +70,7 @@
             if (diff < 0) {
                 clearInterval(x);
                 h = m = s = 0;
+                SubmitAnswer();
             }
 
             h = (h < 10) ? "0" + h : h;
@@ -173,6 +166,33 @@
             /* Remove default left margin */
             padding-left: 10px;
             /* Add custom padding for indentation */
+        }
+
+        .countdown-clock {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+        }
+
+        .time-block {
+            text-align: center;
+        }
+
+        .time {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .label {
+            font-size: 14px;
+            margin-top: 5px;
         }
     </style>
 </body>

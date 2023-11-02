@@ -25,6 +25,8 @@ public class Submission {
 
     private String startedTime;
 
+    private String endTime;
+
     private String submittedTime;
 
     private double score;
@@ -43,11 +45,12 @@ public class Submission {
     public Submission() {
     }
 
-    public Submission(String student, String assignmentId, int examCode, int questionCount) {
+    public Submission(String student, String assignmentId, int examCode, int questionCount, int duration) {
         this.student = student;
         this.assignmentId = assignmentId;
         this.examCode = examCode;
         this.startedTime = getCurrentDateTime();
+        this.endTime = calculateEndTime(this.startedTime, duration);
         this.score = -1.0;
         this.selected = new ArrayList<>(Collections.nCopies(questionCount, null));
         this.submissionId = submissionIdGenerate();
@@ -69,6 +72,14 @@ public class Submission {
         this.startedTime = startedTime;
     }
 
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     public int getExamCode() {
         return examCode;
     }
@@ -77,12 +88,12 @@ public class Submission {
         this.examCode = examCode;
     }
 
-    public double getScore() {
-        return score;
+    public void setScore(double score) {
+        this.score = score;
     }
 
-    public void setScore(Double score) {
-        this.score = score;
+    public double getScore() {
+        return score;
     }
 
     public String getSubmittedTime() {
@@ -128,8 +139,17 @@ public class Submission {
 
     private static String getCurrentDateTime() {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MM/dd/yyyy");
         String formattedDateTime = currentDateTime.format(formatter);
         return formattedDateTime;
+    }
+
+    private String calculateEndTime(String startTimeInStr, int durationInMinutes) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MM/dd/yyyy");
+        LocalDateTime startedTime = LocalDateTime.parse(startTimeInStr, formatter);
+        LocalDateTime endTime = startedTime.plusMinutes(durationInMinutes);
+        String formattedEndtime = endTime.format(formatter);
+        return formattedEndtime;
     }
 }
