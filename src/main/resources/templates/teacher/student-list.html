@@ -36,6 +36,11 @@
         <input type="text" id="student" name="student" required />
         <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="submit" value="Thêm học sinh" />
+    </form><br>
+
+    <form action="/teacher/classroom/export-student-list" method="get">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}">
+        <input type="submit" value="Xuất danh sách học sinh">
     </form>
 
     <script>

@@ -1,8 +1,18 @@
 package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers.teacher;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.killian.SpringBoot.ExamApp.models.Assignment;
 import com.killian.SpringBoot.ExamApp.models.Classroom;
 import com.killian.SpringBoot.ExamApp.models.StudentClassroom;
+import com.killian.SpringBoot.ExamApp.models.User;
 import com.killian.SpringBoot.ExamApp.repositories.AssignmentRepository;
 import com.killian.SpringBoot.ExamApp.repositories.ClassroomRepository;
 import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
@@ -21,6 +32,8 @@ import com.killian.SpringBoot.ExamApp.repositories.StudentClassroomRepository;
 import com.killian.SpringBoot.ExamApp.repositories.SubmissionRepository;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(path = "/teacher/classroom")
@@ -88,6 +101,87 @@ public class TeacherClassroomController {
         sessionManagementService.setMessage("Bạn đã xóa lớp " + classroom.getName());
         classroomRepository.delete(classroom);
         return "redirect:/teacher/classroom/classrooms-page";
+    }
+
+    @GetMapping("/export-student-list")
+    public void exportStudentList(
+            HttpServletResponse response,
+            @RequestParam("classCode") String classCode,
+            Model model) {
+        Classroom classroom = classroomRepository.findByClasscode(classCode);
+        List<String> usernames = studentClassroomRepository.findAllStudentsByClasscode(classCode);
+        List<User> users = new ArrayList<>();
+        for (String username : usernames) {
+            User user = userRepository.findByUsername(username);
+            users.add(user);
+        }
+        try (
+                // Create a new Excel workbook and sheet
+                Workbook workbook = new HSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Danh sách học sinh");
+
+            Font boldFont = workbook.createFont();
+            boldFont.setBold(true);
+            CellStyle style = workbook.createCellStyle();
+            style.setFont(boldFont);
+
+            Row row0 = sheet.createRow(0);
+
+            Cell row0col0 = row0.createCell(0);
+            row0col0.setCellValue("Lớp: " + classroom.getName());
+            row0col0.setCellStyle(style);
+
+            Cell row0col1 = row0.createCell(1);
+            row0col1.setCellValue("Mã lớp: " + classCode);
+            row0col1.setCellStyle(style);
+
+            Row row2 = sheet.createRow(2);
+
+            Cell row2col0 = row2.createCell(0);
+            row2col0.setCellValue("STT");
+            row2col0.setCellStyle(style);
+
+            Cell row2col1 = row2.createCell(1);
+            row2col1.setCellValue("Họ và tên");
+            row2col1.setCellStyle(style);
+
+            Cell row2col2 = row2.createCell(2);
+            row2col2.setCellValue("Tên đăng nhập");
+            row2col2.setCellStyle(style);
+
+            Cell row2col3 = row2.createCell(3);
+            row2col3.setCellValue("Ngày sinh");
+            row2col3.setCellStyle(style);
+
+            for (int i = 0; i < users.size(); i++) {
+                Row row = sheet.createRow(i + 3);
+                Cell cell0 = row.createCell(0);
+                cell0.setCellValue("" + i);
+                Cell cell1 = row.createCell(1);
+                cell1.setCellValue(users.get(i).getName());
+                Cell cell2 = row.createCell(2);
+                cell2.setCellValue(users.get(i).getUsername());
+                Cell cell3 = row.createCell(3);
+                cell3.setCellValue(users.get(i).getDob());
+            }
+
+            for (int columnIndex = 0; columnIndex <= 2; columnIndex++) {
+                sheet.autoSizeColumn(columnIndex);
+            }
+
+            // Set the content type and headers for the response
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-disposition", "attachment; filename=student-list.xls");
+
+            try (OutputStream outputStream = response.getOutputStream()) {
+                workbook.write(outputStream);
+                outputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @GetMapping("/student-list")
