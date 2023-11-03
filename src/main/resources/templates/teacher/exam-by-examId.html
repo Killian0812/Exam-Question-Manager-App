@@ -29,8 +29,7 @@
 
     <form th:action="@{export-pdf}" method="get">
         <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
-        <input th:type="hidden" th:id="examCode" th:name="examCode" th:value="${exam.examCode}">
-        <button type="submit" class="export-pdf-button">Xuất file pdf đề thi</button>
+        <button type="submit" class="export-pdf-button">Xuất file zip đề thi</button>
     </form>
 
     <h1>Đề thi: <span th:text="${exam.name} + ' - ID: ' + ${exam.examId}"></span></h1>

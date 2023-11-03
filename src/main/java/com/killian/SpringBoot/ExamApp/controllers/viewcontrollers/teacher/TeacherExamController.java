@@ -3,7 +3,16 @@ package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers.teacher;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
+import java.util.zip.ZipEntry;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -205,75 +214,117 @@ public class TeacherExamController {
     }
 
     @GetMapping("/export-pdf")
-    public void exportExamPDF(
+    public void exportExamsToZip(
             HttpServletResponse response,
-            @RequestParam("examId") String examId,
-            @RequestParam("examCode") int examCode) {
-
-        response.setContentType("application/pdf");
-        response.setHeader("Content-Disposition", "attachment; filename=exam.pdf");
+            @RequestParam("examId") String examId) {
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=exams.zip");
 
         try {
-            // Create a new document
-            PDDocument document = new PDDocument();
-            PDPage page = new PDPage(PDRectangle.A4);
-            document.addPage(page);
+            // Create a temporary directory to store individual PDFs
+            File tempDir = Files.createTempDirectory("exams").toFile();
 
-            // Create a content stream for the page
-            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+            // Create a ZIP file to store the individual PDFs
+            File zipFile = new File(tempDir, "exams.zip");
+            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(zipFile));
 
-            Exam exam = examRepository.findByExamIdAndCode(examId, examCode);
+            List<Integer> examCodes = examRepository.findDistinctExamCode(examId);
 
-            ClassPathResource fontResource = new ClassPathResource("/static/fonts/arial-unicode-ms.ttf");
-            ClassPathResource BoldFontResource = new ClassPathResource("/static/fonts/arial-unicode-ms-bold.ttf");
-            PDType0Font font = PDType0Font.load(document, fontResource.getFile());
-            PDType0Font boldFont = PDType0Font.load(document, BoldFontResource.getFile());
+            for (int k = 0; k < examCodes.size(); k++) {
 
-            // Exam details
-            contentStream.setFont(boldFont, 14);
-            contentStream.beginText();
-            contentStream.newLineAtOffset(50, 750);
-            contentStream.showText("Bài thi: " + exam.getName());
-            contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Khối lớp: " + exam.getGrade());
-            contentStream.showText("      Môn học: " + exam.getSubject());
-            contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Thời gian làm bài: " + exam.getDuration() + " phút");
-            contentStream.newLineAtOffset(0, -20);
-            contentStream.showText("Đề số: 00" + (exam.getExamCode() + 1));
-            contentStream.endText();
+                int examCode = examCodes.get(k);
+                // Generate individual PDFs for each exam
+                Exam exam = examRepository.findByExamIdAndCode(examId, examCode);
 
-            // Questions
-            contentStream.setFont(font, 12);
-            contentStream.beginText();
-            contentStream.newLineAtOffset(50, 650); // Set the initial position for the first line
+                PDDocument document = new PDDocument();
+                PDPage page = new PDPage(PDRectangle.A4);
+                document.addPage(page);
 
-            List<Question> questions = exam.getQuestions();
-            for (int i = 0; i < questions.size(); i++) {
-                Question question = questions.get(i);
-                String fullQuestionText = "Câu " + (i + 1) + ": " + question.getText();
+                // Create a content stream for the page
+                PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
-                List<String> lines = splitTextManually(fullQuestionText, font, 12, 400); // Adjust the width as needed
-                for (String line : lines) {
-                    contentStream.showText(line);
-                    contentStream.newLineAtOffset(0, -20); // next line
+                ClassPathResource fontResource = new ClassPathResource("/static/fonts/arial-unicode-ms.ttf");
+                ClassPathResource BoldFontResource = new ClassPathResource("/static/fonts/arial-unicode-ms-bold.ttf");
+                PDType0Font font = PDType0Font.load(document, fontResource.getFile());
+                PDType0Font boldFont = PDType0Font.load(document, BoldFontResource.getFile());
+
+                // Exam details
+                contentStream.setFont(boldFont, 14);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(50, 750);
+                contentStream.showText("Bài thi: " + exam.getName());
+                contentStream.newLineAtOffset(0, -20);
+                contentStream.showText("Khối lớp: " + exam.getGrade());
+                contentStream.showText("      Môn học: " + exam.getSubject());
+                contentStream.newLineAtOffset(0, -20);
+                contentStream.showText("Thời gian làm bài: " + exam.getDuration() + " phút");
+                contentStream.newLineAtOffset(0, -20);
+                contentStream.showText("Đề số: 00" + (exam.getExamCode() + 1));
+                contentStream.endText();
+
+                // Questions
+                contentStream.setFont(font, 12);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(50, 650); // Set the initial position for the first line
+
+                List<Question> questions = exam.getQuestions();
+                for (int i = 0; i < questions.size(); i++) {
+                    Question question = questions.get(i);
+                    String fullQuestionText = "Câu " + (i + 1) + ": " + question.getText();
+
+                    List<String> lines = splitTextManually(fullQuestionText, font, 12, 400); // Adjust the width as
+                                                                                             // needed
+                    for (String line : lines) {
+                        contentStream.showText(line);
+                        contentStream.newLineAtOffset(0, -20); // next line
+                    }
+
+                    contentStream.newLineAtOffset(10, 0);
+                    for (int j = 0; j < question.getChoices().size(); j++) {
+                        // Add each choice
+                        contentStream.showText(labelGenerator.getLabel(j) + " " + question.getChoices().get(j));
+                        contentStream.newLineAtOffset(0, -20);
+                    }
+                    contentStream.newLineAtOffset(-10, -20);
                 }
 
-                contentStream.newLineAtOffset(10, 0);
-                for (int j = 0; j < question.getChoices().size(); j++) {
-                    // Add each choice
-                    contentStream.showText(labelGenerator.getLabel(j) + " " + question.getChoices().get(j));
-                    contentStream.newLineAtOffset(0, -20);
-                }
-                contentStream.newLineAtOffset(-10, -20);
+                contentStream.endText();
+                contentStream.close();
+
+                // Save the individual PDF to a temporary file
+                File pdfFile = new File(tempDir, exam.getName() + "_" + exam.getExamCode() + ".pdf");
+                document.save(pdfFile);
+                
+                // Close the individual PDF document
+                document.close();
+
+                // Add the individual PDF to the ZIP file
+                ZipEntry zipEntry = new ZipEntry(exam.getName() + "_" + exam.getExamCode() + ".pdf");
+                zipOutputStream.putNextEntry(zipEntry);
+
+                // Create input stream for each pdf
+                FileInputStream fileInputStream = new FileInputStream(pdfFile);
+
+                // Copy into zip file
+                IOUtils.copy(fileInputStream, zipOutputStream);
+
+                // Code input stream and current zip output stream
+                fileInputStream.close();
+                zipOutputStream.closeEntry();
+                
             }
 
-            contentStream.endText();
-            contentStream.close();
+            // Close the ZIP output stream
+            zipOutputStream.close();
 
-            // Save the PDF to the response output stream
-            document.save(response.getOutputStream());
-            document.close();
+            // Send the ZIP file as the response
+            try (OutputStream outputStream = response.getOutputStream()) {
+                FileUtils.copyFile(zipFile, outputStream);
+                outputStream.flush();
+            }
+
+            // Delete the temporary directory and files
+            FileUtils.deleteDirectory(tempDir);
         } catch (Exception e) {
             e.printStackTrace();
         }
