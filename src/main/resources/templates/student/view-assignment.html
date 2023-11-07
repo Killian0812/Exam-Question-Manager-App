@@ -60,7 +60,7 @@
         if (submittedStatus == 1) {
             viewResultButton.removeAttribute("disabled"); // Enable view result button
         } else {
-            if (expiredStatus == 0)
+            if (expiredStatus == 0 || submittedStatus == -1)
                 startExamButton.removeAttribute("disabled"); // Enable start exam button
         }
 

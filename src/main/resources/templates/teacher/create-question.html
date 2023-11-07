@@ -31,7 +31,6 @@
 
         <div id="choices-container" style="display: none">
             <br>Choices:
-            <input type="text" id="choices" name="choices" style="display: none" />
         </div>
 
         <div id="answer-container" style="display: none">
@@ -85,13 +84,19 @@
         // Initial state based on the default selected question type
         handleQuestionTypeChange();
 
-        addChoiceButton.addEventListener('click', () => {
+        // 4 choices by default
+        addNewChoice();
+        addNewChoice();
+        addNewChoice();
+        addNewChoice();
+
+        function addNewChoice() {
             const newChoiceDiv = document.createElement('div');
             const newChoiceInput = document.createElement('input');
             newChoiceInput.type = 'text';
             newChoiceInput.name = 'choices';
             newChoiceInput.required = true;
-
+            
             const newRadio = document.createElement('input');
             newRadio.type = 'radio';
             newRadio.name = 'correctChoice';
@@ -102,7 +107,6 @@
                     document.getElementById('answer').value = newChoiceInput.value;
                 }
             });
-
             const removeButton = document.createElement('button');
             removeButton.type = 'button';
             removeButton.className = 'remove-choice';
@@ -116,7 +120,10 @@
             newChoiceDiv.appendChild(removeButton);
 
             choicesContainer.appendChild(newChoiceDiv);
-        });
+            
+        }
+        
+        addChoiceButton.addEventListener('click', addNewChoice);
 
         setTimeout(function () {
             var messageDiv = document.getElementById("messageDiv");

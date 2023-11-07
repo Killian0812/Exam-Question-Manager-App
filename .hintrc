@@ -13,6 +13,13 @@
     "meta-viewport": "off",
     "meta-charset-utf-8": "off",
     "axe/forms": "off",
-    "axe/structure": "off"
+    "axe/structure": "off",
+    "button-type": "off",
+    "axe/parsing": [
+      "default",
+      {
+        "duplicate-id-active": "off"
+      }
+    ]
   }
 }

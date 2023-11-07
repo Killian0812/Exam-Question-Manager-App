@@ -2,7 +2,6 @@ package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +12,16 @@ import org.springframework.web.servlet.ModelAndView;
 import com.killian.SpringBoot.ExamApp.models.User;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
+import com.killian.SpringBoot.ExamApp.services.UserServiceImpl;
 
 @Controller
 public class RegistrationController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserServiceImpl userService;
 
     @Autowired
     private SessionManagementService sessionManagementService;
@@ -41,7 +44,7 @@ public class RegistrationController {
             @RequestParam("role") String role,
             @RequestParam("dob") String dob) {
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElse(null);
         String message = null;
         if (user != null)
             message = "Tên người dùng đã được sử dụng. Hãy thử tên khác.";
@@ -60,7 +63,7 @@ public class RegistrationController {
                     DateTimeFormatter desiredFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
                     String formattedDob = date.format(desiredFormat);
                     
-                    userRepository.save(new User(username, password, email, name, role, formattedDob));
+                    userService.saveUser(new User(username, password, email, name, role, formattedDob));
                 }
             }
         }

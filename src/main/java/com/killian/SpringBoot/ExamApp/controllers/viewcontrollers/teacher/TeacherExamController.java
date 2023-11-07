@@ -26,11 +26,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.killian.SpringBoot.ExamApp.models.Exam;
 import com.killian.SpringBoot.ExamApp.models.Question;
 import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
+import com.killian.SpringBoot.ExamApp.services.ExamService;
 import com.killian.SpringBoot.ExamApp.services.LabelGenerator;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
@@ -48,6 +50,9 @@ public class TeacherExamController {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private ExamService examService;
 
     @Autowired
     private LabelGenerator labelGenerator;
@@ -153,6 +158,42 @@ public class TeacherExamController {
         }
         sessionManagementService.setMessage("Tạo đề thi thành công!");
         return "redirect:/teacher/exam/get-exam-by-examId?examId=" + tmp + "&selectedCode=0";
+    }
+
+    @GetMapping("/create-own-exam-page")
+    public String createExamManuallyPage(Model model) {
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+        return "teacher/create-exam-by-docx";
+    }
+
+    @PostMapping("/upload-docx")
+    public String createExamFromDocx(@RequestParam("subject") String subject,
+            @RequestParam("grade") int grade,
+            @RequestParam("name") String name,
+            @RequestParam("duration") int duration,
+            @RequestParam("file") MultipartFile file,
+            Model model) {
+
+        List<Exam> exams = examRepository.findByNameAndOwner(name, sessionManagementService.getUsername());
+        if (!exams.isEmpty()) {
+            sessionManagementService.setMessage("Tên đề thi trùng lặp");
+            return "redirect:/teacher/exam/create-own-exam-page";
+        }
+
+        // process docx file
+        Exam exam = examService.processDocxFile(file, grade, subject);
+        exam.setName(name);
+        exam.setGrade(grade);
+        exam.setSubject(subject);
+        exam.setDuration(duration);
+        exam.setExamCode(0);
+        exam.setExamId();
+        exam.setOwner(sessionManagementService.getUsername());
+        examRepository.save(exam);
+
+        sessionManagementService.setMessage("Tạo đề thi thành công!");
+        return "redirect:/teacher/exam/get-exam-by-examId?examId=" + exam.getExamId() + "&selectedCode=0";
     }
 
     @GetMapping("/view-exams-by-filter-page")
@@ -261,11 +302,14 @@ public class TeacherExamController {
                 contentStream.newLineAtOffset(0, -20);
                 contentStream.showText("Đề số: 00" + (exam.getExamCode() + 1));
                 contentStream.endText();
-
+                
                 // Questions
                 contentStream.setFont(font, 12);
                 contentStream.beginText();
                 contentStream.newLineAtOffset(50, 650); // Set the initial position for the first line
+                
+                // Create a variable to keep track of the current y-coordinate
+                float currentY = 650; // Initial position for the first line
 
                 List<Question> questions = exam.getQuestions();
                 for (int i = 0; i < questions.size(); i++) {
@@ -275,17 +319,43 @@ public class TeacherExamController {
                     List<String> lines = splitTextManually(fullQuestionText, font, 12, 400); // Adjust the width as
                                                                                              // needed
                     for (String line : lines) {
+                        // If the current Y-coordinate goes beyond the page boundary, create a new page
+                        if (currentY < 50) {
+                            contentStream.endText();
+                            contentStream.close();
+                            page = new PDPage(PDRectangle.A4);
+                            document.addPage(page);
+                            contentStream = new PDPageContentStream(document, page);
+                            contentStream.setFont(font, 12);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, 800);
+                            currentY = 800; // Reset the Y-coordinate for the new page
+                        }
                         contentStream.showText(line);
                         contentStream.newLineAtOffset(0, -20); // next line
+                        currentY -= 20;
                     }
 
                     contentStream.newLineAtOffset(10, 0);
                     for (int j = 0; j < question.getChoices().size(); j++) {
+                        if (currentY < 50) {
+                            contentStream.endText();
+                            contentStream.close();
+                            page = new PDPage(PDRectangle.A4);
+                            document.addPage(page);
+                            contentStream = new PDPageContentStream(document, page);
+                            contentStream.setFont(font, 12);
+                            contentStream.beginText();
+                            contentStream.newLineAtOffset(50, 800);
+                            currentY = 800; // Reset the Y-coordinate for the new page
+                        }
                         // Add each choice
                         contentStream.showText(labelGenerator.getLabel(j) + " " + question.getChoices().get(j));
                         contentStream.newLineAtOffset(0, -20);
+                        currentY -= 20;
                     }
                     contentStream.newLineAtOffset(-10, -20);
+                    currentY -= 20;
                 }
 
                 contentStream.endText();
@@ -294,7 +364,7 @@ public class TeacherExamController {
                 // Save the individual PDF to a temporary file
                 File pdfFile = new File(tempDir, exam.getName() + "_" + exam.getExamCode() + ".pdf");
                 document.save(pdfFile);
-                
+
                 // Close the individual PDF document
                 document.close();
 
@@ -311,7 +381,7 @@ public class TeacherExamController {
                 // Code input stream and current zip output stream
                 fileInputStream.close();
                 zipOutputStream.closeEntry();
-                
+
             }
 
             // Close the ZIP output stream

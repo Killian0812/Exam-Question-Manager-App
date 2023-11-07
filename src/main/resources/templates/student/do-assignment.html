@@ -36,8 +36,8 @@
                 <li th:each="choice, choiceIndex : ${question.choices}">
                     <label>
                         <input type="radio" th:name="'selectedChoice' + ${questionIndex.index}" th:value="${choice}"
-                            th:checked="${choiceIndex.index==selected.get(questionIndex.index)}"
-                            th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])" />
+                            th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])"
+                            th:checked="${selected.size() > questionIndex.index and choiceIndex.index == selected.get(questionIndex.index)}" />
                         <span th:text="' ' + ${choice}"></span>
                     </label>
                 </li>
@@ -108,6 +108,9 @@
         }
 
         function SubmitAnswer() {
+
+            if (!confirm("Bạn có chắc chắn muốn nộp bài?"))
+                return;
             var choices = [];
             var questionCount = /*[[${exam.questions.size()}]]*/ 0;
             for (var questionIndex = 0; questionIndex < questionCount; questionIndex++) {

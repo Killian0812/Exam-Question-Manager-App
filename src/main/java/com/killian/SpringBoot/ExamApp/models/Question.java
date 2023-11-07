@@ -22,7 +22,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 300)
+    @Column(columnDefinition = "VARCHAR(2000)")
     private String text;
 
     @ElementCollection
@@ -42,6 +42,11 @@ public class Question {
     private String questionType;
 
     public Question() {
+    }
+
+    public Question(int grade, String subject) {
+        this.grade = grade;
+        this.subject = subject;
     }
 
     public Question(String text, List<String> choices, String answer, String subject, String chapter, int grade,
@@ -65,6 +70,10 @@ public class Question {
 
     public List<String> getChoices() {
         return choices;
+    }
+
+    public void addChoice(String choice) {
+        this.choices.add(choice);
     }
 
     public void setChoices(List<String> choices) {

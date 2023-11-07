@@ -27,9 +27,7 @@ public class TeacherQuestionController {
     @GetMapping("/create-question-page")
     public String createQuestionPage(Model model) {
         String username = sessionManagementService.getUsername();
-        String password = sessionManagementService.getPassword();
         model.addAttribute("username", username);
-        model.addAttribute("password", password);
         model.addAttribute("message", message);
         message = null;
         return "teacher/create-question";
@@ -45,10 +43,6 @@ public class TeacherQuestionController {
             @RequestParam("chapter") String chapter,
             @RequestParam("questionType") String questionType,
             Model model) {
-
-        if (!choices.isEmpty()) {
-            choices.remove(0);
-        }
         
         Question newQuestion = new Question();
         newQuestion.setText(text);

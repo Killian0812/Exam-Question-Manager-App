@@ -4,13 +4,15 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 
 @Entity
@@ -33,6 +35,8 @@ public class Submission {
 
     private int examCode;
 
+    @ElementCollection
+    @CollectionTable(name = "selected_choice", joinColumns = @JoinColumn(name = "submission_id"))
     private List<Integer> selected;
 
     private String assignmentId;
@@ -52,7 +56,9 @@ public class Submission {
         this.startedTime = getCurrentDateTime();
         this.endTime = calculateEndTime(this.startedTime, duration);
         this.score = -1.0;
-        this.selected = new ArrayList<>(Collections.nCopies(questionCount, null));
+        this.selected = new ArrayList<>();
+        for (int i = 0; i < questionCount; i++)
+            this.selected.add(99);
         this.submissionId = submissionIdGenerate();
     }
 
@@ -108,8 +114,15 @@ public class Submission {
         return selected;
     }
 
-    public void setSelected(int index, int value) {
-        this.selected.set(index, value);
+    public void setSelected(int index, int value, int size) {
+        if (selected.size() == size) {
+            selected.set(index, value);
+        } else {
+            while (selected.size() < size) {
+                selected.add(null);
+            }
+            selected.add(value);
+        }
     }
 
     public String getAssignmentId() {

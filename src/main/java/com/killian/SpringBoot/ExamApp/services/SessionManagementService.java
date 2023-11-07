@@ -15,9 +15,8 @@ public class SessionManagementService {
         this.httpSession = httpSession;
     }
 
-    public void createUserSession(String username, String password, String role) {
+    public void createUserSession(String username, String role) {
         httpSession.setAttribute("username", username);
-        httpSession.setAttribute("password", password);
         httpSession.setAttribute("role", role);
     }
 
@@ -47,10 +46,6 @@ public class SessionManagementService {
 
     public String getUsername() {
         return (String) httpSession.getAttribute("username");
-    }
-
-    public String getPassword() {
-        return (String) httpSession.getAttribute("password");
     }
 
     public String getRole() {

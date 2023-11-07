@@ -112,7 +112,7 @@ public class TeacherClassroomController {
         List<String> usernames = studentClassroomRepository.findAllStudentsByClasscode(classCode);
         List<User> users = new ArrayList<>();
         for (String username : usernames) {
-            User user = userRepository.findByUsername(username);
+            User user = userRepository.findByUsername(username).orElse(null);
             users.add(user);
         }
         try (

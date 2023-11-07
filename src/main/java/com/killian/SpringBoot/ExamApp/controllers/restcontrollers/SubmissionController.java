@@ -45,7 +45,9 @@ public class SubmissionController {
             @RequestParam("questionIndex") int questionIndex,
             @RequestParam("newChoice") int newChoice) {
         Submission submission = submissionRepository.findBySubmissionId(submissionId);
-        submission.setSelected(questionIndex, newChoice);
+        Assignment assignment = assignmentRepository.findByAssignmentId(submission.getAssignmentId());
+        Exam exam = examRepository.findByExamIdAndCode(assignment.getExamId(), submission.getExamCode());
+        submission.setSelected(questionIndex, newChoice, exam.getQuestions().size());
         submissionRepository.save(submission);
         return "OK";
     }

@@ -11,6 +11,7 @@ import com.killian.SpringBoot.ExamApp.models.User;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
 import com.killian.SpringBoot.ExamApp.services.EmailService;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
+import com.killian.SpringBoot.ExamApp.services.UserServiceImpl;
 
 @Controller
 public class UserController {
@@ -22,6 +23,9 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
     private EmailService emailService;
 
     @GetMapping("/login")
@@ -30,7 +34,7 @@ public class UserController {
             @RequestParam("password") String password,
             Model model) {
 
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username).orElse(null);
         String message = null;
 
         if (user == null) {
@@ -38,13 +42,13 @@ public class UserController {
             sessionManagementService.setMessage(message);
             return "redirect:/";
         } else {
-            if (password.equals(user.getPassword()) == false) {
+            if (!userService.correctPassword(user, password)) {
                 message = "Sai mật khẩu.";
                 sessionManagementService.setMessage(message);
                 sessionManagementService.setUsername(username);
                 return "redirect:/";
             } else {
-                sessionManagementService.createUserSession(username, password, user.getRole());
+                sessionManagementService.createUserSession(username, user.getRole());
                 return "redirect:/" + user.getRole().toLowerCase() + "/dashboard";
             }
         }
@@ -53,7 +57,8 @@ public class UserController {
     @GetMapping("/profile")
     public String profile(Model model) {
 
-        User user = userRepository.findByUsername(sessionManagementService.getUsername());
+        User user = userRepository.findByUsername(sessionManagementService.getUsername()).orElse(null);
+        ;
         model.addAttribute("user", user);
         return "profile";
     }
@@ -70,14 +75,11 @@ public class UserController {
             @RequestParam("newPassword") String newPassword,
             @RequestParam("confirmPassword") String confirmPassword,
             Model model) {
-        String password = sessionManagementService.getPassword();
-        if (currentPassword.equals(password)) {
+        User user = userRepository.findByUsername(sessionManagementService.getUsername()).get();
+        if (userService.correctPassword(user, currentPassword)) {
             if (newPassword.equals(confirmPassword)) {
                 sessionManagementService.setMessage("Đổi mật khẩu thành công.");
-                String username = sessionManagementService.getUsername();
-                User user = userRepository.findByUsername(username);
-                user.setPassword(newPassword);
-                userRepository.save(user);
+                userService.changePassword(user, newPassword);
             } else {
                 sessionManagementService.setMessage("Mật khẩu xác nhận không đúng.");
             }
@@ -113,12 +115,10 @@ public class UserController {
     public String teacherDashboard(Model model) {
         // Retrieve user data from the session
         String username = sessionManagementService.getUsername();
-        String password = sessionManagementService.getPassword();
         String role = sessionManagementService.getRole();
 
         // Use the data as needed
         model.addAttribute("username", username);
-        model.addAttribute("password", password);
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
@@ -128,14 +128,11 @@ public class UserController {
 
     @GetMapping("/student/dashboard")
     public String studentDashboard(Model model) {
-        // Retrieve user data from the session
         String username = sessionManagementService.getUsername();
-        String password = sessionManagementService.getPassword();
         String role = sessionManagementService.getRole();
 
         // Use the data as needed
         model.addAttribute("username", username);
-        model.addAttribute("password", password);
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
@@ -148,5 +145,20 @@ public class UserController {
         // Clear user session on logout
         sessionManagementService.clearUserSession();
         return "redirect:/";
+    }
+
+    // @GetMapping("/401")
+    // public String unauthorized() {
+    //     return "error";
+    // }
+
+    // @GetMapping("/403")
+    // public String forbidden() {
+    //     return "error";
+    // }
+
+    @GetMapping("/404")
+    public String notFound() {
+        return "error";
     }
 }

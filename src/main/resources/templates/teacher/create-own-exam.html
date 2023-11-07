@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Create Exam</title>
+</head>
+
+<body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/teacher/exam/create-exam-page}" method="get">
+        <input type="submit" value="Back"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h1>Create exam</h1>
+
+    <form th:action="@{/create-own-exam}" method="post">
+
+        <label for="name">Exam name:</label>
+        <input type="text" id="name" name="name" required /><br /><br />
+
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required /><br /><br />
+
+        <label for="grade">Grade:</label>
+        <input type="text" id="grade" name="grade" required /><br /><br />
+
+        <h3>Questions: </h3>
+
+        <div id="questions-container">
+
+            <label for="text">Question Text:</label>
+            <input type="text" id="text" name="text" required /><br /><br />
+
+            <div>
+                <label>Question Type:</label>
+                <input type="radio" id="questionType" name="questionType" value="multiple-choice" checked />
+                Multiple-Choice
+                <input type="radio" id="questionType" name="questionType" value="type-in" /> Type-In
+            </div><br>
+
+            <button type="button" id="add-choice">Add more choice</button>
+
+            <div id="choices-container" style="display: none">
+                <br>Choices:
+            </div>
+
+            <div id="answer-container" style="display: none">
+                <label for="answer">Answer:</label>
+                <input type="text" id="answer" name="answer" required />
+            </div><br>
+
+        </div>
+
+        <input type="button" id="add-question" value="Add question" />
+    </form>
+
+    <script th:inline="javascript">
+
+        const addQuestionButton = document.getElementById('add-question');
+        const questionsContainer = document.getElementById('questions-container');
+        const questionTypeRadios = document.querySelectorAll('input[name="questionType"]');
+        const choicesContainer = document.getElementById('choices-container');
+        const answerContainer = document.getElementById('answer-container');
+        const addChoiceButton = document.getElementById('add-choice');
+        const choiceRadio = document.getElementsByName('correctChoice');
+        const choicesInput = document.getElementsByName('choices');
+
+        // Function to handle radio button change
+        function handleQuestionTypeChange() {
+            if (questionTypeRadios[0].checked) {
+                choicesContainer.style.display = 'block';
+                addChoiceButton.style.display = 'block';
+                answerContainer.style.display = 'none';
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            } else {
+                choicesContainer.style.display = 'none';
+                addChoiceButton.style.display = 'none';
+                answerContainer.style.display = 'block';
+                choiceRadio.required = true;
+                choicesInput.required = true;
+            }
+        }
+
+        // Add event listener to radio buttons
+        questionTypeRadios.forEach(function (radio) {
+            radio.addEventListener('change', handleQuestionTypeChange);
+        });
+
+        // Initial state based on the default selected question type
+        handleQuestionTypeChange();
+
+        // 4 choices by default
+        addNewChoice();
+        addNewChoice();
+        addNewChoice();
+        addNewChoice();
+
+        function addNewChoice() {
+            const newChoiceDiv = document.createElement('div');
+            const newChoiceInput = document.createElement('input');
+            newChoiceInput.type = 'text';
+            newChoiceInput.name = 'choices';
+            newChoiceInput.required = true;
+
+            const newRadio = document.createElement('input');
+            newRadio.type = 'radio';
+            newRadio.name = 'correctChoice';
+            newRadio.value = choicesContainer.children.length; // Assign a unique value
+            newRadio.required = true; // Make it required
+            newRadio.addEventListener('change', function () {
+                if (newRadio.checked) {
+                    document.getElementById('answer').value = newChoiceInput.value;
+                }
+            });
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'remove-choice';
+            removeButton.textContent = 'Remove';
+            removeButton.addEventListener('click', function () {
+                newChoiceDiv.remove();
+            });
+
+            newChoiceDiv.appendChild(newRadio);
+            newChoiceDiv.appendChild(newChoiceInput);
+            newChoiceDiv.appendChild(removeButton);
+
+            choicesContainer.appendChild(newChoiceDiv);
+
+        }
+
+        addChoiceButton.addEventListener('click', addNewChoice);
+
+        // Create a function to add a new question
+        function addQuestion() {
+            // Create new question div
+            const newQuestionDiv = document.createElement('div');
+            newQuestionDiv.classList.add('question'); // You can add a CSS class for styling
+
+            // Add new question text input
+            const questionTextInput = document.createElement('input');
+            questionTextInput.type = 'text';
+            questionTextInput.name = 'text';
+            questionTextInput.placeholder = 'Question Text';
+            questionTextInput.required = true;
+
+            // Add new question type (radio buttons)
+            const questionTypeLabel = document.createElement('label');
+            questionTypeLabel.textContent = 'Question Type:';
+
+            const multipleChoiceRadio = document.createElement('input');
+            multipleChoiceRadio.type = 'radio';
+            multipleChoiceRadio.name = 'questionType';
+            multipleChoiceRadio.value = 'multiple-choice';
+            multipleChoiceRadio.checked = true; // Default to multiple-choice
+
+            const multipleChoiceLabel = document.createElement('span');
+            multipleChoiceLabel.textContent = 'Multiple-Choice';
+
+            const typeInRadio = document.createElement('input');
+            typeInRadio.type = 'radio';
+            typeInRadio.name = 'questionType';
+            typeInRadio.value = 'type-in';
+
+            const typeInLabel = document.createElement('span');
+            typeInLabel.textContent = 'Type-In';
+
+            // Add 'add more choice' button
+            const addChoiceButton = document.createElement('button');
+            addChoiceButton.type = 'button';
+            addChoiceButton.textContent = 'Add more choice';
+            addChoiceButton.addEventListener('click', addNewChoice);
+
+            // Add the new question elements to the new question div
+            newQuestionDiv.appendChild(questionTextInput);
+            newQuestionDiv.appendChild(questionTypeLabel);
+            newQuestionDiv.appendChild(multipleChoiceRadio);
+            newQuestionDiv.appendChild(multipleChoiceLabel);
+            newQuestionDiv.appendChild(typeInRadio);
+            newQuestionDiv.appendChild(typeInLabel);
+            newQuestionDiv.appendChild(addChoiceButton);
+
+            // Add the new question div to the questions container
+            questionsContainer.appendChild(newQuestionDiv);
+        }
+
+        addQuestionButton.addEventListener('click', addQuestion);
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+                messageDiv.parentElement.removeChild(messageDiv);
+            }
+        }, 2000); // message disappears after 2s
+    </script>
+
+    <style>
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+</body>
+
+</html>

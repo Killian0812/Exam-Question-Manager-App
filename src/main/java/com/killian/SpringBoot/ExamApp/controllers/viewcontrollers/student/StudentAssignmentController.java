@@ -146,10 +146,12 @@ public class StudentAssignmentController {
         List<Integer> choiceIndexes = submission.getSelected();
         List<String> choices = new ArrayList<>();
         for (int i = 0; i < questions.size(); i++) {
-            if (choiceIndexes.get(i) == null)
+            if (choiceIndexes.size() < (i+1) || choiceIndexes.get(i) == 99)
                 choices.add("Không trả lời");
-            else
-                choices.add(questions.get(i).getChoices().get(choiceIndexes.get(i)));
+            else {
+                int index = choiceIndexes.get(i);
+                choices.add(questions.get(i).getChoices().get(index));
+            }
         }
         // Thời gian bắt đầu: 17:30:38 11/02/2023
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss MM/dd/yyyy");
