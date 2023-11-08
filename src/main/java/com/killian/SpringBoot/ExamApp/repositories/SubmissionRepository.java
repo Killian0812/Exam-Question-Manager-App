@@ -1,5 +1,7 @@
 package com.killian.SpringBoot.ExamApp.repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,9 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     @Modifying
     @Query("DELETE FROM Submission s WHERE s.assignmentId = :assignmentId")
     void deleteByAssignmentId(@Param("assignmentId") String assignmentId);
+
+    @Query("SELECT s FROM Submission s WHERE s.assignmentId = :assignmentId")
+    List<Submission> findAllSubmissionsByAssignmentId(@Param("assignmentId") String assignmentId);
 
     @Query("SELECT s FROM Submission s WHERE s.assignmentId = :assignmentId AND s.student = :student")
     Submission findByAssignmentId(@Param("assignmentId") String assignmentId, @Param("student") String student);

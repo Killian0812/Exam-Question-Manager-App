@@ -39,7 +39,7 @@
     <p th:if="${expired}">Đã quá thời hạn làm bài</p>
     <form id="assignmentForm" action="/student/classroom/assignment/do-assignment" method="get">
         <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-        <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
+        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
         <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button" disabled
             onclick="return confirm('Bài tập sẽ tính giờ làm bài. Bạn có chắc chắn muốn bắt đầu làm?')" />
     </form><br>

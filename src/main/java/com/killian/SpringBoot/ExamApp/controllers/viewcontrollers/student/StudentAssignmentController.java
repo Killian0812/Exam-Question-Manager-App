@@ -58,11 +58,11 @@ public class StudentAssignmentController {
 
     @GetMapping("view-assignment")
     public String viewAssignment(
-            @RequestParam("assignmentName") String assignmentName,
+            @RequestParam("assignmentId") String assignmentId,
             @RequestParam("classCode") String classCode,
             Model model) {
         String className = classroomRepository.findByClasscode(classCode).getName();
-        Assignment assignment = assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName);
+        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
         model.addAttribute("assignment", assignment);
         model.addAttribute("assignmentDeadline", assignment.getDeadline());
 
@@ -98,13 +98,12 @@ public class StudentAssignmentController {
 
     @GetMapping("do-assignment")
     public String doAssignment(
-            @RequestParam("assignmentName") String assignmentName,
+            @RequestParam("assignmentId") String assignmentId,
             @RequestParam("classCode") String classCode,
             Model model) {
 
         Classroom classroom = classroomRepository.findByClasscode(classCode);
-        String className = classroom.getName();
-        Assignment assignment = assignmentRepository.findAssignmentByName(className, assignmentName).get(0);
+        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
         List<Exam> exams = examRepository.findByExamId(assignment.getExamId());
         String student = sessionManagementService.getUsername();
 
@@ -131,7 +130,7 @@ public class StudentAssignmentController {
         }
         model.addAttribute("className", classroom.getName());
         model.addAttribute("classCode", classCode);
-        model.addAttribute("assignmentName", assignmentName);
+        model.addAttribute("assignmentName", assignment.getName());
         return "student/do-assignment";
     }
 
@@ -161,7 +160,7 @@ public class StudentAssignmentController {
         model.addAttribute("choices", choices);
         model.addAttribute("questions", questions);
         model.addAttribute("submission", submission);
-        model.addAttribute("assignmentName", assignment.getName());
+        model.addAttribute("assignment", assignment);
         model.addAttribute("classCode", assignment.getClassCode());
         return "student/result";
     }

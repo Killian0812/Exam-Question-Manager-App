@@ -25,7 +25,7 @@
             <span th:text="${assignment.name}"></span>
             <form th:action="@{assignment/view-assignment}" method="get" style="display: inline;">
                 <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-                <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
+                <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
                 <input type="submit" value="Xem">
             </form>
         </li>

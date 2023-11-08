@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Danh sách kết quả làm bài</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form th:action="@{/teacher/classroom/assignment/view-assignment}" method="get">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignmentId}" />
+        <input type="submit" value="Quay lại bài tập"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form><br>
+
+    <table style="width:50%">
+        <thead>
+            <tr>
+                <th>Họ và tên</th>
+                <th>Điểm số</th>
+                <th>Thời gian làm bài</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="name, nameIndex : ${names}">
+                <td th:text="${name}">Name</td>
+                <td th:text="${scores.get(nameIndex.index)}">Score</td>
+                <td th:text="${timeToFinish.get(nameIndex.index)}">Score</td>
+            </tr>
+        </tbody>
+    </table><br>
+
+    <form action="/teacher/classroom/assignment/export-result" method="get">
+        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignmentId}">
+        <input type="submit" value="Xuất file kết quả">
+    </form><br>
+
+</body>
+
+</html>

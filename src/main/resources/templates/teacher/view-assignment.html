@@ -22,12 +22,18 @@
 
     <h1>Hạn chót: <span th:text="${assignment.deadline}"></span></h1>
 
-    <h2>Đề kiểm tra: <button id="viewExamButton" 
-        th:attr="data-exam-url=@{/teacher/exam/get-exam-by-examId(examId=${assignment.examId},selectedCode=0)}">Xem tại đây</button></h2>
+    <h2>Đề kiểm tra: <button id="viewExamButton"
+            th:attr="data-exam-url=@{/teacher/exam/get-exam-by-examId(examId=${assignment.examId},selectedCode=0)}">Xem
+            tại đây</button></h2>
+
+    <form action="/teacher/classroom/assignment/view-results" method="get">
+        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}">
+        <input type="submit" value="Xem kết quả học sinh">
+    </form><br>
 
     <form th:action="@{remove-assignment}" method="post" style="display: inline;">
         <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-        <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignment.name}" />
+        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
         <input type="submit" value="Xóa bài tập" onclick="return confirm('Bạn có chắc chắn muốn xóa bài tập này?')" />
     </form>
 

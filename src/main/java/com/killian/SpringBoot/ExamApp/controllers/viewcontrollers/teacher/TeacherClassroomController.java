@@ -10,6 +10,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -122,56 +123,71 @@ public class TeacherClassroomController {
 
             Font boldFont = workbook.createFont();
             boldFont.setBold(true);
-            CellStyle style = workbook.createCellStyle();
-            style.setFont(boldFont);
+
+            CellStyle writeInBold = workbook.createCellStyle();
+            writeInBold.setFont(boldFont);
+
+            CellStyle writeInBoldAndCenter = workbook.createCellStyle();
+            writeInBoldAndCenter.setFont(boldFont);
+            writeInBoldAndCenter.setAlignment(HorizontalAlignment.CENTER);
+
+            CellStyle writeInCenter = workbook.createCellStyle();
+            writeInCenter.setAlignment(HorizontalAlignment.CENTER);
 
             Row row0 = sheet.createRow(0);
 
             Cell row0col0 = row0.createCell(0);
             row0col0.setCellValue("Lớp: " + classroom.getName());
-            row0col0.setCellStyle(style);
+            row0col0.setCellStyle(writeInBold);
 
             Cell row0col1 = row0.createCell(1);
             row0col1.setCellValue("Mã lớp: " + classCode);
-            row0col1.setCellStyle(style);
+            row0col1.setCellStyle(writeInBold);
 
             Row row2 = sheet.createRow(2);
 
             Cell row2col0 = row2.createCell(0);
             row2col0.setCellValue("STT");
-            row2col0.setCellStyle(style);
+            row2col0.setCellStyle(writeInBoldAndCenter);
 
             Cell row2col1 = row2.createCell(1);
             row2col1.setCellValue("Họ và tên");
-            row2col1.setCellStyle(style);
+            row2col1.setCellStyle(writeInBoldAndCenter);
 
             Cell row2col2 = row2.createCell(2);
             row2col2.setCellValue("Tên đăng nhập");
-            row2col2.setCellStyle(style);
+            row2col2.setCellStyle(writeInBoldAndCenter);
 
             Cell row2col3 = row2.createCell(3);
             row2col3.setCellValue("Ngày sinh");
-            row2col3.setCellStyle(style);
+            row2col3.setCellStyle(writeInBoldAndCenter);
 
             for (int i = 0; i < users.size(); i++) {
                 Row row = sheet.createRow(i + 3);
                 Cell cell0 = row.createCell(0);
-                cell0.setCellValue("" + i);
+                cell0.setCellValue("" + (i+1));
+                cell0.setCellStyle(writeInCenter);
+
                 Cell cell1 = row.createCell(1);
                 cell1.setCellValue(users.get(i).getName());
+                cell1.setCellStyle(writeInCenter);
+
                 Cell cell2 = row.createCell(2);
                 cell2.setCellValue(users.get(i).getUsername());
+                cell2.setCellStyle(writeInCenter);
+
                 Cell cell3 = row.createCell(3);
                 cell3.setCellValue(users.get(i).getDob());
+                cell3.setCellStyle(writeInCenter);
             }
 
-            for (int columnIndex = 0; columnIndex <= 2; columnIndex++) {
+            for (int columnIndex = 0; columnIndex <= 3; columnIndex++) {
                 sheet.autoSizeColumn(columnIndex);
             }
 
             // Set the content type and headers for the response
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader("Content-disposition", "attachment; filename=student-list.xls");
+            response.setHeader("Content-disposition", "attachment; filename=danh_sach_hoc_sinh.xls");
 
             try (OutputStream outputStream = response.getOutputStream()) {
                 workbook.write(outputStream);

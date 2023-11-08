@@ -17,7 +17,7 @@
 
 <body>
     <form th:action="@{/student/classroom/assignment/view-assignment}" method="get">
-        <input type="hidden" id="assignmentName" name="assignmentName" th:value="${assignmentName}" />
+        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
         <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
         <input type="submit" value="Quay lại trang trước"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
