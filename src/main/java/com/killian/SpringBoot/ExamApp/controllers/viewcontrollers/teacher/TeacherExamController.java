@@ -259,7 +259,7 @@ public class TeacherExamController {
             HttpServletResponse response,
             @RequestParam("examId") String examId) {
         response.setContentType("application/zip");
-        response.setHeader("Content-Disposition", "attachment; filename=exams.zip");
+        response.setHeader("Content-Disposition", "attachment; filename=de_thi.zip");
 
         try {
             // Create a temporary directory to store individual PDFs

@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.killian.SpringBoot.ExamApp.models.PasswordResetToken;
 import com.killian.SpringBoot.ExamApp.models.User;
+import com.killian.SpringBoot.ExamApp.repositories.PasswordResetTokenRepository;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
-import com.killian.SpringBoot.ExamApp.services.EmailService;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 import com.killian.SpringBoot.ExamApp.services.UserServiceImpl;
 
@@ -26,7 +27,7 @@ public class UserController {
     private UserServiceImpl userService;
 
     @Autowired
-    private EmailService emailService;
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @GetMapping("/login")
     public String login(
@@ -52,6 +53,36 @@ public class UserController {
                 return "redirect:/" + user.getRole().toLowerCase() + "/dashboard";
             }
         }
+    }
+
+    @GetMapping("/reset-password-page")
+    public String resetPasswordPage(@RequestParam("tokenId") String tokenId, Model model) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByTokenId(tokenId);
+        String email = passwordResetToken.getEmail();
+        User user = userRepository.findByEmail(email);
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", email);
+        model.addAttribute("tokenId", tokenId);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+        return "reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(
+            @RequestParam("tokenId") String tokenId,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("confirmPassword") String confirmPassword,
+            Model model) {
+        User user = userRepository.findByEmail(email);
+        if (!password.equals(confirmPassword)) {
+            sessionManagementService.setMessage("Mật khẩu xác nhận không chính xác.");
+            return "redirect:/reset-password-page?tokenId=" + tokenId;
+        }
+        userService.changePassword(user, confirmPassword);
+        sessionManagementService.setMessage("Đổi mật khẩu thành công");
+        return "redirect:/";
     }
 
     @GetMapping("/profile")
@@ -86,24 +117,6 @@ public class UserController {
         } else
             sessionManagementService.setMessage("Mật khẩu hiện tại không đúng");
         return "redirect:/change-password-page";
-    }
-
-    @PostMapping("/forget")
-    public String forget(@RequestParam("email") String email, Model model) {
-
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            sessionManagementService.setMessage("Email chưa đăng ký tài khoản.");
-            return "redirect:/forget-password";
-        }
-        try {
-            String emailBody = "Tên đăng nhập: " + user.getUsername() + "<br>" + "Mật khẩu: " + user.getPassword();
-            emailService.sendEmail(email, "Quên mật khẩu", emailBody);
-            sessionManagementService.setMessage("Thông tin đăng nhập đã được gửi về email của bạn.");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return "redirect:/forget-password";
     }
 
     @GetMapping("/back-to-dashboard")
@@ -149,12 +162,12 @@ public class UserController {
 
     // @GetMapping("/401")
     // public String unauthorized() {
-    //     return "error";
+    // return "error";
     // }
 
     // @GetMapping("/403")
     // public String forbidden() {
-    //     return "error";
+    // return "error";
     // }
 
     @GetMapping("/404")
