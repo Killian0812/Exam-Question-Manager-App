@@ -13,7 +13,7 @@
 
     <div th:if="${role == 'Student'}">
         <h1>Trang chủ</h1>
-        <p th:text="'Xin chào, ' + ${username} + '!'">Xin chào, {username}!</p>
+        <p th:text="'Xin chào, ' + ${name} + '!'">Xin chào, {name}!</p>
         <ul>
 
             <form th:action="@{/profile}" method="get">

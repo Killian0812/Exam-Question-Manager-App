@@ -279,6 +279,61 @@ public class TeacherAssignmentController {
         return "redirect:/teacher/classroom/assignment?classCode=" + classCode;
     }
 
+    @GetMapping("edit-assignment-page")
+    public String editAssignmentPage(
+            @RequestParam("assignmentId") String assignmentId,
+            @RequestParam("classCode") String classCode,
+            Model model) {
+        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+        DateTimeFormatter desiredFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime currentDeadline = LocalDateTime.parse(assignment.getDeadline(), formatter);
+        String currentDeadlineStr = currentDeadline.format(desiredFormatter);
+        model.addAttribute("assignment", assignment);
+        model.addAttribute("deadline", currentDeadlineStr);
+        model.addAttribute("classCode", classCode);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+        return "teacher/edit-assignment";
+    }
+
+    @PostMapping("edit-assignment")
+    public String editAssignment(
+            @RequestParam("assignmentId") String assignmentId,
+            @RequestParam("assignmentName") String assignmentName,
+            @RequestParam("deadline") String deadline,
+            @RequestParam("examId") String examId,
+            @RequestParam("classCode") String classCode) {
+
+        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
+        if (examRepository.findByExamId(examId).isEmpty()) {
+            sessionManagementService.setMessage("Không tìm thấy đề thi với ID đã cung cấp!");
+            return "redirect:/teacher/classroom/assignment/edit-assignment-page?classCode=" + classCode
+                    + "&assignmentId=" + assignmentId;
+        }
+        if (assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName) != null) {
+            sessionManagementService.setMessage("Tên bài tập bị trùng lặp!");
+            return "redirect:/teacher/classroom/assignment/edit-assignment-page?classCode=" + classCode
+                    + "&assignmentId=" + assignmentId;
+        }
+        // 2023-10-27T13:43
+        SimpleDateFormat fromUser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat myFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        String reformattedDeadline;
+        try {
+            reformattedDeadline = myFormat.format(fromUser.parse(deadline));
+            assignment.setDeadline(reformattedDeadline);
+            assignment.setName(assignmentName);
+            assignment.setExamId(examId);
+            assignmentRepository.save(assignment);
+            sessionManagementService.setMessage("Thay đổi thông tin bài tập thành công!");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/teacher/classroom/assignment/view-assignment?classCode=" + classCode + "&assignmentId="
+                + assignmentId;
+    }
+
     @GetMapping("view-assignment")
     public String viewAssignment(
             @RequestParam("assignmentId") String assignmentId,
@@ -288,6 +343,8 @@ public class TeacherAssignmentController {
         Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
         model.addAttribute("assignment", assignment);
         model.addAttribute("classCode", classCode);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
 
         return "teacher/view-assignment";
     }

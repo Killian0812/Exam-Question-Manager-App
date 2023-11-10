@@ -20,14 +20,15 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "username", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin", unique = true)
     private String username;
 
-    @Column(unique = true)
+    @Column(name = "email", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin", unique = true)
     private String email;
 
     private String password;
 
+    @Column(name = "name", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String name;
 
     private String role;

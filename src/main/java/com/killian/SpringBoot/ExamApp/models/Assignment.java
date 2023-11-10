@@ -2,6 +2,7 @@ package com.killian.SpringBoot.ExamApp.models;
 
 import java.security.SecureRandom;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,16 +17,21 @@ public class Assignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String name;
 
     private String deadline;
 
+    @Column(name = "examId", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String examId;
 
+    @Column(name = "className", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String className;
 
+    @Column(name = "classCode", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String classCode;
 
+    @Column(name = "assignmentId", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String assignmentId;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

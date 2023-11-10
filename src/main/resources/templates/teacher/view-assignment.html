@@ -18,6 +18,12 @@
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
     </form><br>
 
+    <form th:action="@{edit-assignment-page}" method="get">
+        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+        <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
+        <input type="submit" value="Chỉnh sửa"/>
+    </form>
+
     <h1>Bài tập: <span th:text="${assignment.name}"></span></h1>
 
     <h1>Hạn chót: <span th:text="${assignment.deadline}"></span></h1>
@@ -26,7 +32,7 @@
             th:attr="data-exam-url=@{/teacher/exam/get-exam-by-examId(examId=${assignment.examId},selectedCode=0)}">Xem
             tại đây</button></h2>
 
-    <form action="/teacher/classroom/assignment/view-results" method="get">
+    <form action="view-results" method="get">
         <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}">
         <input type="submit" value="Xem kết quả học sinh">
     </form><br>

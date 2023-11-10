@@ -3,6 +3,8 @@ package com.killian.SpringBoot.ExamApp.models;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,10 +18,12 @@ public class PasswordResetToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "email", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String email;
 
     private String expiredTime;
 
+    @Column(name = "tokenId", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String tokenId;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

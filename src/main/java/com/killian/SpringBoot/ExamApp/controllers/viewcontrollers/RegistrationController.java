@@ -49,7 +49,7 @@ public class RegistrationController {
         if (user != null)
             message = "Tên người dùng đã được sử dụng. Hãy thử tên khác.";
         else if (email != null) {
-            user = userRepository.findByEmail(email);
+            user = userRepository.findByEmail(email).orElse(null);
             if (user != null)
                 message = "Email đã được sử dụng.";
             else {

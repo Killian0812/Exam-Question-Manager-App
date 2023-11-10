@@ -22,7 +22,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(2000)")
+    @Column(name = "text", columnDefinition = "VARCHAR(2000) COLLATE utf8mb4_bin")
     private String text;
 
     @ElementCollection

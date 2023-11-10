@@ -35,11 +35,15 @@ public class UserController {
             @RequestParam("password") String password,
             Model model) {
 
-        User user = userRepository.findByUsername(username).orElse(null);
+        boolean loginWithEmail = username.contains("@");
+        User user = null;
+        if (loginWithEmail)
+            user = userRepository.findByEmail(username).orElse(null);
+        else
+            user = userRepository.findByUsername(username).orElse(null);
         String message = null;
-
         if (user == null) {
-            message = "Tên đăng nhập không tồn tại.";
+            message = loginWithEmail ? "Email chưa được đăng kí" : "Tên đăng nhập không tồn tại.";
             sessionManagementService.setMessage(message);
             return "redirect:/";
         } else {
@@ -59,7 +63,7 @@ public class UserController {
     public String resetPasswordPage(@RequestParam("tokenId") String tokenId, Model model) {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByTokenId(tokenId);
         String email = passwordResetToken.getEmail();
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElse(null);
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", email);
         model.addAttribute("tokenId", tokenId);
@@ -75,7 +79,7 @@ public class UserController {
             @RequestParam("password") String password,
             @RequestParam("confirmPassword") String confirmPassword,
             Model model) {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElse(null);
         if (!password.equals(confirmPassword)) {
             sessionManagementService.setMessage("Mật khẩu xác nhận không chính xác.");
             return "redirect:/reset-password-page?tokenId=" + tokenId;
@@ -128,9 +132,16 @@ public class UserController {
     public String teacherDashboard(Model model) {
         // Retrieve user data from the session
         String username = sessionManagementService.getUsername();
+        User user = null;
+        if (username.contains("@")) {
+            user = userRepository.findByEmail(username).orElse(null);
+            sessionManagementService.setUsername(user.getUsername());
+        } else
+            user = userRepository.findByUsername(username).orElse(null);
         String role = sessionManagementService.getRole();
 
         // Use the data as needed
+        model.addAttribute("name", user.getName());
         model.addAttribute("username", username);
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
@@ -142,9 +153,16 @@ public class UserController {
     @GetMapping("/student/dashboard")
     public String studentDashboard(Model model) {
         String username = sessionManagementService.getUsername();
+        User user = null;
+        if (username.contains("@")) {
+            user = userRepository.findByEmail(username).orElse(null);
+            sessionManagementService.setUsername(user.getUsername());
+        } else
+            user = userRepository.findByUsername(username).orElse(null);
         String role = sessionManagementService.getRole();
 
         // Use the data as needed
+        model.addAttribute("name", user.getName());
         model.addAttribute("username", username);
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());

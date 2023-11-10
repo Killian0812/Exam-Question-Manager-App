@@ -31,7 +31,7 @@ public class PasswordResetTokenController {
     
     @PostMapping("/forget-password")
     public String sendTokenToEmail(@RequestParam("email") String email) {
-        User user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElse(null);
         if (user == null) {
             return "Email chưa đăng ký tài khoản.";
         }
