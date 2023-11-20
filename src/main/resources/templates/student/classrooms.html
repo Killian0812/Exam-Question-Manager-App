@@ -1,65 +1,103 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Các lớp học</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classrooms</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style-student.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
-    <div th:if="${message}" id="messageDiv" class="alert alert-success">
-        <p th:text="${message}"></p>
-    </div>
-
-    <form th:action="@{/back-to-dashboard}" method="get">
-        <input type="submit" value="Quay lại trang chủ"
-            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
-    </form>
-
-    <h1>Các lớp học</h1>
-
-    <div th:if="${classrooms}">
-        <h2 th:text="'Các lớp hiện tại: '"></h2>
-        <ul>
-            <li th:each="classroom : ${classrooms}">
-                <div>
-                    <span th:text="${classroom.name}"></span>
-                    <form action="view-classroom" method="get" style="display: inline;">
-                        <input type="hidden" th:id="classCode" th:name="classCode" th:value="${classroom.classCode}">
-                        <!-- <input type="hidden" th:id="className" th:name="className" th:value="${classroom.name}"> -->
-                        <button type="submit">Xem lớp</button>
-                    </form>
-                </div><br>
-            </li>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <li class="active"><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            <li><button><i class='bx bx-folder'></i>Xem các đề thi </button></li>
+            <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
+        </ul>
+        <ul class="side-menu">
+            <li><button><i class='bx bx-log-out'></i>Đăng xuất</button></li>
         </ul>
     </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="images/logo.png">
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p><br>
+            </div>
 
-    <form th:action="@{join-classroom-page}" method="get">
-        <input type="submit" value="Tham gia Lớp học mới" />
-    </form><br>
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <input type="submit" value="Quay lại trang chủ" class="back-button" />
+            </form><br><br>
 
-    <style>
-        .redirect-button {
-            display: inline-block;
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: #000000;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
+            <div class="boxs">
+                <div th:if="${classrooms}">
+                    <h2 th:text="'Các lớp học hiện tại: '"></h2><br>
+                    <ul>
+                        <li th:each="classroom : ${classrooms}">
+                            <div>
+                                <span th:text="${classroom.name}"></span>
+                                <form action="view-classroom" method="get" style="display: inline;" class="view-class">
+                                    <input type="hidden" th:id="classCode" th:name="classCode"
+                                        th:value="${classroom.classCode}">
+                                    <button type="submit">
+                                        <span>Xem lớp</span>
+                                        <span><i class='bx bx-up-arrow-alt'></i></span>
+                                    </button>
+                                </form>
+                            </div><br>
+                        </li>
+                    </ul>
+                </div>
 
-    <script>
-        setTimeout(function () {
-            var messageDiv = document.getElementById("messageDiv");
-            if (messageDiv) {
-                messageDiv.style.display = "none";
-            }
-        }, 2000); // message disapear after 2s
-    </script>
+                <form th:action="@{join-classroom-page}" method="get" class="attend">
+                    <input type="submit" value="Tham gia Lớp học mới" />
+                </form><br>
+            </div>
+            
+            <script>
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 2000); // message disapear after 2s
+            </script>
 
+        </main>
+    </div>
+
+    <script src="index.js"></script>
 </body>
 
 </html>

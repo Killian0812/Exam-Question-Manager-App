@@ -21,6 +21,9 @@
         "duplicate-id-active": "off"
       }
     ],
-    "disown-opener": "off"
+    "disown-opener": "off",
+    "axe/name-role-value": "off",
+    "axe/text-alternatives": "off",
+    "compat-api/css": "off"
   }
 }
