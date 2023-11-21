@@ -2,56 +2,149 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Student List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách học sinh</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style3.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
-
-    <div th:if="${message}" id="messageDiv" class="alert alert-success">
-        <p th:text="${message}"></p>
-    </div>
-
-    <form th:action="@{view-classroom}" method="get">
-        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-        <input type="submit" value="Quay lại trang trước"
-            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
-    </form>
-
-    <h2 th:text="'Lớp: ' + ${className}"></h2>
-    <h2>Danh sách học sinh:</h2>
-
-    <ul id="studentList">
-        <li th:each="student : ${students}">
-            <span th:text="${student}"></span>
-            <form th:action="@{/teacher/classroom/remove-student}" method="post" style="display: inline;">
-                <input type="hidden" id="name" name="name" th:value=${student} />
-                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-                <input type="submit" value="Xóa khỏi lớp"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa học sinh này khỏi lớp?')" />
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard' ></i>Trang chủ</button></li>
             </form>
-        </li>
-    </ul>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-paperclip' ></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
+                <li><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            </form>
+            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            </form>
+            <li><button><i class='bx bx-cog' ></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get">
+                <li><button><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+            </form><br>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu' ></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="images/logo.png">
+            </a>
+        </nav>
+         <!-- End of Navbar -->
+         <main>
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+        
+            <form th:action="@{view-classroom}" method="get">
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                <input type="submit" value="Quay lại trang trước"
+                    style="background-color: #96120f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" />
+            </form>
+        
+            <h1 th:text="'Lớp: ' + ${className}"></h1>
+            <h3>Danh sách học sinh:</h3>
 
-    <form th:action="@{/teacher/classroom/add-student}" method="post">
-        <input type="text" id="student" name="student" required />
-        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-        <input type="submit" value="Thêm học sinh" />
-    </form><br>
+            <ul id="studentList">
+                <table>  
+                    <tr><th>Tên đăng nhập</th><th>Họ và tên</th><th>Ngày sinh</th><th>Email</th><th></th></tr>  
+                    <li th:each="student : ${students}">
+                        <tr><td th:text="${student.username}"></td>
+                            <td th:text="${student.name}"></td>
+                            <td th:text="${student.dob}"></td>
+                            <td th:text="${student.email}"></td>
+                            <td>
+                                <form th:action="@{/teacher/classroom/remove-student}" method="post" style="display: inline;">
+                                    <input type="hidden" id="name" name="name" th:value=${student} />
+                                    <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                                    <input type="submit" value="Xóa khỏi lớp"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa học sinh này khỏi lớp?')" />
+                                </form>
+                            </td></tr>  
+                    </li>
+                </table>  
+            </ul>
+        
+            <form th:action="@{/teacher/classroom/add-student}" method="post" style="margin-top: 25px; display: flex; justify-content: center;" class="tuongtac2">
+                <input type="text" id="student" name="student" required />
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
+                <button type="submit">Thêm học sinh</button>
+            </form><br>
+        
+            <form action="/teacher/classroom/export-student-list" method="get" style="display: flex; align-items: center; justify-content: center;"  class="tuongtac1">
+                <input type="hidden" id="classCode" name="classCode" th:value="${classCode}">
+                <button type="submit">Xuất danh sách học sinh</button>
+            </form>
 
-    <form action="/teacher/classroom/export-student-list" method="get">
-        <input type="hidden" id="classCode" name="classCode" th:value="${classCode}">
-        <input type="submit" value="Xuất danh sách học sinh">
-    </form>
+            <style>  
+                table, th, td {  
+                    margin-left: auto;
+                    margin-right: auto;
+                    border: 1px solid black;  
+                    border-collapse: collapse;  
+                }  
+                th, td {  
+                    padding: 10px;  
+                }  
+            </style>  
+        
+            <script>
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 2000); // message disapear after 2s
+            </script>
 
-    <script>
-        setTimeout(function () {
-            var messageDiv = document.getElementById("messageDiv");
-            if (messageDiv) {
-                messageDiv.style.display = "none";
-            }
-        }, 2000); // message disapear after 2s
-    </script>
-
+            <style>
+                .redirect-button {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    font-size: 14px;
+                    background-color: #000000;
+                    color: #fff;
+                    text-decoration: none;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            </style>
+         </main>
+        </div>
+        <script src="/js/index.js"></script>   
 </body>
-
 </html>

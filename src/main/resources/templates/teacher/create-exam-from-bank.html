@@ -1,74 +1,154 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
-    <title>Create Exam</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Exam From Bank</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
 </head>
 
 <body>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <li class="active"><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            <li><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <li><button class="logout"><i class='bx bx-log-out'></i>Đăng xuất</button></li>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="images/logo.png">
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <div>
+                <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                    <p th:text="${message}"></p>
+                </div>
+                <form th:action="@{select-subject-and-grade}" method="get">
+                    <button type="submit" class="btn btn-secondary border-3" style="background-color: #96120f;">Chọn lại
+                        môn học / khối lớp</button>
+                </form>
 
-    <div th:if="${message}" id="messageDiv" class="alert alert-success">
-        <p th:text="${message}"></p>
+                <div class="container text-center mb-4">
+                    <div class="row align-items-start">
+                        <div class="col-sm">
+                            <h1>Tạo Đề thi</h1>
+                        </div>
+                        <div class="col-sm"></div>
+                    </div>
+                </div>
+                <form th:action="@{create-exam-from-bank}" method="post">
+                    <div class="row">
+                        <div class="col">
+                            <h3 th:text="'Khối lớp: '+${selectedGrade}"></h3>
+                            <h3 th:text="'Môn học: '+${selectedSubject}"></h3>
+
+                            <input type="hidden" name="subject" th:value="${selectedSubject}" />
+                            <input type="number" name="grade" th:value="${selectedGrade}" style="display: none" />
+
+                            <label for="name">Tên bộ đề:</label>
+                            <div class="form-floating mb-5 mt-3">
+                                <input type="text" class="form-control" id="name" name="name" th:value="${typedName}"
+                                    placeholder="Sample Exam" required />
+                                <label for="floatingInput">Tên bộ đề</label>
+                            </div>
+
+                            <label for="amount">Số mã đề:</label>
+                            <div class="form-floating mb-5 mt-3">
+                                <input type="text" class="form-control" id="amount" name="amount" th:value="1"
+                                    placeholder="Sample Class" required />
+                                <label for="floatingInput">Số mã đề</label>
+                            </div>
+
+                            <label for="duration">Thời gian làm bài (Phút):</label>
+                            <div class="form-floating mb-5 mt-3">
+                                <input type="number" class="form-control" id="duration" name="duration"
+                                    placeholder="Sample Class" required />
+                                <label for="floatingInput">Thời gian làm bài</label>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <h4>Phân chia số câu:</h4>
+                            <div th:each="chapter, chapterIndex : ${chapters}">
+                                <label th:text="${chapter} + ' - '"></label>
+                                <input type="number" id="questionCountForEachChapter" name="questionCountForEachChapter"
+                                    required th:value="0" th:max="${limit.get(chapterIndex.index)}" th:min="0" />
+                                <br><br>
+                            </div><br />
+                            <div class="col d-flex justify-content-end">
+                                <button type="submit" class="btn btn-secondary btn-lg border-3"
+                                    style="background-color: #96120f;">Tạo đề</button>
+                            </div>
+                        </div>
+                </form>
+            </div>
+            <script>
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 2000); // message disapear after 2s
+            </script>
+
+            <style>
+                .redirect-button {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    font-size: 14px;
+                    background-color: #000000;
+                    color: #fff;
+                    text-decoration: none;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            </style>
+    </div>
+    </div>
+    </main>
     </div>
 
-    <form th:action="@{select-subject-and-grade}" method="get">
-        <input type="submit" value="Chọn lại môn học / Khối lớp"
-            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
-    </form>
-
-    <h1>Tạo Đề thi</h1>
-
-    <form th:action="@{create-exam-from-bank}" method="post">
-
-        <h3 th:text="'Khối lớp: '+${selectedGrade}"></h3>
-        <h3 th:text="'Môn học: '+${selectedSubject}"></h3>
-
-        <input type="hidden" name="subject" th:value="${selectedSubject}" />
-        <input type="number" name="grade" th:value="${selectedGrade}" style="display: none" />
-
-        <label for="name">Tên bộ đề:</label>
-        <input type="text" id="name" name="name" th:value="${typedName}" required />
-
-        <label for="amount">Số mã đề:</label>
-        <input type="number" id="amount" name="amount" th:value="1" required /><br><br>
-
-        <label for="duration">Thời gian làm bài (Phút):</label>
-        <input type="number" id="duration" name="duration" required />
-
-        <h4>Phân chia số câu:</h4>
-        <div th:each="chapter, chapterIndex : ${chapters}">
-            <label th:text="${chapter} + ' - '"></label>
-            <input type="number" id="questionCountForEachChapter" name="questionCountForEachChapter" required
-                th:value="0" th:max="${limit.get(chapterIndex.index)}" th:min="0" />
-            <br><br>
-        </div><br />
-
-        <input type="submit" value="Tạo đề thi" />
-    </form>
-
-    <script>
-        setTimeout(function () {
-            var messageDiv = document.getElementById("messageDiv");
-            if (messageDiv) {
-                messageDiv.style.display = "none";
-            }
-        }, 2000); // message disapear after 2s
-    </script>
-
-    <style>
-        .redirect-button {
-            display: inline-block;
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: #000000;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    </style>
-
+    <script src="/js/index.js"></script>
 </body>
 
 </html>

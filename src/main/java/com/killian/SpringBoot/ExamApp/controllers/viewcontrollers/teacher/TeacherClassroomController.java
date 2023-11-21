@@ -204,7 +204,8 @@ public class TeacherClassroomController {
     public String studentList(
             @RequestParam("classCode") String classCode,
             Model model) {
-        List<String> students = studentClassroomRepository.findAllStudentsByClasscode(classCode);
+        List<String> usernames = studentClassroomRepository.findAllStudentsByClasscode(classCode);
+        List<User> students = userRepository.findAllByUsernames(usernames);
         String className = classroomRepository.findByClasscode(classCode).getName();
         model.addAttribute("className", className);
         model.addAttribute("classCode", classCode);
