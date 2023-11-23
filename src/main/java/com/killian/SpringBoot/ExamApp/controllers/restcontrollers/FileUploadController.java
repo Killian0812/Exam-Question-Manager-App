@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 import com.killian.SpringBoot.ExamApp.models.ResponseObject;
 import com.killian.SpringBoot.ExamApp.services.ImageStorageService;
+import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
 @RequestMapping(path = "api/v1/FileUpload")
@@ -26,6 +27,22 @@ public class FileUploadController {
     // inject Storage Service
     @Autowired
     private ImageStorageService storageService;
+
+    @Autowired
+    private SessionManagementService sessionManagementService;
+
+    @GetMapping("/reloadPageForImageAppear")
+    public ResponseEntity<ResponseObject> reloadPageForImageAppear(
+            @RequestParam(value = "hash", required = false) String hashValue) {
+        if (hashValue != null) {
+            sessionManagementService.clearMessage();
+            // System.out.println("Page reloaded");
+        } else {
+            // System.out.println("Page not reloaded yet");
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseObject("Ok", "Page reloaded", null));
+    }
 
     @PostMapping("")
     public ResponseEntity<ResponseObject> uploadFile(@RequestParam("file") MultipartFile file) {

@@ -39,6 +39,7 @@ public class RegistrationController {
             @RequestParam("username") String username,
             @RequestParam("email") String email,
             @RequestParam("name") String name,
+            @RequestParam("gender") String gender,
             @RequestParam("password") String password,
             @RequestParam("confirmPassword") String confirmPassword,
             @RequestParam("role") String role,
@@ -62,8 +63,8 @@ public class RegistrationController {
                     LocalDate date = LocalDate.parse(dob, inputFormat);
                     DateTimeFormatter desiredFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
                     String formattedDob = date.format(desiredFormat);
-                    
-                    userService.saveUser(new User(username, password, email, name, role, formattedDob));
+
+                    userService.saveUser(new User(username, password, email, name, role, formattedDob, gender));
                 }
             }
         }

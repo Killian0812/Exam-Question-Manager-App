@@ -1,16 +1,21 @@
 package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.killian.SpringBoot.ExamApp.models.PasswordResetToken;
 import com.killian.SpringBoot.ExamApp.models.User;
 import com.killian.SpringBoot.ExamApp.repositories.PasswordResetTokenRepository;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
+import com.killian.SpringBoot.ExamApp.services.ImageStorageService;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 import com.killian.SpringBoot.ExamApp.services.UserServiceImpl;
 
@@ -28,6 +33,9 @@ public class UserController {
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private ImageStorageService storageService;
 
     @GetMapping("/login")
     public String login(
@@ -93,9 +101,55 @@ public class UserController {
     public String profile(Model model) {
 
         User user = userRepository.findByUsername(sessionManagementService.getUsername()).orElse(null);
-        ;
         model.addAttribute("user", user);
+        model.addAttribute("message", sessionManagementService.getMessage());
         return "profile";
+    }
+
+    @GetMapping("/profile/edit")
+    public String editProfilePage(Model model) {
+
+        User user = userRepository.findByUsername(sessionManagementService.getUsername()).orElse(null);
+        model.addAttribute("user", user);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+        return "edit-profile";
+    }
+
+    @PostMapping("edit-profile")
+    public String editProfile(
+            @RequestParam("avatar") MultipartFile avatar,
+            @RequestParam("name") String name,
+            @RequestParam("email") String email,
+            @RequestParam("gender") String gender,
+            @RequestParam("dob") String dob) {
+
+        User thisUser = userRepository.findByUsername(sessionManagementService.getUsername()).get();
+        User user = userRepository.findByEmail(email).get();
+        if (user != null && user.getUsername() != thisUser.getUsername()) {
+            sessionManagementService.setMessage("Email đã được đăng kí bởi tài khoản khác.");
+            return "redirect:/profile/edit";
+        }
+        if (dob != null) {
+            DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate date = LocalDate.parse(dob, inputFormat);
+            DateTimeFormatter desiredFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            String formattedDob = date.format(desiredFormat);
+            thisUser.setDob(formattedDob);
+        }
+        if (email != null)
+            thisUser.setEmail(email);
+        if (gender != null)
+            thisUser.setGender(gender);
+        if (name != null)
+            thisUser.setName(name);
+        if (!avatar.isEmpty()) {
+            String generatedFileName = storageService.storeFile(avatar);
+            thisUser.setAvatarFileName(generatedFileName);
+        }
+        userRepository.save(thisUser);
+        sessionManagementService.setMessage("Cập nhật thông tin thành công");
+        return "redirect:/profile";
     }
 
     @GetMapping("/change-password-page")

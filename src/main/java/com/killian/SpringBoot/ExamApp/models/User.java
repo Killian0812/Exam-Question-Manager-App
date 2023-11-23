@@ -31,6 +31,10 @@ public class User implements UserDetails {
     @Column(name = "name", columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String name;
 
+    private String gender;
+
+    private String avatarFileName;
+
     private String role;
 
     private String dob;
@@ -39,20 +43,15 @@ public class User implements UserDetails {
 
     }
 
-    public User(String username, String password, String email, String name, String role, String dob) {
+    public User(String username, String password, String email, String name, String role, String dob, String gender) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
+        this.gender = gender;
+        this.avatarFileName = "default.jpg";
         this.role = role;
         this.dob = dob;
-    }
-
-    public User(String username, String password, String email, String role) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.role = role;
     }
 
     @Override
@@ -79,6 +78,22 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getAvatarFileName() {
+        return avatarFileName;
+    }
+
+    public void setAvatarFileName(String avatarFileName) {
+        this.avatarFileName = avatarFileName;
     }
 
     public String getName() {

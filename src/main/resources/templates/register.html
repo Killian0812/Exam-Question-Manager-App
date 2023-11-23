@@ -62,21 +62,26 @@
                 <input class="dangky" type="text" id="username" name="username" placeholder="Tên đăng nhập"
                     required /><br />
                 <input class="dangky" type="email" id="email" name="email" placeholder="Email" required /><br />
-                <input class="dangky" type="name" id="name" name="name" placeholder="Họ và tên" required /><br />
+                <input class="dangky" type="name" id="name" name="name" placeholder="Họ và tên" required /><br /><br>
+                <label for="gender">Giới tính:</label>
+                <select style="
+                    border: 1px solid black; 
+                    border-radius: 5px; 
+                    cursor: pointer;" id="gender" name="gender">
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                </select><br /><br>
+                <label for="dob">Ngày sinh:</label>
+                <input class="dangky" type="date" id="dob" name="dob" required><br><br>
                 <input class="dangky" type="password" id="password" name="password" placeholder="Mật khẩu"
                     required /><br />
                 <input class="dangky" type="password" id="confirmPassword" name="confirmPassword"
                     placeholder="Nhập lại mật khẩu" required /><br /><br />
-                <label for="dob">Ngày sinh:</label>
-                <input class="dangky" type="date" id="dob" name="dob" required><br><br>
                 <label for="role">Bạn là:</label>
                 <select style="
                     border: 1px solid black; 
                     border-radius: 5px; 
-                    cursor: pointer;
-                    
-                    
-                    " id="role" name="role">
+                    cursor: pointer;" id="role" name="role">
                     <option value="Student">Học sinh</option>
                     <option value="Teacher">Giáo viên</option>
                 </select><br />

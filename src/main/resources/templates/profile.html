@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Trang cá nhân</title>
 </head>
+
 <body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
 
     <form th:action="@{/back-to-dashboard}" method="get">
         <input type="submit" value="Quay lại trang chủ"
             style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form><br>
+
+    <form th:action="@{profile/edit}" method="get">
+        <input type="submit" value="Thay đổi thông tin cá nhân" />
     </form>
 
     <h2>Hồ sơ người dùng</h2>
-    
+
+    <div>
+        <!-- <label for="avatar">Ảnh đại diện:</label> -->
+        <img th:src="@{'/images/' + ${user.avatarFileName}}" width="270" height="250" />
+    </div><br>
+
     <div>
         <label for="username">Tên đăng nhập:</label>
         <span th:text="${user.username}"></span>
@@ -21,20 +35,49 @@
         <label for="name">Họ và tên:</label>
         <span th:text="${user.name}"></span>
     </div>
-    
+
+    <div>
+        <label for="gender">Giới tính:</label>
+        <span th:text="${user.gender}"></span>
+    </div>
+
     <div>
         <label for="dob">Ngày sinh:</label>
         <span th:text="${user.dob}"></span>
     </div>
-    
+
     <div>
         <label for="email">Email:</label>
         <span th:text="${user.email}"></span>
-    </div><br>  
-    
+    </div><br>
+
     <form th:action="@{change-password-page}" method="get">
         <input type="submit" value="Đổi mật khẩu" />
     </form><br>
 
+    <script th:inline="javascript">
+
+        window.onload = function () {
+            setTimeout(function () {
+                if (!window.location.hash) {
+                    window.location = window.location + '#reloaded';
+                    window.location.reload();
+                }
+            }, 500);
+        };
+        if (window.location.hash == "#reloaded") {
+            var hashValue = window.location.hash;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/v1/FileUpload/reloadPageForImageAppear?hash=' + encodeURIComponent(hashValue), true);
+            xhr.send();
+            setTimeout(function () {
+                var messageDiv = document.getElementById("messageDiv");
+                if (messageDiv) {
+                    messageDiv.style.display = "none";
+                }
+            }, 2000);
+        }
+    </script>
 </body>
+
 </html>

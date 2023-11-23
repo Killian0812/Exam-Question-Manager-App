@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang cá nhân</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+</head>
+
+<body>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <form th:action="@{/profile}" method="get">
+        <input type="submit" value="Quay lại hồ sơ cá nhân"
+            style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+    </form>
+
+    <h2>Thay đổi thông tin người dùng</h2>
+
+    <form action="/edit-profile" enctype="multipart/form-data" id="editProfileForm" method="post">
+
+        <div>
+            <span>Ảnh đại diện:</span><br>
+            <img id="imagePreview" th:src="@{'/images/' + ${user.avatarFileName}}" width="270" height="250"><br>
+            <input type="file" id="image" name="avatar" accept=".jpg, .png, .jpeg">
+        </div><br>
+
+        <div>
+            <label for="name">Họ và tên:</label>
+            <input type="text" id="name" name="name" th:value="${user.name}"></span>
+        </div><br>
+
+        <div>
+            <label for="gender">Giới tính:</label>
+            <select style="
+                border: 1px solid black; 
+                border-radius: 5px; 
+                cursor: pointer;" id="gender" name="gender">
+                <option value="Nam" th:selected="${user.gender == 'Nam'}">Nam</option>
+                <option value="Nữ" th:selected="${user.gender != 'Nam'}">Nữ</option>
+            </select>
+        </div><br>
+
+        <div>
+            <label for="dob">Ngày sinh:</label>
+            <input type="date" id="dob" name="dob" th:value="${user.dob}"><br><br>
+        </div>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" th:value="${user.email}"><br><br>
+        </div>
+
+        <input type="submit" id="submitButton" value="Xác nhận" disabled>
+    </form>
+
+    <script th:inline="javascript">
+        
+        image.onchange = evt => {
+            const [file] = image.files
+            if (file) {
+                imagePreview.src = URL.createObjectURL(file)
+            }
+        }
+        
+        function formatDate(inputDate) {
+            var formattedDate = moment(inputDate, 'MM/DD/YYYY').format('YYYY-MM-DD');
+            return formattedDate;
+        }
+        var inputDate = /*[[${user.dob}]]*/ "";
+        var convertedDate = formatDate(inputDate);
+        document.getElementById("dob").value = convertedDate;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            var form = document.getElementById('editProfileForm');
+            var inputs = form.querySelectorAll('input, select');
+            var submitButton = document.getElementById('submitButton');
+        
+            var isFormChanged = false;
+        
+            function enableSubmitButton() {
+                submitButton.disabled = !isFormChanged;
+            }
+        
+            inputs.forEach(function(input) {
+                input.addEventListener('change', function() {
+                    isFormChanged = true;
+                    enableSubmitButton();
+                });
+            });
+        });
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); 
+    </script>
+</body>
+
+</html>

@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageStorageService implements IStorageService {
 
-    private final Path storageFolder = Paths.get("uploads");
+    private final Path storageFolder = Paths.get("src/main/resources/static/images");
 
     public ImageStorageService() {
         try {
@@ -39,15 +39,15 @@ public class ImageStorageService implements IStorageService {
     public String storeFile(MultipartFile file) {
         try {
             // empty file not allowed
-            System.out.println("Calling Image Storage Service");
+            // System.out.println("Calling Image Storage Service");
             if (file.isEmpty())
                 throw new RuntimeException("Failed to store empty file!");
             // image file only
             if (!isImageFile(file))
                 throw new RuntimeException("You can only upload image!");
-            // size must be <= 5mb
+            // size must be <= 25mb
             float fileSizeInMegabytes = file.getSize() / 1000000;
-            if (fileSizeInMegabytes > 5.0f)
+            if (fileSizeInMegabytes > 25.0f)
                 throw new RuntimeException("File size too big!");
 
             // file must be renamed
