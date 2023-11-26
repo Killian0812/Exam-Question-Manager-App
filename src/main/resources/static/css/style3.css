@@ -34,14 +34,31 @@ h3 {
 }
 
 .left-column {
-    width: 50%;
+    width: 60%;
     float: left;
+    position: relative;
 }
 
 .right-column {
-    width: 50%;
+    width: 40%;
     float: right;
+    position: relative;
 }
+
+.container {
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-top: 225px;
+    transform:translate(-50%,-50%);
+    background-color: #ffffff;
+    width: 70%; 
+    text-align: center;
+    box-sizing: border-box;  
+    border-radius: 30px;
+    border: 2px solid #464646;
+}
+
 
 .tuongtac button {
     background-color: inherit;
@@ -119,4 +136,26 @@ h3 {
 .tuongtac2 button:active{
     background-color: #96120f;
     color: #fff;
+}
+
+.back-button {
+    background-color: rgb(150, 3, 3);
+    align-items: center;
+    border-radius: 6px;
+    color: white;
+    display: flex;
+    font-family: 'Roboto';
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: center;
+    line-height: 28px;
+    padding: 8px 12px;
+    text-align: center;
+    border: none;
+    box-shadow: 0 0 5px 1px black;
+}
+
+.back-button:hover {
+    background-color: rgb(176, 54, 54);
+    cursor: pointer;
 }

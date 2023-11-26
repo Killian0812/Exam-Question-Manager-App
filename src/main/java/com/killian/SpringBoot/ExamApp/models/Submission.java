@@ -2,6 +2,7 @@ package com.killian.SpringBoot.ExamApp.models;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,7 +154,8 @@ public class Submission {
     }
 
     private static String getCurrentDateTime() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        ZoneId zoneId = ZoneId.of("Asia/Bangkok");
+        LocalDateTime currentDateTime = LocalDateTime.now(zoneId);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MM/dd/yyyy");
         String formattedDateTime = currentDateTime.format(formatter);
         return formattedDateTime;

@@ -36,10 +36,9 @@
             <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
-            <form th:action="@{/logout}" method="get" id="logoutForm">
-                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
-            </form>
-            
+            <form th:action="@{/logout}" method="get">
+                <li><button><i class='bx bx-log-out'></i>Đăng xuất</button></li>
+            </form><br>
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -74,15 +73,16 @@
             </div>
 
             <form th:action="@{classrooms-page}" method="get">
-                <input type="submit" value="Quay lại trang trước"
-                    style="background-color: #96120f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" />
+                <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
             </form>
 
             <div class="left-column">
-                <h1 style="line-height: 150px;font-size: 35px;">Lớp: <span th:text="${classroom.name}"></span></h1>
-                <h3>Môn học: <span th:text="${classroom.subject}"></span></h3>
-                <h3>Khối lớp: <span th:text="${classroom.grade}"></span></h3>
-                <h3>Mã lớp: <span th:text="${classroom.classCode}"></span></h3>
+                <div class="container">
+                    <h1 style="line-height: 100px;font-size: 35px;">Lớp: <span th:text="${classroom.name}"></span></h1>
+                    <h3>Môn học: <span th:text="${classroom.subject}"></span></h3>
+                    <h3>Khối lớp: <span th:text="${classroom.grade}"></span></h3>
+                    <h3 style="margin-bottom: 50px;">Mã lớp: <span th:text="${classroom.classCode}"></span></h3>
+                </div>
             </div>
 
             <div class="right-column"
@@ -97,26 +97,12 @@
                     <button type="submit">Danh sách bài tập</button>
                 </form><br>
 
-                <form action="/teacher/classroom/remove-classroom" method="post" class="tuongtac" style="display: inline;">
+                <form action="/teacher/classroom/remove-classroom" method="post" style="display: inline;" class="tuongtac">
                     <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}">
-                    <button type="submit" value="Xóa lớp"
-                        onclick="return confirm('Bạn có chắc chắn muốn xóa lớp học này?')" >Xoá lớp</button>
+                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa lớp học này?')" >
+                        Xóa lớp</button>
                 </form>
             </div>
-
-            <style>
-                .redirect-button {
-                    display: inline-block;
-                    padding: 5px 10px;
-                    font-size: 14px;
-                    background-color: #000000;
-                    color: #fff;
-                    text-decoration: none;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
-            </style>
 
             <script>
                 setTimeout(function () {

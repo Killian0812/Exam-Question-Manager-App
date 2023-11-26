@@ -13,14 +13,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-        <style>
-            a{
-                text-decoration: none;
-            }
-        </style>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
 </head>
 
-<body>
+<body style="background-color: #f1f5f9;">
     <!--Sidebar-->
     <div class="sidebar">
         <a href="#" class="logo">
@@ -47,9 +47,10 @@
         </ul>
         <ul class="side-menu">
             <form th:action="@{/logout}" method="get" id="logoutForm">
-                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
             </form>
-            
+
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -75,23 +76,22 @@
             </a>
         </nav>
         <!-- End of Navbar -->
-        <main style="background-color: #f1f5f9;">
+        <main>
             <div>
                 <div th:if="${message}" id="messageDiv" class="alert alert-success">
                     <p th:text="${message}"></p>
-                </div>
+                </div><br>
 
-                <form th:action="@{view-exams-by-filter-page}" method="get">
-                    <button type="submit" class="btn btn-secondary border-3" style="background-color: #96120f;">Quay lại
-                        các đề
-                    </button>
-                </form><br>
-
-                <span th:text="'Đề số: '"></span>
                 <div class="container">
+                    <form th:action="@{view-exams-by-filter-page}" method="get">
+                        <h2><input type="submit" value="Quay lại các đề" class="back-button" /></h2>
+                    </form>
+
+                    <span th:text="'Đề số: '"></span>
                     <div class="row">
                         <div class="col-9">
-                            <form th:action="@{get-exam-by-examId}" method="get" style="display: inline;">
+                            <form th:action="@{get-exam-by-examId}" class="tuongtac1" method="get"
+                                style="display: inline;">
                                 <div class="row">
                                     <div class="col-2">
                                         <input class="form-control" th:type="hidden" th:id="examId" th:name="examId"
@@ -101,30 +101,21 @@
                                                 th:selected="${code == selectedCode}"></option>
                                         </select>
                                     </div>
-                                    <div class="col-sm"><button type="submit" class="btn btn-secondary border-3"
-                                            style="background-color: #96120f;">Xem</button>
-                                    </div>
-
+                                    <div class="col-sm"><button type="submit">Xem</button></div>
                                 </div>
                             </form><br><br>
                         </div>
 
                         <div class="col-3">
-                            <form th:action="@{export-pdf}" method="get">
+                            <form th:action="@{export-pdf}" method="get" class="tuongtac2">
                                 <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
-                                <button type="submit" class="btn btn-secondary border-3"
-                                    style="background-color: #96120f;">Xuất file
-                                    zip các
-                                    đề thi</button>
+                                <button type="submit">Xuất file zip các đề thi</button>
                             </form>
                         </div>
                     </div>
                 </div>
 
             </div>
-
-
-
 
             <div class="col" style="text-align: center;">
                 <h1><span th:text="'Đề thi: ' + ${exam.name} + ' - ID: ' + ${exam.examId}"></span></h1>

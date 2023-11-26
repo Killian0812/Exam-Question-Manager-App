@@ -3,6 +3,9 @@
 
 <head>
     <title>Exam Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 
 <body>
@@ -45,18 +48,23 @@
         </li>
     </ul>
 
-    <button id="submitButton" onclick="SubmitAnswer()">Nộp bài</button>
+    <button id="submitButton" onclick="SubmitAnswer('Bạn có chắc chắn muốn nộp bài?')">Nộp bài</button>
 
     <script th:inline="javascript">
 
         // "17:31:00 11/25/2023"
         var submissionEndTime = /*[[${endTime}]]*/ 0;
-        var endTime = new Date(submissionEndTime).getTime();
+        var timezone = 'Asia/Bangkok';
+        const endTime = moment.tz(submissionEndTime, 'HH:mm:ss MM/DD/YYYY', timezone).valueOf();
+
+        var now = moment.tz(timezone);
+        var currentTime = now.valueOf();
+
         var x = setInterval(function () {
-            var now = new Date();
-            var currentTime = now.getTime();
 
             var s, m, h;
+            var now = moment.tz(timezone);
+            var currentTime = now.valueOf();
             var diff = endTime - currentTime;
 
             s = Math.floor(diff / 1000);
@@ -70,7 +78,7 @@
             if (diff < 0) {
                 clearInterval(x);
                 h = m = s = 0;
-                SubmitAnswer();
+                SubmitAnswer('Đã hết giờ làm bài. Bấm OK để xác nhận nộp bài.');
             }
 
             h = (h < 10) ? "0" + h : h;
@@ -107,9 +115,9 @@
                 });
         }
 
-        function SubmitAnswer() {
+        function SubmitAnswer(msgStr) {
 
-            if (!confirm("Bạn có chắc chắn muốn nộp bài?"))
+            if (!confirm(msgStr))
                 return;
             var choices = [];
             var questionCount = /*[[${exam.questions.size()}]]*/ 0;

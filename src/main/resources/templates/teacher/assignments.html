@@ -72,27 +72,24 @@
         
             <form th:action="@{view-classroom}" method="get">
                 <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-                <input type="submit" value="Quay lại trang trước"
-                style="background-color: #96120f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" />
+                <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
             </form>
         
-            <h1 th:text="'Lớp: ' + ${className}"></h1>
-            <h3>Danh sách bài tập:</h3>
-        
+            <h1 style="text-align: left;" th:text="'Lớp: ' + ${className}"></h1>
+            <h2>Danh sách bài tập:</h2>
             <ul id="assignmentList">
                 <li th:each="assignment : ${assignments}">
-                    <span th:text="${assignment.name}"></span>
-                    <form th:action="@{assignment/view-assignment}" method="get" style="display: inline;" class="tuongtac">
+                    <form th:action="@{assignment/view-assignment}" method="get" style="display: inline;" class="tuongtac2">
                         <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                         <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
-                        <button style="display: flex; align-items: center; justify-content: center;"type="submit" th:text="${assignmentName}"></button>
+                        <button style=" width: 30%;" type="submit" th:text="${assignment.name}"></button>
                     </form><br>
                 </li>
             </ul>
         
-            <form th:action="@{assignment/add-assignment-page}" method="get" style="display: flex; align-items: center; justify-content: center;" class="tuongtac1">
+            <form th:action="@{assignment/add-assignment-page}" method="get" style="display: flex;" class="tuongtac1">
                 <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
-                <button type="submit">Thêm bài tập</buttom>
+                <button type="submit">Thêm bài tập</button>
             </form>
         
             <script>
@@ -126,6 +123,6 @@
             </style>
          </main>
     </div>
-    <script src="/js/index.js"></script>
+    <script src="/css/index.js"></script>
 </body>
 </html>

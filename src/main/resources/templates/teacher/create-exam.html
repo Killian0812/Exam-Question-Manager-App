@@ -79,20 +79,19 @@
             <div>
                 <div th:if="${message}" id="messageDiv" class="alert alert-success">
                     <p th:text="${message}"></p>
-                </div>
+                </div><br>
 
                 <div class="container-fluid">
                     <div class="row" style="height: 100vh;">
                         <div class="col-9">
-                            <div class="'container">
+                            <div class="container">
                                 <form th:action="@{/back-to-dashboard}" method="get">
-                                    <button type="submit" class="btn btn-secondary border-3"
-                                        style="background-color:  #96120f;">Quay về trang
+                                    <button type="submit" class="back-button">Quay về trang
                                         chủ</button>
                                 </form>
-                            </div>
+                            </div><br>
 
-                            <div class="container text-center">
+                            <div class="container">
                                 <div class="row align-items-start">
                                     <div class="col mb-5 mt-3">
                                         <h1>Tạo Đề Thi</h1>
@@ -100,14 +99,12 @@
                                 </div>
                             </div>
 
-                            <form th:action="@{select-subject-and-grade}" method="get">
-                                <button type="submit" class="btn btn-secondary btn-lg border-3"
-                                    style="background-color:  #96120f;">Tạo đề thi từ ngân hàng câu hỏi</button>
+                            <form th:action="@{select-subject-and-grade}" method="get" class="tuongtac2">
+                                <button type="submit">Tạo đề thi từ ngân hàng câu hỏi</button>
                             </form><br>
 
-                            <form th:action="@{create-own-exam-page}" method="get">
-                                <button type="submit" class="btn btn-secondary btn-lg border-3 mt-3"
-                                    style="background-color:  #96120f;">Tự tạo đề thi</button>
+                            <form th:action="@{create-own-exam-page}" method="get" class="tuongtac2">
+                                <button type="submit">Tự tạo đề thi</button>
                             </form><br>
 
                             <script>
@@ -119,8 +116,7 @@
                                 }, 2000); // message disapear after 2s
                             </script>
                         </div>
-                        <div class="col" style="background-color: rgb(255, 225, 225)">
-                        </div>
+                        <!-- <div class="col" style="background-color: rgb(120, 120, 120)"></div> -->
                     </div>
                 </div>
             </div>

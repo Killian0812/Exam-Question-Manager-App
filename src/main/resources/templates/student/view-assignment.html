@@ -102,16 +102,16 @@
             <p th:if="${expired}" class="notification">
                 <i class='bx bx-x-circle'></i>
                 <span>Đã quá thời hạn làm bài !!!</span>
-            </p>
+            </p><br>
 
-            <br><form id="assignmentForm" action="/student/classroom/assignment/do-assignment" method="get">
+            <form id="assignmentForm" action="do-assignment" method="get">
                 <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                 <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
-                <input type="button" id="startExamButton" value="Bắt đầu làm bài" class="start-button" disabled
+                <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button" disabled
                     onclick="return confirm('Bài tập sẽ tính giờ làm bài. Bạn có chắc chắn muốn bắt đầu làm?')" />
             </form><br>
 
-            <form action="/student/classroom/assignment/result" method="get">
+            <form action="result" method="get">
                 <input type="hidden" id="submissionId" name="submissionId" th:value="${submissionId}">
                 <input type="submit" id="viewResultButton" value="Xem kết quả" class="result-button" disabled>
             </form>

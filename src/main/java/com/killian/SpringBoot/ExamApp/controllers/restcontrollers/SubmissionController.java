@@ -91,7 +91,7 @@ public class SubmissionController {
 
     private static String getCurrentDateTime() {
         LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MM/dd/yyyy");
         String formattedDateTime = currentDateTime.format(formatter);
         return formattedDateTime;
     }

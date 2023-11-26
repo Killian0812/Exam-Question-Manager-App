@@ -13,11 +13,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-        <style>
-            a{
-                text-decoration: none;
-            }
-        </style>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
 
 </head>
 
@@ -39,7 +39,7 @@
                 <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
             </form>
             <form th:action="@{/teacher/exam/create-exam-page}" method="get">
-                <li  class="active"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+                <li class="active"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
             </form>
             <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
                 <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
@@ -48,9 +48,10 @@
         </ul>
         <ul class="side-menu">
             <form th:action="@{/logout}" method="get" id="logoutForm">
-                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
             </form>
-            
+
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -76,22 +77,21 @@
             </a>
         </nav>
         <!-- End of Navbar -->
-        <main 
-            style="
+        <main style="
                 background-color: #f1f5f9;
                 ">
-            <div 
-                style="
+            <div style="
                     margin-left: 10px;
                     
                     ">
                 <div th:if="${message}" id="messageDiv" class="alert alert-success">
                     <p th:text="${message}"></p>
-                </div>
+                </div><br>
+
                 <form th:action="@{select-subject-and-grade}" method="get">
-                    <button type="submit" class="btn btn-secondary border-3" style="background-color: #96120f;">Chọn lại
+                    <button type="submit" class="back-button">Chọn lại
                         môn học / khối lớp</button>
-                </form>
+                </form><br>
 
                 <div class="container text-center mb-4">
                     <div class="row align-items-start">
@@ -101,9 +101,9 @@
                         <div class="col-sm"></div>
                     </div>
                 </div>
-                <form th:action="@{create-exam-from-bank}" method="post">
+                <form th:action="@{create-exam-from-bank}" method="post" class="tuongtac2">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-3">
                             <h3 th:text="'Khối lớp: '+${selectedGrade}"></h3>
                             <h3 th:text="'Môn học: '+${selectedSubject}"></h3>
 
@@ -139,11 +139,10 @@
                                     required th:value="0" th:max="${limit.get(chapterIndex.index)}" th:min="0" />
                                 <br><br>
                             </div><br />
-                            <div class="col d-flex justify-content-end">
-                                <button type="submit" class="btn btn-secondary btn-lg border-3"
-                                    style="background-color: #96120f;">Tạo đề</button>
-                            </div>
                         </div>
+                        <div>
+                            <button type="submit">Tạo đề</button>
+                        </div><br><br>
                 </form>
             </div>
             <script>
