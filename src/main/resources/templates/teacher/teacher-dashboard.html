@@ -3,41 +3,85 @@
 
 <head>
     <title>Exam Manager</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="/css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        
+
+    </style>
 </head>
 
 <body>
-
     <div th:if="${message}" id="messageDiv" class="alert alert-success">
         <p th:text="${message}"></p>
     </div>
-
-    <div th:if="${role == 'Teacher'}">
-        <h1>Trang chủ</h1>
-        <p th:text="'Xin chào, ' + ${name} + '!'">Xin chào, {name}!</p>
-        <ul>
-
+    <!--Sidebar-->
+    
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <li class="active"><button><i class='bx bxs-dashboard' ></i>Trang chủ</button></li>
             <form th:action="@{/profile}" method="get">
-                <input type="submit" value="Xem hồ sơ" />
-            </form><br>
-
+                <li type="submit"><button><i class='bx bx-paperclip' ></i>Xem hồ sơ</button></li>
+            </form>
             <form th:action="@{classroom/classrooms-page}" method="get">
-                <input type="submit" value="Xem các Lớp học" />
-            </form><br>
-
+                <li type="submit"><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            </form>
             <form th:action="@{exam/create-exam-page}" method="get">
-                <input type="submit" value="Tạo Đề thi" />
-            </form><br>
-
+                <li type="submit"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            </form>
             <form th:action="@{exam/view-exams-by-filter-page}" method="get">
-                <input type="submit" value="Xem Đề thi" />
-            </form><br>
+                <li type="submit"><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            </form>
+            <li type="submit"><button><i class='bx bx-cog' ></i>Cài đặt</button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+            </form>
+            
         </ul>
     </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content" th:if="${role == 'Teacher'}">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu' ></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="images/logo.png">
+            </a>
+        </nav>
+         <!-- End of Navbar -->
+         <main>
+            <div>
+            
+            </div>
+         </main>
+    </div>
 
-    <form th:action="@{/logout}" method="get">
-        <input type="submit" value="Đăng xuất" class="redirect-button" />
-    </form><br>
-
+    <script>
+        
+        </script>
+        
     <script>
         setTimeout(function () {
             var messageDiv = document.getElementById("messageDiv");
@@ -46,20 +90,21 @@
             }
         }, 2000); // message disapear after 2s
     </script>
-
+    <script src="/js/index.js"></script>
     <style>
-        .redirect-button {
-            display: inline-block;
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: #000000;
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+                .redirect-button {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    font-size: 14px;
+                    background-color: #000000;
+                    color: #fff;
+                    text-decoration: none;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
     </style>
+    
 
 </body>
 
