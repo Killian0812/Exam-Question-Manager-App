@@ -201,6 +201,23 @@ h1 {
     border: none;
 }
 
+.start-button:disabled {
+    background-color: rgb(180, 180, 180);
+    border-radius: 6px;
+    color: white;
+    font-family: 'Roboto';
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 40px;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin: auto;
+    border: none;
+}
+
 /* view-classroom */
 .classroom-table {
     width: 100%;

@@ -36,9 +36,10 @@
             <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
-            <form th:action="@{/logout}" method="get">
-                <li><button><i class='bx bx-log-out'></i>Đăng xuất</button></li>
-            </form><br>
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+            </form>
+            
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -86,20 +87,20 @@
 
             <div class="right-column"
                 style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 475px;">
-                <form action="student-list" method="get" style="display: inline;" class="tuongtac">
+                <form action="student-list" method="get" style="display: inline;" class="tuongtac1">
                     <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}">
                     <button type="submit">Danh sách học sinh</button>
                 </form><br>
 
-                <form action="assignment" method="get" style="display: inline;" class="tuongtac">
+                <form action="assignment" method="get" style="display: inline;" class="tuongtac1">
                     <input type="hidden" id="className" name="classCode" th:value="${classroom.classCode}">
                     <button type="submit">Danh sách bài tập</button>
                 </form><br>
 
-                <form action="/teacher/classroom/remove-classroom" method="post" style="display: inline;">
+                <form action="/teacher/classroom/remove-classroom" method="post" class="tuongtac" style="display: inline;">
                     <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}">
-                    <input type="submit" value="Xóa lớp"
-                        onclick="return confirm('Bạn có chắc chắn muốn xóa lớp học này?')" />
+                    <button type="submit" value="Xóa lớp"
+                        onclick="return confirm('Bạn có chắc chắn muốn xóa lớp học này?')" >Xoá lớp</button>
                 </form>
             </div>
 

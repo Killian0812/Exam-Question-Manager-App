@@ -54,11 +54,11 @@ toggler.addEventListener('change', function () {
         document.body.classList.remove('dark');
     }
 });
-document.getElementById("logoutForm").addEventListener("submit", function(event) {
+document.getElementById("logoutForm").addEventListener("submit", function (event) {
     event.preventDefault(); // Ngăn chặn việc gửi biểu mẫu mặc định.
 });
 
-document.getElementById("logoutButton").addEventListener("click", function() {
+document.getElementById("logoutButton").addEventListener("click", function () {
     var confirmLogout = confirm("Bạn có muốn đăng xuất không?");
     if (confirmLogout) {
         // Nếu người dùng xác nhận đăng xuất, gửi biểu mẫu để chuyển hướng người dùng đến trang /logout.
@@ -66,7 +66,7 @@ document.getElementById("logoutButton").addEventListener("click", function() {
     }
 });
 
-document.getElementById("cancelButton").addEventListener("click", function() {
+document.getElementById("cancelButton").addEventListener("click", function () {
     var cancelLogout = confirm("Bạn có muốn hủy đăng xuất không?");
     if (cancelLogout) {
         // Xử lý khi người dùng xác nhận hủy đăng xuất, ví dụ: không có thay đổi gì.
