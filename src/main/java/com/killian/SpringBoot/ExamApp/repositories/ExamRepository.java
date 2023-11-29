@@ -28,6 +28,10 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     List<Exam> findBySubjectGradeAndCode(@Param("subject") String subject, @Param("grade") int grade,
             @Param("examCode") int examCode);
 
+    @Query("SELECT e FROM Exam e WHERE e.subject = :subject AND e.grade = :grade AND e.examCode = :examCode AND e.owner IS NULL")
+    List<Exam> findTrainingExams(@Param("subject") String subject, @Param("grade") int grade,
+            @Param("examCode") int examCode);
+
     @Query("SELECT e FROM Exam e WHERE e.name = :name AND e.owner = :owner")
     List<Exam> findByNameAndOwner(@Param("name") String name, @Param("owner") String owner);
 

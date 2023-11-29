@@ -66,7 +66,7 @@
         <!-- End of Navbar -->
         <main>
             <div th:if="${message}" id="messageDiv" class="alert alert-success">
-                <p th:text="${message}"></p>
+                <p th:text="${message}"></p><br>
             </div>
 
             <form th:action="@{/teacher/classroom/assignment}" method="get">

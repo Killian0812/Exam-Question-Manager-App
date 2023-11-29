@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:debug="true">
+
+<head>
+    <title>Exam Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+</head>
+
+<body>
+
+    <h1>Đề thi: <span th:text=" ${exam.name}"></span></h1>
+
+    <div class="countdown-clock">
+        <div class="time-block">
+            <span class="time" id="hour">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="label">Giờ</span>
+        </div>
+        <div class="time-block">
+            <span class="time" id="min">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="label">Phút</span>
+        </div>
+        <div class="time-block">
+            <span class="time" id="sec">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="label">Giây</span>
+        </div>
+    </div>
+
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+
+    <ul class="question-list">
+        <li th:each="question, questionIndex : ${exam.questions}">
+            <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
+            <ul>
+                <li th:each="choice, choiceIndex : ${question.choices}">
+                    <label>
+                        <input type="radio" th:name="'selectedChoice' + ${questionIndex.index}" th:value="${choice}"
+                            th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])"
+                            th:checked="${selected.size() > questionIndex.index and choiceIndex.index == selected.get(questionIndex.index)}" />
+                        <span th:text="' ' + ${choice}"></span>
+                    </label>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <button id="submitButton" onclick="SubmitAnswer('Bạn có chắc chắn muốn nộp bài?')">Nộp bài</button>
+
+    <script th:inline="javascript">
+
+        // "17:31:00 11/25/2023"
+        var submissionEndTime = /*[[${endTime}]]*/ 0;
+        var timezone = 'Asia/Bangkok';
+        const endTime = moment.tz(submissionEndTime, 'HH:mm:ss MM/DD/YYYY', timezone).valueOf();
+
+        var now = moment.tz(timezone);
+        var currentTime = now.valueOf();
+
+        var x = setInterval(function () {
+
+            var s, m, h;
+            var now = moment.tz(timezone);
+            var currentTime = now.valueOf();
+            var diff = endTime - currentTime;
+
+            s = Math.floor(diff / 1000);
+            m = Math.floor(s / 60);
+            h = Math.floor(m / 60);
+
+            s = s % 60;
+            m = m % 60;
+            h = h % 24;
+
+            if (diff < 0) {
+                clearInterval(x);
+                h = m = s = 0;
+                SubmitAnswer('Đã hết giờ làm bài. Bấm OK để xác nhận nộp bài.');
+            }
+
+            h = (h < 10) ? "0" + h : h;
+            m = (m < 10) ? "0" + m : m;
+            s = (s < 10) ? "0" + s : s;
+
+            document.getElementById("hour").innerHTML = h;
+            document.getElementById("min").innerHTML = m;
+            document.getElementById("sec").innerHTML = s;
+
+        }, 1000);
+
+        var submissionId = /*[[${submissionId}]]*/ 0;
+
+        function SubmitChoice(questionIndex, newChoice) {
+
+            var url = `/api/submission/submit-training-choice?submissionId=${submissionId}&questionIndex=${questionIndex}&newChoice=${newChoice}`;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('SubmitChoice successful');
+                        // You can add additional handling here
+                    } else {
+                        console.error('SubmitChoice failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+                });
+        }
+
+        function SubmitAnswer(msgStr) {
+
+            if (!confirm(msgStr))
+                return;
+            var choices = [];
+            var questionCount = /*[[${exam.questions.size()}]]*/ 0;
+            for (var questionIndex = 0; questionIndex < questionCount; questionIndex++) {
+                // Retrieve the selected choice for the current question
+                var selectedChoice = document.querySelector('input[name="selectedChoice' + questionIndex + '"]:checked');
+                if (selectedChoice) {
+                    choices.push(selectedChoice.value);
+                } else {
+                    choices.push(null);
+                }
+            }
+            var choicesJsonString = JSON.stringify(choices);
+
+            // Construct the URL with query parameters
+            var url = '/api/submission/submit-training-assignment?' +
+                'choicesJsonString=' + encodeURIComponent(choicesJsonString) +
+                '&submissionId=' + encodeURIComponent(submissionId);
+
+            // Send the POST request
+            fetch(url, {
+                method: 'POST',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Check the response text
+                        response.text().then(text => {
+                            if (text === 'OK') {
+                                window.location.href = '/student/exam/submission/view-submission?submissionId=' + submissionId;
+                            } else {
+                                console.log('Response is not "OK":', text);
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    // Handle fetch error if needed
+                    console.error('An error occurred:', error);
+                });
+        }
+
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+
+    <style>
+        ul {
+            list-style: none;
+        }
+
+        .question-list {
+            margin-left: 0;
+            /* Remove default left margin */
+            padding-left: 10px;
+            /* Add custom padding for indentation */
+        }
+
+        .countdown-clock {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            width: 200px;
+        }
+
+        .time-block {
+            text-align: center;
+        }
+
+        .time {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .label {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</body>
+
+</html>

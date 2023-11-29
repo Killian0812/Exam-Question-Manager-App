@@ -12,26 +12,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.killian.SpringBoot.ExamApp.models.Assignment;
-import com.killian.SpringBoot.ExamApp.models.Classroom;
 import com.killian.SpringBoot.ExamApp.models.Exam;
 import com.killian.SpringBoot.ExamApp.models.Question;
 import com.killian.SpringBoot.ExamApp.models.Submission;
-import com.killian.SpringBoot.ExamApp.repositories.AssignmentRepository;
-import com.killian.SpringBoot.ExamApp.repositories.ClassroomRepository;
 import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.repositories.SubmissionRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
-@RequestMapping(path = "/student/classroom/assignment")
-public class StudentAssignmentController {
-
-    @Autowired
-    private AssignmentRepository assignmentRepository;
-
-    @Autowired
-    private ClassroomRepository classroomRepository;
+@RequestMapping(path = "/student/exam")
+public class StudentExamController {
 
     @Autowired
     private ExamRepository examRepository;
@@ -42,79 +32,73 @@ public class StudentAssignmentController {
     @Autowired
     private SessionManagementService sessionManagementService;
 
-    @GetMapping("")
-    public String assignmentList(
-            @RequestParam("classCode") String classCode,
-            Model model) {
-        Classroom classroom = classroomRepository.findByClasscode(classCode);
-        List<Assignment> assignments = assignmentRepository.findAssignmentsByClassname(classroom.getName());
-        model.addAttribute("assignments", assignments);
-        model.addAttribute("className", classroom.getName());
-        model.addAttribute("classCode", classCode);
-        model.addAttribute("message", sessionManagementService.getMessage());
+    @GetMapping("/training")
+    public String trainingExam(Model model) {
         sessionManagementService.clearMessage();
-        return "student/assignments";
+        return "student/exams-by-filter";
     }
 
-    @GetMapping("view-assignment")
-    public String viewAssignment(
-            @RequestParam("assignmentId") String assignmentId,
-            @RequestParam("classCode") String classCode,
+    @GetMapping("/find-exam")
+    public String findAllExams(
+            @RequestParam("selectedSubject") String selectedSubject,
+            @RequestParam("selectedGrade") int selectedGrade,
             Model model) {
-        String className = classroomRepository.findByClasscode(classCode).getName();
-        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
-        model.addAttribute("assignment", assignment);
-        model.addAttribute("assignmentDeadline", assignment.getDeadline());
 
-        Exam exam = examRepository.findByExamId(assignment.getExamId()).get(0);
-        model.addAttribute("className", className);
-        model.addAttribute("classCode", classCode);
+        List<String> subjects = examRepository.findDistinctSubjects();
+        List<Integer> grades = examRepository.findDistinctGrades();
+
+        model.addAttribute("subjects", subjects);
+        model.addAttribute("grades", grades);
+
+        List<Exam> exams = examRepository.findTrainingExams(selectedSubject, selectedGrade, 0);
+
+        model.addAttribute("selectedSubject", selectedSubject);
+        model.addAttribute("selectedGrade", selectedGrade);
+        model.addAttribute("exams", exams);
+
+        return "student/exams-by-filter";
+    }
+
+    @GetMapping("/view-exam")
+    public String viewAssignment(
+            @RequestParam("examId") String examId,
+            Model model) {
+
+        Exam exam = examRepository.findByExamId(examId).get(0);
+        model.addAttribute("exam", exam);
         model.addAttribute("examDuration", exam.getDuration());
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
 
-        Submission submission = submissionRepository.findByAssignmentId(assignment.getAssignmentId(),
+        List<Submission> submissions = submissionRepository.findByExamId(examId,
                 sessionManagementService.getUsername());
-        if (submission != null) {
-            if (submission.getScore() != -1.0)
+        if (!submissions.isEmpty()) {
+            if (submissions.size() >= 2 || submissions.get(submissions.size() - 1).getScore() != -1.0)
                 model.addAttribute("submitted", 1);
-            else
-                model.addAttribute("submitted", -1);
-            model.addAttribute("submissionId", submission.getSubmissionId());
+            if (submissions.get(submissions.size() - 1).getScore() == -1.0)
+                model.addAttribute("isDoing", 1);
         } else {
             model.addAttribute("submitted", 0);
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
-            // 00:49 24/11/2023
-            LocalDateTime deadline = LocalDateTime.parse(assignment.getDeadline(), formatter);
-            int comparison = deadline.compareTo(currentDateTime);
-            if (comparison < 0)
-                model.addAttribute("expired", 1);
-            else
-                model.addAttribute("expired", 0);
         }
-        return "student/view-assignment";
+        return "student/view-exam";
     }
 
-    @GetMapping("do-assignment")
+    @GetMapping("/do-exam")
     public String doAssignment(
-            @RequestParam("assignmentId") String assignmentId,
-            @RequestParam("classCode") String classCode,
+            @RequestParam("examId") String examId,
             Model model) {
 
-        Classroom classroom = classroomRepository.findByClasscode(classCode);
-        Assignment assignment = assignmentRepository.findByAssignmentId(assignmentId);
-        List<Exam> exams = examRepository.findByExamId(assignment.getExamId());
+        List<Exam> exams = examRepository.findByExamId(examId);
         String student = sessionManagementService.getUsername();
 
-        Submission submission = submissionRepository.findByAssignmentId(assignment.getAssignmentId(), student);
-        if (submission == null) {
+        List<Submission> submissions = submissionRepository.findByExamId(examId, student);
+        if (submissions.isEmpty() || submissions.get(submissions.size() - 1).getScore() != -1.0) {
             model.addAttribute("message", "Bắt đầu làm bài");
             // Get a random examCode
             Random random = new Random();
             int randomIndex = random.nextInt(exams.size());
             Exam exam = exams.get(randomIndex);
-            Submission newSubmission = new Submission(student, assignment.getAssignmentId(), randomIndex,
+            Submission newSubmission = new Submission(student, randomIndex, examId,
                     exam.getQuestions().size(), exam.getDuration());
             submissionRepository.save(newSubmission);
             model.addAttribute("endTime", newSubmission.getEndTime());
@@ -122,30 +106,39 @@ public class StudentAssignmentController {
             model.addAttribute("submissionId", newSubmission.getSubmissionId());
             model.addAttribute("exam", exam);
         } else {
+            Submission submission = submissions.get(submissions.size() - 1);
             Exam exam = exams.get(submission.getExamCode());
             model.addAttribute("endTime", submission.getEndTime());
             model.addAttribute("exam", exam);
             model.addAttribute("submissionId", submission.getSubmissionId());
             model.addAttribute("selected", submission.getSelected());
         }
-        model.addAttribute("className", classroom.getName());
-        model.addAttribute("classCode", classCode);
-        model.addAttribute("assignmentName", assignment.getName());
-        return "student/do-assignment";
+        return "student/do-exam";
     }
 
-    @GetMapping("result")
+    @GetMapping("/submission/all-submission")
+    public String getAllSubmissions(
+            @RequestParam("examId") String examId,
+            Model model) {
+        List<Submission> submissions = submissionRepository.findByExamId(examId,
+                sessionManagementService.getUsername());
+        model.addAttribute("submissions", submissions);
+        model.addAttribute("examId", examId);
+        model.addAttribute("submission", submissions.get(0));
+        return "student/submissions";
+    }
+
+    @GetMapping("/submission/view-submission")
     public String getResult(
             @RequestParam("submissionId") String submissionId,
             Model model) {
         Submission submission = submissionRepository.findBySubmissionId(submissionId);
-        Assignment assignment = assignmentRepository.findByAssignmentId(submission.getAssignmentId());
-        Exam exam = examRepository.findByExamId(assignment.getExamId()).get(submission.getExamCode());
+        Exam exam = examRepository.findByExamId(submission.getExamId()).get(submission.getExamCode());
         List<Question> questions = exam.getQuestions();
         List<Integer> choiceIndexes = submission.getSelected();
         List<String> choices = new ArrayList<>();
         for (int i = 0; i < questions.size(); i++) {
-            if (choiceIndexes.size() < (i+1) || choiceIndexes.get(i) == 99)
+            if (choiceIndexes.size() < (i + 1) || choiceIndexes.get(i) == 99)
                 choices.add("Không trả lời");
             else {
                 int index = choiceIndexes.get(i);
@@ -162,8 +155,7 @@ public class StudentAssignmentController {
         model.addAttribute("choices", choices);
         model.addAttribute("questions", questions);
         model.addAttribute("submission", submission);
-        model.addAttribute("assignment", assignment);
-        model.addAttribute("classCode", assignment.getClassCode());
-        return "student/result";
+        model.addAttribute("examId", exam.getExamId());
+        return "student/view-submission";
     }
 }

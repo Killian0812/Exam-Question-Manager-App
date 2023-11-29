@@ -44,12 +44,27 @@ public class Submission {
 
     private String assignmentId;
 
+    private String examId;
+
     private String submissionId;
 
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static SecureRandom random = new SecureRandom();
 
     public Submission() {
+    }
+
+    public Submission(String student, int examCode, String examId, int questionCount, int duration) {
+        this.student = student;
+        this.examId = examId;
+        this.examCode = examCode;
+        this.startedTime = getCurrentDateTime();
+        this.endTime = calculateEndTime(this.startedTime, duration);
+        this.score = -1.0;
+        this.selected = new ArrayList<>();
+        for (int i = 0; i < questionCount; i++)
+            this.selected.add(99);
+        this.submissionId = submissionIdGenerate();
     }
 
     public Submission(String student, String assignmentId, int examCode, int questionCount, int duration) {
@@ -103,6 +118,14 @@ public class Submission {
 
     public double getScore() {
         return score;
+    }
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
     }
 
     public String getSubmittedTime() {

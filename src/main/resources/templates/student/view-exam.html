@@ -1,13 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" th:debug="true">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lớp học</title>
+    <title>Student Dashboard</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/style-student.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        /* Define a style for the disabled button */
+        .result-button[disabled] {
+            background-color: lightgray;
+            color: gray;
+            border: 2px solid rgb(167, 167, 167);
+            cursor: not-allowed;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .result-button {
+            cursor: pointer;
+            background-color: green;
+            color: white;
+            border: 2px solid rgb(0, 65, 0);
+            border-radius: 5px;
+            padding: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -25,10 +45,10 @@
                 <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
             </form>
             <form th:action="@{/student/classroom/classrooms-page?}" method="get">
-                <li class="active"><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
             </form>
             <form th:action="@{/student/exam/training}" method="get">
-                <li><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
+                <li class="active"><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
             </form>
             <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
         </ul>
@@ -68,38 +88,49 @@
             </div>
 
             <div class="taskbar">
-                <form th:action="@{classrooms-page}" method="get">
-                    <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}" />
-                    <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
+                <form th:action="@{/student/exam/training}" method="get">
+                    <h2><input type="submit" value="Quay lại các đề tự luyện" class="back-button" /></h2>
                 </form>
-                <h2 class="class-code" th:text="'Code lớp: ' + ${classroom.classCode}"></h2>
             </div><br>
 
-            <table class="classroom-table">
+            <table class="assignment-table">
                 <tr>
-                    <td class="sample-column">Lớp</td>
-                    <td><span th:text="${classroom.name}"></span></td>
+                    <td class="sample-column">Đề thi</td>
+                    <td><span th:text="${exam.name}"></span></td>
                 </tr>
                 <tr>
-                    <td class="sample-column">Môn học</td>
-                    <td><span th:text="${classroom.subject}"></span></td>
+                    <td class="sample-column">Thời gian</td>
+                    <td><span th:text="${exam.duration} + ' phút'"></span></td>
                 </tr>
-                <tr>
-                    <td class="sample-column">Khối lớp</td>
-                    <td><span th:text="${classroom.grade}"></span></td>
-                </tr>
-                <tr>
-                    <td class="sample-column">Giáo viên</td>
-                    <td><span th:text="${classroom.teacher}"></span></td>
-                </tr>
-            </table>
+            </table><br>
 
-            <form action="assignment" method="get">
-                <input type="hidden" id="classCode" name="classCode" th:value="${classroom.classCode}"></span>
-                <input type="submit" value="Danh sách bài tập" class="assignment-list">
+            <form id="assignmentForm" action="do-exam" method="get">
+                <input type="hidden" id="examId" name="examId" th:value="${exam.examId}" />
+                <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button" 
+                    onclick="return confirm('Bài tập sẽ tính giờ làm bài. Bạn có chắc chắn muốn bắt đầu làm?')" />
             </form><br>
 
-            <script>
+            <form action="submission/all-submission" method="get">
+                <input type="hidden" id="examId" name="examId" th:value="${exam.examId}">
+                <input type="submit" id="viewResultButton" value="Xem kết quả" class="result-button" disabled>
+            </form>
+
+            <script th:inline="javascript">
+
+                var viewResultButton = document.getElementById("viewResultButton");
+                var startExamButton = document.getElementById("startExamButton");
+
+                var submittedStatus = /*[[${submitted}]]*/ 0;
+                
+                var isDoing = /*[[${isDoing}]]*/ 0;
+
+                if (submittedStatus == 1) {
+                    viewResultButton.removeAttribute("disabled"); 
+                } 
+                if (isDoing == 1) {
+                    startExamButton.value = "Tiếp tục làm bài";
+                }
+
                 setTimeout(function () {
                     var messageDiv = document.getElementById("messageDiv");
                     if (messageDiv) {
@@ -107,6 +138,7 @@
                     }
                 }, 2000); // message disapear after 2s
             </script>
+
         </main>
     </div>
 

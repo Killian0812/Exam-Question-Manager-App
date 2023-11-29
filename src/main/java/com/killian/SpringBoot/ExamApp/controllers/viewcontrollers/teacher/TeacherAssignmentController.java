@@ -311,7 +311,8 @@ public class TeacherAssignmentController {
             return "redirect:/teacher/classroom/assignment/edit-assignment-page?classCode=" + classCode
                     + "&assignmentId=" + assignmentId;
         }
-        if (assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName) != null) {
+        Assignment checkAssignment = assignmentRepository.findAssignmentByClasscodeAndName(classCode, assignmentName);
+        if (checkAssignment != null && checkAssignment != assignment) {
             sessionManagementService.setMessage("Tên bài tập bị trùng lặp!");
             return "redirect:/teacher/classroom/assignment/edit-assignment-page?classCode=" + classCode
                     + "&assignmentId=" + assignmentId;

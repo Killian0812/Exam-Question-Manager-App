@@ -89,6 +89,55 @@ public class SubmissionController {
         return "OK";
     }
 
+    @PostMapping("/submit-training-choice")
+    @ResponseStatus(HttpStatus.OK)
+    public String submitTrainingChoice(
+            @RequestParam("submissionId") String submissionId,
+            @RequestParam("questionIndex") int questionIndex,
+            @RequestParam("newChoice") int newChoice) {
+        Submission submission = submissionRepository.findBySubmissionId(submissionId);
+        Exam exam = examRepository.findByExamIdAndCode(submission.getExamId(), submission.getExamCode());
+        submission.setSelected(questionIndex, newChoice, exam.getQuestions().size());
+        submissionRepository.save(submission);
+        return "OK";
+    }
+
+    @PostMapping("submit-training-assignment")
+    @ResponseStatus(HttpStatus.OK)
+    public String submitTrainingAssignment(
+            @RequestParam("choicesJsonString") String choicesJsonString,
+            @RequestParam("submissionId") String submissionId) {
+
+        Submission submission = submissionRepository.findBySubmissionId(submissionId);
+        Exam exam = examRepository.findByExamIdAndCode(submission.getExamId(), submission.getExamCode());
+        List<String> answers = new ArrayList<>();
+        List<Question> questions = exam.getQuestions();
+        for (Question question : questions) {
+            answers.add(question.getAnswer());
+        }
+        int countCorrectAnswer = 0;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<String> selectedChoices = mapper.readValue(choicesJsonString, new TypeReference<List<String>>() {
+            });
+            for (int i = 0; i < answers.size(); i++) {
+                if (selectedChoices.get(i) != null && selectedChoices.get(i).equals(answers.get(i)))
+                    countCorrectAnswer++;
+            }
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        double newScore = (double) countCorrectAnswer / questions.size() * 10.0;
+        double roundedScore = Math.round(newScore * 10) / 10.0;
+        submission.setScore(roundedScore);
+        submission.setSubmittedTime(getCurrentDateTime());
+        submissionRepository.save(submission);
+        return "OK";
+    }
+
     private static String getCurrentDateTime() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss MM/dd/yyyy");

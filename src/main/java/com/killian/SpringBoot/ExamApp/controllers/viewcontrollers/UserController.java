@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.killian.SpringBoot.ExamApp.models.PasswordResetToken;
 import com.killian.SpringBoot.ExamApp.models.User;
-import com.killian.SpringBoot.ExamApp.repositories.PasswordResetTokenRepository;
 import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
 import com.killian.SpringBoot.ExamApp.services.ImageStorageService;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
@@ -32,70 +30,7 @@ public class UserController {
     private UserServiceImpl userService;
 
     @Autowired
-    private PasswordResetTokenRepository passwordResetTokenRepository;
-
-    @Autowired
     private ImageStorageService storageService;
-
-    @GetMapping("/login")
-    public String login(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            Model model) {
-
-        boolean loginWithEmail = username.contains("@");
-        User user = null;
-        if (loginWithEmail)
-            user = userRepository.findByEmail(username).orElse(null);
-        else
-            user = userRepository.findByUsername(username).orElse(null);
-        String message = null;
-        if (user == null) {
-            message = loginWithEmail ? "Email chưa được đăng kí" : "Tên đăng nhập không tồn tại.";
-            sessionManagementService.setMessage(message);
-            return "redirect:/";
-        } else {
-            if (!userService.correctPassword(user, password)) {
-                message = "Sai mật khẩu.";
-                sessionManagementService.setMessage(message);
-                sessionManagementService.setUsername(username);
-                return "redirect:/";
-            } else {
-                sessionManagementService.createUserSession(username, user.getRole());
-                return "redirect:/" + user.getRole().toLowerCase() + "/dashboard";
-            }
-        }
-    }
-
-    @GetMapping("/reset-password-page")
-    public String resetPasswordPage(@RequestParam("tokenId") String tokenId, Model model) {
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByTokenId(tokenId);
-        String email = passwordResetToken.getEmail();
-        User user = userRepository.findByEmail(email).orElse(null);
-        model.addAttribute("username", user.getUsername());
-        model.addAttribute("email", email);
-        model.addAttribute("tokenId", tokenId);
-        model.addAttribute("message", sessionManagementService.getMessage());
-        sessionManagementService.clearMessage();
-        return "reset-password";
-    }
-
-    @PostMapping("/reset-password")
-    public String resetPassword(
-            @RequestParam("tokenId") String tokenId,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("confirmPassword") String confirmPassword,
-            Model model) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (!password.equals(confirmPassword)) {
-            sessionManagementService.setMessage("Mật khẩu xác nhận không chính xác.");
-            return "redirect:/reset-password-page?tokenId=" + tokenId;
-        }
-        userService.changePassword(user, confirmPassword);
-        sessionManagementService.setMessage("Đổi mật khẩu thành công");
-        return "redirect:/";
-    }
 
     @GetMapping("/profile")
     public String profile(Model model) {

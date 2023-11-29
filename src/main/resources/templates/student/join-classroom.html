@@ -18,14 +18,25 @@
             <div class="logo-name"><span>TQBEdu</span></div>
         </a>
         <ul class="side-menu">
-            <li class="active"><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
-            <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
-            <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
-            <li><button><i class='bx bx-folder'></i>Xem các đề thi </button></li>
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/student/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/student/exam/training}" method="get">
+                <li><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
+            </form>
             <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
         </ul>
         <ul class="side-menu">
-            <li><button><i class='bx bx-log-out'></i>Đăng xuất</button></li>
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
         </ul>
     </div>
     <!-- End of Sidebar -->
