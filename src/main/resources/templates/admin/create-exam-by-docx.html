@@ -20,6 +20,7 @@
 
 <body style="background-color: #f1f5f9;">
     <!--Sidebar-->
+
     <div class="sidebar">
         <a href="#" class="logo">
             <i class='bx bxs-graduation'></i>
@@ -29,28 +30,28 @@
             <form th:action="@{/back-to-dashboard}" method="get">
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
-            <form th:action="@{/profile}" method="get">
-                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            <form th:action="@{/admin/access/user-manager}" method="get">
+                <li type="submit"><button><i class='bx bx-lock-alt'></i>Quản lý người dùng</button></li>
             </form>
-            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
-                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            <form th:action="@{/admin/questions/create-question-page}" method="get">
+                <li type="submit"><button><i class='bx bx-edit'></i>Tạo câu hỏi</button></li>
             </form>
-            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
-                <li class="active"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            <form th:action="@{create-exam-page}" method="get">
+                <li class="active" type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi</button></li>
             </form>
-            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
-                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            <form th:action="@{view-exams-by-filter-page}" method="get">
+                <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
             </form>
-            <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+            <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
             <form th:action="@{/logout}" method="get" id="logoutForm">
                 <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
                         xuất</button></li>
             </form>
-
         </ul>
     </div>
+
     <!-- End of Sidebar -->
     <!-- Main Content -->
     <div class="content">
@@ -130,9 +131,17 @@
                     <button type="submit">Upload và tạo đề</button>
                 </div>
             </form>
-
         </main>
     </div>
+
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
     <script src="/js/index.js"></script>
 </body>
 

@@ -20,6 +20,7 @@
 
 <body style="background-color: #f1f5f9;">
     <!--Sidebar-->
+
     <div class="sidebar">
         <a href="#" class="logo">
             <i class='bx bxs-graduation'></i>
@@ -29,28 +30,28 @@
             <form th:action="@{/back-to-dashboard}" method="get">
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
-            <form th:action="@{/profile}" method="get">
-                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            <form th:action="@{/admin/access/user-manager}" method="get">
+                <li type="submit"><button><i class='bx bx-lock-alt'></i>Quản lý người dùng</button></li>
             </form>
-            <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
-                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            <form th:action="@{/admin/questions/create-question-page}" method="get">
+                <li class="active" type="submit"><button><i class='bx bx-edit'></i>Tạo câu hỏi</button></li>
             </form>
-            <form th:action="@{/teacher/exam/create-exam-page}" method="get">
-                <li class="active"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+            <form th:action="@{/admin/exam/create-exam-page}" method="get">
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi</button></li>
             </form>
-            <form th:action="@{/teacher/exam/view-exams-by-filter-page}" method="get">
-                <li><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+            <form th:action="@{/admin/exam/view-exams-by-filter-page}" method="get">
+                <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
             </form>
-            <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
+            <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
             <form th:action="@{/logout}" method="get" id="logoutForm">
                 <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
                         xuất</button></li>
             </form>
-
         </ul>
     </div>
+
     <!-- End of Sidebar -->
     <!-- Main Content -->
     <div class="content">
@@ -79,17 +80,12 @@
                 <p th:text="${message}"></p>
             </div>
 
-            <form th:action="@{create-exam-page}" method="get">
+            <form th:action="@{create-question-page}" method="get">
                 <input type="submit" value="Quay lại trang trước" class="back-button" />
             </form><br>
 
-            <h1 style="text-align: left; font-size: 28px; font-weight: 400;">Tạo đề thi</h1>
-            <form action="upload-docx" method="post" enctype="multipart/form-data">
-                <div class="form-floating mb-3 mt-3" style="width: 50%;">
-                    <input type="text" class="form-control" id="name" name="name" placeholder="AssignmentName goes here"
-                        required />
-                    <label for="name">Tên bài thi</label>
-                </div>
+            <h1 style="text-align: left; font-size: 28px; font-weight: 400;">Upload câu hỏi</h1>
+            <form action="create-multiple-questions" method="post" enctype="multipart/form-data">
 
                 <div class="form-container" style="display: flex; gap: 20px;">
                     <div class="form-floating mb-3 mt-3" style="width: 20%;">
@@ -112,25 +108,42 @@
                     </div>
                 </div>
 
-                <div class="form-floating mb-3 mt-3" style="width: 20%;">
-                    <input type="number" class="form-control" id="duration" name="duration"
-                        placeholder="Duration goes here" required />
-                    <label for="duration">Thời gian làm bài (Phút)</label>
-                </div>
-
                 <label style="margin-top: 10px" for="file">Chọn một file .DOCX:</label>
                 <input type="file" id="file" name="file" accept=".docx" required>
                 <br><br>
 
                 <a target="_blank" style="text-decoration: underline;"
-                    href="https://docs.google.com/document/d/1uM3vQ4YeUkT4bAXgf9cpdHoTtg13ima9/edit?usp=sharing&ouid=113483520106770204124&rtpof=true&sd=true">
+                    href="https://docs.google.com/document/d/1ZulEx1fDeh7UtlkXcQz-RAJrU7xP3Tmdc4D7LE_MoDk/edit?usp=sharing">
                     Xem định dạng mẫu tại đây</a><br><br>
 
                 <div class="tuongtac1">
-                    <button type="submit">Upload và tạo đề</button>
+                    <button type="submit">Upload các câu hỏi</button>
                 </div>
             </form>
 
+
+            <script>
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 2000); // message disapear after 2s
+            </script>
+
+            <style>
+                .redirect-button {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    font-size: 14px;
+                    background-color: #000000;
+                    color: #fff;
+                    text-decoration: none;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                }
+            </style>
         </main>
     </div>
     <script src="/js/index.js"></script>

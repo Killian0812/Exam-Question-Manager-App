@@ -12,8 +12,8 @@
 
 
 <body>
-     <!--Sidebar-->
-     <div class="sidebar">
+    <!--Sidebar-->
+    <div class="sidebar">
         <a href="#" class="logo">
             <i class='bx bxs-graduation'></i>
             <div class="logo-name"><span>TQBEdu</span></div>
@@ -37,9 +37,9 @@
             <li><button><i class='bx bx-cog' ></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
-            <form th:action="@{/logout}" method="get">
-                <li><button><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
-            </form><br>
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+            </form>
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -93,13 +93,6 @@
             </form>
         
             <script>
-                setTimeout(function () {
-                    var messageDiv = document.getElementById("messageDiv");
-                    if (messageDiv) {
-                        messageDiv.style.display = "none";
-                    }
-                }, 2000); // message disapear after 2s
-        
                 document.querySelectorAll(".viewAssignmentButton").forEach(function (button) {
                     button.addEventListener("click", function () {
                         var assignmentUrl = this.getAttribute("data-assignment-url");

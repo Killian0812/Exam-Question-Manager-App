@@ -60,9 +60,10 @@
             <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
-            <form th:action="@{/logout}" method="get">
-                <li><button><i class='bx bx-log-out'></i>Đăng xuất</button></li>
-            </form><br>
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -134,13 +135,6 @@
         </main>
     </div>
     <script>
-        setTimeout(function () {
-            var messageDiv = document.getElementById("messageDiv");
-            if (messageDiv) {
-                messageDiv.style.display = "none";
-            }
-        }, 2000); // message disapear after 2s
-
         document.getElementById("checkExamId").addEventListener("click", function () {
             var examId = document.getElementById("examId").value;
 

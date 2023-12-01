@@ -11,7 +11,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        /* Style for button placement */
+        a {
+            text-decoration: none;
+        }
+
         .button-container {
             display: flex;
         }
@@ -60,9 +63,10 @@
             <li><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
-            <form th:action="@{/logout}" method="get">
-                <li><button><i class='bx bx-log-out'></i>Đăng xuất</button></li>
-            </form><br>
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -104,8 +108,8 @@
             <form action="edit-assignment" method="post" class="tuongtac2">
 
                 <div class="form-floating mb-3 mt-3" style="width: 50%;">
-                    <input type="text" class="form-control" id="assignmentName" name="assignmentName" th:value="${assignment.name}"
-                        placeholder="AssignmentName goes here" required />
+                    <input type="text" class="form-control" id="assignmentName" name="assignmentName"
+                        th:value="${assignment.name}" placeholder="AssignmentName goes here" required />
                     <label for="assignmentName">Tên bài tập</label>
                 </div>
                 <div class="form-floating mb-3 mt-3" style="width: 30%;">
@@ -114,8 +118,8 @@
                     <label for="deadline">Hạn chót</label>
                 </div>
                 <div class="form-floating mb-3 mt-3" style="width: 20%; display: flex; align-items: center; ">
-                    <input type="text" class="form-control" id="examId" name="examId" th:value="${assignment.examId}" placeholder="ExamId goes here"
-                        required />
+                    <input type="text" class="form-control" id="examId" name="examId" th:value="${assignment.examId}"
+                        placeholder="ExamId goes here" required />
                     <label for="examId">ID Đề</label>
                     <button type="button" id="checkExamId" style="margin-left: 5%; border: 2px solid #d7d2e9;">Kiểm
                         tra</button>
@@ -141,7 +145,7 @@
         var deadline = /*[[${deadline}]]*/ "";
         document.getElementById("deadline").value = deadline;
 
-       
+
         document.getElementById("checkExamId").addEventListener("click", function () {
             var examId = document.getElementById("examId").value;
 

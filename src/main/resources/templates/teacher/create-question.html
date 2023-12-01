@@ -17,7 +17,7 @@
 
     <h1>Create Question</h1>
 
-    <form th:action="@{/create-question}" method="post">
+    <form th:action="@{create-question}" method="post">
         <label for="text">Question Text:</label>
         <input type="text" id="text" name="text" required /><br /><br />
 
@@ -39,13 +39,25 @@
         </div><br>
 
         <label for="subject">Subject:</label>
-        <input type="text" id="subject" name="subject" required /><br /><br />
+        <select id="subject" name="subject" required>
+            <option value="" disabled selected></option>
+            <option>Toán</option>
+            <option>Lịch Sử</option>
+            <option>Tiếng Anh</option>
+        </select><br><br>
+
+        <label for="grade">Khối lớp</label>
+        <select type="number" id="grade" name="grade" required>
+            <option value="" disabled selected></option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+        </select><br><br>
 
         <label for="chapter">Chapter:</label>
-        <input type="text" id="chapter" name="chapter" required /><br /><br />
-
-        <label for="difficulty">Difficulty:</label>
-        <input type="text" id="difficulty" name="difficulty" required /><br /><br />
+        <select type="text" id="chapter" name="chapter">
+            <!-- <option></option> -->
+        </select><br><br>
 
         <input type="submit" value="Create Question" />
     </form>
@@ -96,7 +108,7 @@
             newChoiceInput.type = 'text';
             newChoiceInput.name = 'choices';
             newChoiceInput.required = true;
-            
+
             const newRadio = document.createElement('input');
             newRadio.type = 'radio';
             newRadio.name = 'correctChoice';
@@ -120,10 +132,48 @@
             newChoiceDiv.appendChild(removeButton);
 
             choicesContainer.appendChild(newChoiceDiv);
-            
+
         }
-        
+
         addChoiceButton.addEventListener('click', addNewChoice);
+
+        const subjectDropdown = document.getElementById('subject');
+        const gradeDropdown = document.getElementById('grade');
+        const chapterDropdown = document.getElementById('chapter');
+
+        subjectDropdown.addEventListener('change', updateChapters);
+        gradeDropdown.addEventListener('change', updateChapters);
+
+        function updateChapters() {
+            const selectedSubject = subjectDropdown.value;
+            const selectedGrade = gradeDropdown.value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const chapters = JSON.parse(xhr.responseText);
+
+                        // Clear previous options
+                        chapterDropdown.innerHTML = "";
+
+                        // Populate chapter dropdown with received data
+                        chapters.forEach((chapter) => {
+                            const option = document.createElement("option");
+                            option.text = chapter;
+                            option.value = chapter;
+                            chapterDropdown.add(option);
+                        });
+                    } else {
+                        console.error('Request failed with status:', xhr.status);
+                    }
+                }
+            };
+
+            // Prepare and send the request
+            xhr.open('GET', `/api/v1/questions/getChapters?subject=${selectedSubject}&grade=${selectedGrade}`);
+            xhr.send();
+        }
 
         setTimeout(function () {
             var messageDiv = document.getElementById("messageDiv");

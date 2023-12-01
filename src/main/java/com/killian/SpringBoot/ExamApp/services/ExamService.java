@@ -56,6 +56,8 @@ public class ExamService {
 
             for (XWPFParagraph paragraph : document.getParagraphs()) {
 
+                if (paragraph.getRuns().isEmpty())
+                    break;
                 XWPFRun run = paragraph.getRuns().get(0);
                 String text = run.getText(0);
 

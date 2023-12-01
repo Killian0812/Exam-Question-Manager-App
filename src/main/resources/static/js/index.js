@@ -66,9 +66,32 @@ document.getElementById("logoutButton").addEventListener("click", function () {
     }
 });
 
-document.getElementById("cancelButton").addEventListener("click", function () {
-    var cancelLogout = confirm("Bạn có muốn hủy đăng xuất không?");
-    if (cancelLogout) {
-        // Xử lý khi người dùng xác nhận hủy đăng xuất, ví dụ: không có thay đổi gì.
+setTimeout(function () {
+    var messageDiv = document.getElementById("messageDiv");
+    if (messageDiv) {
+        messageDiv.style.display = "none";
     }
-});
+}, 2000); // message disapear after 2s
+
+checkSessionValidity();
+
+function checkSessionValidity() {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('Session is valid');
+                // Do something if the session is valid
+            } else {
+                console.log('Session is not valid');
+                window.location.href = "/";
+            }
+        }
+    };
+
+    xhr.open('GET', '/api/v1/session/isSessionValid');
+    xhr.send();
+}
+setInterval(checkSessionValidity, 30000);
+
+

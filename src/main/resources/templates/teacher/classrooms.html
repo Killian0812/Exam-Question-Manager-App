@@ -36,9 +36,9 @@
             <li><button><i class='bx bx-cog' ></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
-            <form th:action="@{/logout}" method="get">
-                <li><button><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
-            </form><br>
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+            </form>
         </ul>
     </div>
     <!-- End of Sidebar -->
@@ -94,30 +94,7 @@
                 <form th:action="@{create-classroom-page}" method="get" class= "tuongtac1">
                     <button type="submit">Tạo lớp học mới</button>
                 </form><br>
-            
-                <style>
-                    .redirect-button {
-                        display: inline-block;
-                        padding: 5px 10px;
-                        font-size: 14px;
-                        background-color: #000000;
-                        color: #fff;
-                        text-decoration: none;
-                        border: none;
-                        border-radius: 4px;
-                        cursor: pointer;
-                    }
-                </style>
-            
-                <script>
-                    setTimeout(function () {
-                        var messageDiv = document.getElementById("messageDiv");
-                        if (messageDiv) {
-                            messageDiv.style.display = "none";
-                        }
-                    }, 2000); // message disapear after 2s
-                </script>
-                
+                            
             </div>
          </main>
     </div>

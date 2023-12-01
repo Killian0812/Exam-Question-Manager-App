@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.killian.SpringBoot.ExamApp.models.Question;
@@ -97,6 +98,15 @@ public class QuestionController {
                     return questionRepository.save(newQuestion);
                 });
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("Ok", "Question updated", updatedQuestion));
+    }
+
+    @GetMapping("/getChapters")
+    public List<String> getChapters(
+            @RequestParam(value = "subject") String subject,
+            @RequestParam(value = "grade", required = false) int grade) {
+        if (subject == null)
+            return null;
+        return questionRepository.findDistinctChaptersBySubjectAndGrade(subject, grade);
     }
 
 }

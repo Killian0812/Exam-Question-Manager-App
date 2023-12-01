@@ -39,6 +39,8 @@ public class User implements UserDetails {
 
     private String dob;
 
+    private int banned;
+
     public User() {
 
     }
@@ -52,6 +54,7 @@ public class User implements UserDetails {
         this.avatarFileName = "default.jpg";
         this.role = role;
         this.dob = dob;
+        this.banned = 0;
     }
 
     @Override
@@ -118,6 +121,14 @@ public class User implements UserDetails {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public int getBanned() {
+        return banned;
+    }
+
+    public void setBanned(int banned) {
+        this.banned = banned;
     }
 
     @Override

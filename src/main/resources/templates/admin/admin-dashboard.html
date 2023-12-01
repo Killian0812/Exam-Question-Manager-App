@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <title>Exam Manager</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Đề Thi</title>
+
     <link rel="stylesheet" href="/css/styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+
+
+    </style>
 </head>
 
 <body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
     <!--Sidebar-->
+
     <div class="sidebar">
         <a href="#" class="logo">
             <i class='bx bxs-graduation'></i>
@@ -18,28 +27,28 @@
         </a>
         <ul class="side-menu">
             <li class="active"><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
-            <form th:action="@{/profile}" method="get">
-                <li type="submit"><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            <form th:action="@{/admin/access/user-manager}" method="get">
+                <li type="submit"><button><i class='bx bx-lock-alt'></i>Quản lý người dùng</button></li>
             </form>
-            <form th:action="@{classroom/classrooms-page}" method="get">
-                <li type="submit"><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            <form th:action="@{questions/create-question-page}" method="get">
+                <li type="submit"><button><i class='bx bx-edit'></i>Tạo câu hỏi</button></li>
             </form>
             <form th:action="@{exam/create-exam-page}" method="get">
-                <li type="submit"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi</button></li>
             </form>
             <form th:action="@{exam/view-exams-by-filter-page}" method="get">
-                <li type="submit"><button><i class='bx bx-folder'></i>Xem các đề thi</button></li>
+                <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
             </form>
             <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
             <form th:action="@{/logout}" method="get" id="logoutForm">
-                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
-                        xuất</button></li>
+                <li type="submit" id="logoutButton"><button id="logoutButton" class="logout"><i
+                            class='bx bx-log-out'></i>Đăng xuất</button></li>
             </form>
-
         </ul>
     </div>
+
     <!-- End of Sidebar -->
     <!-- Main Content -->
     <div class="content">
@@ -63,9 +72,13 @@
             </a>
         </nav>
         <!-- End of Navbar -->
-        <main style="background-color: #f1f5f9;">
+        <main>
+            <div>
+
+            </div>
         </main>
     </div>
+    
     <script src="/js/index.js"></script>
 </body>
 

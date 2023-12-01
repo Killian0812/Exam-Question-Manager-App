@@ -17,6 +17,9 @@ import com.killian.SpringBoot.ExamApp.services.ImageStorageService;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 import com.killian.SpringBoot.ExamApp.services.UserServiceImpl;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UserController {
 
@@ -160,12 +163,41 @@ public class UserController {
         return "student/student-dashboard";
     }
 
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(Model model) {
+        String username = sessionManagementService.getUsername();
+        User user = null;
+        if (username.contains("@")) {
+            user = userRepository.findByEmail(username).orElse(null);
+            sessionManagementService.setUsername(user.getUsername());
+        } else
+            user = userRepository.findByUsername(username).orElse(null);
+        String role = sessionManagementService.getRole();
+
+        // Use the data as needed
+        model.addAttribute("name", user.getName());
+        model.addAttribute("username", username);
+        model.addAttribute("role", role);
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+
+        return "admin/admin-dashboard";
+    }
+
     @GetMapping("/logout")
-    public String logout() {
-        // Clear user session on logout
-        sessionManagementService.clearUserSession();
+    public String logout(HttpSession session, HttpServletRequest request) {
+        session.invalidate(); // Invalidate the session
+        // Redirect to the specified URL after logout
+        // String referer = request.getHeader("referer"); // Get the previous URL before logout
         return "redirect:/";
     }
+
+    // @GetMapping("/logout")
+    // public String logout() {
+    //     // Clear user session on logout
+    //     sessionManagementService.clearUserSession();
+    //     return "redirect:/";
+    // }
 
     // @GetMapping("/401")
     // public String unauthorized() {
