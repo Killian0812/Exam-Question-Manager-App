@@ -1,58 +1,125 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:debug="true">
+<html xmlns:th="http://www.thymeleaf.org" th:debug="true" lang="en">
 
 <head>
     <title>Exam Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style-student.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 
 <body>
-
-    <h1>Đề thi: <span th:text=" ${exam.name}"></span></h1>
-
-    <div class="countdown-clock">
-        <div class="time-block">
-            <span class="time" id="hour">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="label">Giờ</span>
-        </div>
-        <div class="time-block">
-            <span class="time" id="min">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="label">Phút</span>
-        </div>
-        <div class="time-block">
-            <span class="time" id="sec">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="label">Giây</span>
-        </div>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/student/classroom/classrooms-page?}" method="get">
+                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            </form>
+            <form th:action="@{/student/exam/training}" method="get">
+                <li class="active"><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
+            </form>
+            <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get" id="logoutForm">
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
+            </form>
+        </ul>
     </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="images/logo.png">
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <div class="group-class-clock">
+                <h1></h1>
+                <div class="countdown-clock">
+                    <div class="time-block">
+                        <span class="time" id="hour">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Giờ</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time" id="min">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Phút</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time" id="sec">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Giây</span>
+                    </div>
+                </div>
+            </div>
 
-    <div th:if="${message}" id="messageDiv" class="alert alert-success">
-        <p th:text="${message}"></p>
-    </div>
+            <h1 class="title-assignment">Đề thi: <span th:text=" ${exam.name}"></span></h1>
 
-    <ul class="question-list">
-        <li th:each="question, questionIndex : ${exam.questions}">
-            <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
-            <ul>
-                <li th:each="choice, choiceIndex : ${question.choices}">
-                    <label>
-                        <input type="radio" th:name="'selectedChoice' + ${questionIndex.index}" th:value="${choice}"
-                            th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])"
-                            th:checked="${selected.size() > questionIndex.index and choiceIndex.index == selected.get(questionIndex.index)}" />
-                        <span th:text="' ' + ${choice}"></span>
-                    </label>
+
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+
+            <ul class="group-ul question-list">
+                <li th:each="question, questionIndex : ${exam.questions}" class="a-question"
+                    style="background-color: #e6f1f5;">
+                    <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}" class="text-question">
+                    </p>
+                    <ul class="group-ul answer-list">
+                        <li th:each="choice, choiceIndex : ${question.choices}" class="a-answer">
+                            <label>
+                                <input type="radio" th:name="'selectedChoice' + ${questionIndex.index}"
+                                    th:value="${choice}"
+                                    th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])"
+                                    th:checked="${selected.size() > questionIndex.index and choiceIndex.index == selected.get(questionIndex.index)}" />
+                                <span th:text="' ' + ${choice}"></span>
+                            </label>
+                        </li>
+                    </ul>
                 </li>
             </ul>
-        </li>
-    </ul>
 
-    <button id="submitButton" onclick="SubmitAnswer('Bạn có chắc chắn muốn nộp bài?')">Nộp bài</button>
+            <button id="submitButton" onclick="SubmitAnswer('Bạn có chắc chắn muốn nộp bài?')">Nộp bài</button>
+        </main>
+    </div>
 
+    <script src="/js/index.js"></script>
     <script th:inline="javascript">
 
         // "17:31:00 11/25/2023"
         var submissionEndTime = /*[[${endTime}]]*/ 0;
+        var submissionId = /*[[${submissionId}]]*/ 0;
         var timezone = 'Asia/Bangkok';
         const endTime = moment.tz(submissionEndTime, 'HH:mm:ss MM/DD/YYYY', timezone).valueOf();
 
@@ -89,8 +156,6 @@
             document.getElementById("sec").innerHTML = s;
 
         }, 1000);
-
-        var submissionId = /*[[${submissionId}]]*/ 0;
 
         function SubmitChoice(questionIndex, newChoice) {
 
@@ -165,46 +230,6 @@
             }
         }, 2000); // message disapear after 2s
     </script>
-
-    <style>
-        ul {
-            list-style: none;
-        }
-
-        .question-list {
-            margin-left: 0;
-            /* Remove default left margin */
-            padding-left: 10px;
-            /* Add custom padding for indentation */
-        }
-
-        .countdown-clock {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            width: 200px;
-        }
-
-        .time-block {
-            text-align: center;
-        }
-
-        .time {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .label {
-            font-size: 14px;
-            margin-top: 5px;
-        }
-    </style>
 </body>
 
 </html>

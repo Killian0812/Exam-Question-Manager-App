@@ -7,11 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/profile.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <style>
-
-
-    </style>
+   
 </head>
 
 <body>
@@ -106,65 +104,81 @@
             </a>
         </nav>
         <!-- End of Navbar -->
-        <main>
-            <div style="margin-left: 1opx;">
+        <main style=" margin: 30px 20px;">
+            <div>
                 <div th:if="${message}" id="messageDiv" class="alert alert-success">
                     <p th:text="${message}"></p>
                 </div>
 
                 <form th:action="@{/back-to-dashboard}" method="get">
-                    <input type="submit" value="Quay lại trang chủ"
-                        style="background-color: black; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;" />
+                    <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
                 </form><br>
+                <div class="profile-ui">
+                    <div class="profile-setting">
+                        <ul class="profile-choice">
+                            <form th:action="@{profile/edit}" method="get">
+                                <li><button><i class='bx bx-reset'></i>Thay đổi thông tin cá nhân</button></li>
+                            </form> 
+                            <form th:action="@{change-password-page}" method="get">
+                                <li><button><i class='bx bx-fingerprint'></i>Đổi mật khẩu</button></li>
+                            </form>
+                        </ul>
+                    </div>
+                    <div class="profile-information">
+                        <h2>Hồ sơ người dùng</h2>
+                            <div style="align-items: center; padding: 10px; margin-left: 40%;">
+                                <img style=" border-radius: 50%; width: 150px; height: 150px;"  th:src="@{'/images/' + ${user.avatarFileName}}" width="270" height="250" />
+                            </div><br>
+                            <div style="display: flex;">
+                                <div style="width: 50%; padding: 8px;">
+                                    <div style="margin-bottom: 5px;">
+                                        <label for="username" style="font-weight: 500;">Tên đăng nhập:</label>
+                                    </div>
+                                    <button style="border-radius: 5px;"><span th:text="${user.username}"></span></button>
+                                </div>
+                                <div style="width: 50%; padding: 8px;">
+                                    <div  style="margin-bottom: 5px;">   
+                                        <label for="name" style="font-weight: 500;">Họ và tên:</label>
+                                    </div>
+                                    <button style="border-radius: 5px;"><span th:text="${user.name}"></span></button>
+                                </div>
+                            </div>
+                            <div style="display: flex;">
+                                <div style="width: 50%; padding: 8px;">
+                                    <div style="margin-bottom: 5px;">
+                                        <label for="username" style="font-weight: 500;">Giới tính:</label>
+                                    </div>
+                                    <button style="border-radius: 5px;"><span th:text="${user.gender}"></span></button>
+                                </div>
+                                <div style="width: 50%; padding: 8px;">
+                                    <div  style="margin-bottom: 5px;">   
+                                        <label for="name" style="font-weight: 500;">Ngày sinh:</label>
+                                    </div>
+                                    <button style="border-radius: 5px;"><span  th:text="${user.dob}"></span></button>
+                                </div>
+                            </div>
+                            <div style="width: 50%; padding: 8px;">
+                                <div  style="margin-bottom: 5px;">   
+                                    <label for="name" style="font-weight: 500;">Email:</label>
+                                </div>
+                                <button><span  th:text="${user.email}"></span></button>
+                            </div>
+                            
 
-                <form th:action="@{profile/edit}" method="get">
-                    <input type="submit" value="Thay đổi thông tin cá nhân" />
-                </form>
-
-                <h2>Hồ sơ người dùng</h2>
-
-                <div>
-
-                    <img th:src="@{'/images/' + ${user.avatarFileName}}" width="270" height="250" />
-                </div><br>
-
-                <div>
-                    <label for="username">Tên đăng nhập:</label>
-                    <span th:text="${user.username}"></span>
+                    </div>
                 </div>
-
-                <div>
-                    <label for="name">Họ và tên:</label>
-                    <span th:text="${user.name}"></span>
-                </div>
-
-                <div>
-                    <label for="gender">Giới tính:</label>
-                    <span th:text="${user.gender}"></span>
-                </div>
-
-                <div>
-                    <label for="dob">Ngày sinh:</label>
-                    <span th:text="${user.dob}"></span>
-                </div>
-
-                <div>
-                    <label for="email">Email:</label>
-                    <span th:text="${user.email}"></span>
-                </div><br>
-
-                <form th:action="@{change-password-page}" method="get">
-                    <input type="submit" value="Đổi mật khẩu" />
-                </form><br>
-
-                
             </div>
         </main>
     </div>
-
-    <script src="/js/index.js"></script>
-
-    <!-- <script th:inline="javascript">
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
+    <script th:inline="javascript">
 
         window.onload = function () {
             setTimeout(function () {
@@ -186,8 +200,9 @@
                 }
             }, 2000);
         }
-    </script> -->
+    </script>
 
+    <script src="/js/index.js"></script>
 
 </body>
 

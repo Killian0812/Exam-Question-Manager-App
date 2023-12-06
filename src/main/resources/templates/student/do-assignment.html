@@ -1,211 +1,242 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:debug="true">
+<html xmlns:th="http://www.thymeleaf.org" th:debug="true" lang="en">
 
 <head>
     <title>Exam Page</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/style-student.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
-
-    <h1>Lớp: <span th:text=" ${className}"></span></h1>
-    <h3>Bài tập: <span th:text=" ${assignmentName}"></span></h3>
-
-    <div class="countdown-clock">
-        <div class="time-block">
-            <span class="time" id="hour">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="label">Giờ</span>
-        </div>
-        <div class="time-block">
-            <span class="time" id="min">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="label">Phút</span>
-        </div>
-        <div class="time-block">
-            <span class="time" id="sec">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="label">Giây</span>
-        </div>
+    <!--Sidebar-->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            <i class='bx bxs-graduation'></i>
+            <div class="logo-name"><span>TQBEdu</span></div>
+        </a>
+        <ul class="side-menu">
+            <form th:action="@{/back-to-dashboard}" method="get">
+                <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
+            </form>
+            <form th:action="@{/profile}" method="get">
+                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+            </form>
+            <form th:action="@{/student/classroom/classrooms-page?}" method="get">
+                <li class="active"><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+            </form>
+            <li><button><i class='bx bx-folder'></i>Xem các đề thi </button></li>
+            <li><button><i class='bx bx-cog'></i>Cài đặt </button></li>
+        </ul>
+        <ul class="side-menu">
+            <form th:action="@{/logout}" method="get">
+                <li><button><i class='bx bx-log-out'></i>Đăng xuất</button></li>
+            </form><br>
+        </ul>
     </div>
+    <!-- End of Sidebar -->
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <img src="images/logo.png">
+            </a>
+        </nav>
+        <!-- End of Navbar -->
+        <main>
+            <div class="group-class-clock">
+                <h1 class="class-do-assignment">Lớp: <span th:text=" ${className}"></span></h1>
+                <div class="countdown-clock">
+                    <div class="time-block">
+                        <span class="time" id="hour">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Giờ</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time" id="min">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Phút</span>
+                    </div>
+                    <div class="time-block">
+                        <span class="time" id="sec">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class="label">Giây</span>
+                    </div>
+                </div>
+            </div>
 
-    <div th:if="${message}" id="messageDiv" class="alert alert-success">
-        <p th:text="${message}"></p>
-    </div>
+            <h1 class="title-assignment">Bài tập: <span th:text="${assignmentName}"></span></h1>
 
-    <ul class="question-list">
-        <li th:each="question, questionIndex : ${exam.questions}">
-            <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
-            <ul>
-                <li th:each="choice, choiceIndex : ${question.choices}">
-                    <label>
-                        <input type="radio" th:name="'selectedChoice' + ${questionIndex.index}" th:value="${choice}"
-                            th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])"
-                            th:checked="${selected.size() > questionIndex.index and choiceIndex.index == selected.get(questionIndex.index)}" />
-                        <span th:text="' ' + ${choice}"></span>
-                    </label>
+
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+
+            <ul class="group-ul question-list">
+                <li th:each="question, questionIndex : ${exam.questions}" class="a-question"
+                    style="background-color: #e6f1f5;">
+                    <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}" class="text-question">
+                    </p>
+                    <ul class="group-ul answer-list">
+                        <li th:each="choice, choiceIndex : ${question.choices}" class="a-answer">
+                            <label>
+                                <input type="radio" th:name="'selectedChoice' + ${questionIndex.index}"
+                                    th:value="${choice}"
+                                    th:onclick="SubmitChoice([[${questionIndex.index}]],[[${choiceIndex.index}]])"
+                                    th:checked="${selected.size() > questionIndex.index and choiceIndex.index == selected.get(questionIndex.index)}" />
+                                <span th:text="' ' + ${choice}"></span>
+                            </label>
+                        </li>
+                    </ul>
                 </li>
             </ul>
-        </li>
-    </ul>
 
-    <button id="submitButton" onclick="SubmitAnswer('Bạn có chắc chắn muốn nộp bài?')">Nộp bài</button>
+            <button id="submitButton" onclick="SubmitAnswer()">Nộp bài</button>
 
-    <script th:inline="javascript">
+            <script th:inline="javascript">
 
-        // "17:31:00 11/25/2023"
-        var submissionEndTime = /*[[${endTime}]]*/ 0;
-        var timezone = 'Asia/Bangkok';
-        const endTime = moment.tz(submissionEndTime, 'HH:mm:ss MM/DD/YYYY', timezone).valueOf();
+                // "17:31:00 11/25/2023"
+                var submissionEndTime = /*[[${endTime}]]*/ 0;
+                var endTime = new Date(submissionEndTime).getTime();
+                var x = setInterval(function () {
+                    var now = new Date();
+                    var currentTime = now.getTime();
 
-        var now = moment.tz(timezone);
-        var currentTime = now.valueOf();
+                    var s, m, h;
+                    var diff = endTime - currentTime;
 
-        var x = setInterval(function () {
+                    s = Math.floor(diff / 1000);
+                    m = Math.floor(s / 60);
+                    h = Math.floor(m / 60);
 
-            var s, m, h;
-            var now = moment.tz(timezone);
-            var currentTime = now.valueOf();
-            var diff = endTime - currentTime;
+                    s = s % 60;
+                    m = m % 60;
+                    h = h % 24;
 
-            s = Math.floor(diff / 1000);
-            m = Math.floor(s / 60);
-            h = Math.floor(m / 60);
-
-            s = s % 60;
-            m = m % 60;
-            h = h % 24;
-
-            if (diff < 0) {
-                clearInterval(x);
-                h = m = s = 0;
-                SubmitAnswer('Đã hết giờ làm bài. Bấm OK để xác nhận nộp bài.');
-            }
-
-            h = (h < 10) ? "0" + h : h;
-            m = (m < 10) ? "0" + m : m;
-            s = (s < 10) ? "0" + s : s;
-
-            document.getElementById("hour").innerHTML = h;
-            document.getElementById("min").innerHTML = m;
-            document.getElementById("sec").innerHTML = s;
-
-        }, 1000);
-
-        var submissionId = /*[[${submissionId}]]*/ 0;
-
-        function SubmitChoice(questionIndex, newChoice) {
-
-            var url = `/api/submission/submit-choice?submissionId=${submissionId}&questionIndex=${questionIndex}&newChoice=${newChoice}`;
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('SubmitChoice successful');
-                        // You can add additional handling here
-                    } else {
-                        console.error('SubmitChoice failed');
+                    if (diff < 0) {
+                        clearInterval(x);
+                        h = m = s = 0;
+                        SubmitAnswer();
                     }
-                })
-                .catch(error => {
-                    console.error('An error occurred:', error);
-                });
-        }
 
-        function SubmitAnswer(msgStr) {
+                    h = (h < 10) ? "0" + h : h;
+                    m = (m < 10) ? "0" + m : m;
+                    s = (s < 10) ? "0" + s : s;
 
-            if (!confirm(msgStr))
-                return;
-            var choices = [];
-            var questionCount = /*[[${exam.questions.size()}]]*/ 0;
-            for (var questionIndex = 0; questionIndex < questionCount; questionIndex++) {
-                // Retrieve the selected choice for the current question
-                var selectedChoice = document.querySelector('input[name="selectedChoice' + questionIndex + '"]:checked');
-                if (selectedChoice) {
-                    choices.push(selectedChoice.value);
-                } else {
-                    choices.push(null);
-                }
-            }
-            var choicesJsonString = JSON.stringify(choices);
+                    document.getElementById("hour").innerHTML = h;
+                    document.getElementById("min").innerHTML = m;
+                    document.getElementById("sec").innerHTML = s;
 
-            // Construct the URL with query parameters
-            var url = '/api/submission/submit-assignment?' +
-                'choicesJsonString=' + encodeURIComponent(choicesJsonString) +
-                '&submissionId=' + encodeURIComponent(submissionId);
+                    if (h == 0 && m < 5) {
+                        document.querySelector(".countdown-clock").style.background = "rgb(188, 188, 2)";
+                    }
+                    if (h == 0 && m < 2) {
+                        document.querySelector(".countdown-clock").style.background = "rgb(180, 8, 8)";
+                    }
+                }, 1000);
 
-            // Send the POST request
-            fetch(url, {
-                method: 'POST',
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // Check the response text
-                        response.text().then(text => {
-                            if (text === 'OK') {
-                                window.location.href = '/student/classroom/assignment/result?submissionId=' + submissionId;
+                var submissionId = /*[[${submissionId}]]*/ 0;
+
+                function SubmitChoice(questionIndex, newChoice) {
+
+                    var url = `/api/submission/submit-choice?submissionId=${submissionId}&questionIndex=${questionIndex}&newChoice=${newChoice}`;
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                console.log('SubmitChoice successful');
+                                // You can add additional handling here
                             } else {
-                                console.log('Response is not "OK":', text);
+                                console.error('SubmitChoice failed');
                             }
+                        })
+                        .catch(error => {
+                            console.error('An error occurred:', error);
                         });
+                }
+
+                function SubmitAnswer() {
+
+                    if (!confirm("Bạn có chắc chắn muốn nộp bài?"))
+                        return;
+                    var choices = [];
+                    var questionCount = /*[[${exam.questions.size()}]]*/ 0;
+                    for (var questionIndex = 0; questionIndex < questionCount; questionIndex++) {
+                        // Retrieve the selected choice for the current question
+                        var selectedChoice = document.querySelector('input[name="selectedChoice' + questionIndex + '"]:checked');
+                        if (selectedChoice) {
+                            choices.push(selectedChoice.value);
+                        } else {
+                            choices.push(null);
+                        }
                     }
-                })
-                .catch(error => {
-                    // Handle fetch error if needed
-                    console.error('An error occurred:', error);
+                    var choicesJsonString = JSON.stringify(choices);
+
+                    // Construct the URL with query parameters
+                    var url = '/api/submission/submit-assignment?' +
+                        'choicesJsonString=' + encodeURIComponent(choicesJsonString) +
+                        '&submissionId=' + encodeURIComponent(submissionId);
+
+                    // Send the POST request
+                    fetch(url, {
+                        method: 'POST',
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Check the response text
+                                response.text().then(text => {
+                                    if (text === 'OK') {
+                                        window.location.href = '/student/classroom/assignment/result?submissionId=' + submissionId;
+                                    } else {
+                                        console.log('Response is not "OK":', text);
+                                    }
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            // Handle fetch error if needed
+                            console.error('An error occurred:', error);
+                        });
+                }
+
+                setTimeout(function () {
+                    var messageDiv = document.getElementById("messageDiv");
+                    if (messageDiv) {
+                        messageDiv.style.display = "none";
+                    }
+                }, 2000); // message disapear after 2s
+
+                window.addEventListener("scroll", function () {
+                    if (window.innerWidth >= 700) {
+                        document.querySelector(".countdown-clock").style.position = "fixed";
+                    } else {
+                        document.querySelector(".countdown-clock").style.position = "static";
+                    }
                 });
-        }
 
-        setTimeout(function () {
-            var messageDiv = document.getElementById("messageDiv");
-            if (messageDiv) {
-                messageDiv.style.display = "none";
-            }
-        }, 2000); // message disapear after 2s
-    </script>
 
-    <style>
-        ul {
-            list-style: none;
-        }
+            </script>
+        </main>
+    </div>
 
-        .question-list {
-            margin-left: 0;
-            /* Remove default left margin */
-            padding-left: 10px;
-            /* Add custom padding for indentation */
-        }
-
-        .countdown-clock {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            width: 200px;
-        }
-
-        .time-block {
-            text-align: center;
-        }
-
-        .time {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .label {
-            font-size: 14px;
-            margin-top: 5px;
-        }
-    </style>
+    <script src="/js/index.js"></script>
 </body>
 
 </html>
