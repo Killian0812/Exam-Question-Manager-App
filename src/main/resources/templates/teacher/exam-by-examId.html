@@ -77,14 +77,16 @@
         </nav>
         <!-- End of Navbar -->
         <main>
-            <div>
+            <div class="container-fluid">
                 <div th:if="${message}" id="messageDiv" class="alert alert-success">
                     <p th:text="${message}"></p>
                 </div><br>
 
                 <div class="container">
-                    <form th:action="@{view-exams-by-filter-page}" method="get">
-                        <h2><input type="submit" value="Quay lại các đề" class="back-button" /></h2>
+                    <form th:action="@{get-exams-by-subject-and-grade}" method="get">
+                        <input type="hidden" name="selectedSubject" th:value="${exam.subject}">
+                        <input type="hidden" name="selectedGrade" th:value="${exam.grade}">
+                        <h2><input type="submit" value="Xem các đề tương tự" class="back-button" /></h2>
                     </form>
 
                     <span th:text="'Đề số: '"></span>
@@ -119,30 +121,46 @@
 
             <div class="col" style="text-align: center;">
                 <h1><span th:text="'Đề thi: ' + ${exam.name} + ' - ID: ' + ${exam.examId}"></span></h1>
+            </div><br>
+
+            <div class="col" style="text-align: center;">
+                <h2><span th:text="'Môn học: '+ ${exam.subject} + ' - Khối lớp: ' + ${exam.grade}"></span></h2>
             </div>
 
             <div class="col" style="text-align: center;">
-                <h1><span th:text="'Môn học: '+ ${exam.subject} + ' - Khối lớp: ' + ${exam.grade}"></span></h1>
+                <p style="font-size: 140%;">Thời gian làm bài: <span th:text="${exam.duration} + ' phút'"></span></p>
             </div>
 
             <div class="col" style="text-align: center;">
-                <p>Thời gian làm bài: <span th:text="${exam.duration} + ' phút'"></span></p>
+                <p style="font-size: 120%;">Mã đề: <span th:text="'00'+${exam.examCode+1}"></span></p>
             </div>
-
-            <div class="col" style="text-align: center;">
-                <p>Mã đề: <span th:text="'00'+${exam.examCode+1}"></span></p>
-            </div>
-
-            <!-- Display List of Questions -->
-            <!--<h2>Các câu hỏi:</h2>-->
 
             <ul class="question-list">
                 <li th:each="question, questionIndex : ${exam.questions}">
-                    <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
+                    <span style="font-weight: bold;" th:text="'Câu ' + (${questionIndex.index + 1}) + ': '"></span>
+                    <span th:text="${question.text}"></span>
                     <ul>
                         <li th:each="choice, choiceIndex : ${question.choices}">
-                            <p th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></p>
+                            <span style="font-weight: bold;" th:if="${question.answer.contains(choice)}"
+                                th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></span>
+                            <span th:unless="${question.answer.contains(choice)}"
+                                th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></span>
                         </li>
+
+                        <li th:if="${question.questionType == 'type-in'}"
+                            th:each="answer, answerIndex : ${question.answer}">
+                            <span style="font-weight: bold;" th:text="'Đáp án'"></span>
+                            <span th:text="${question.answer.size() > 1} ? (${answerIndex.index + 1} + ': ') : ':'"
+                                style="font-weight: bold;"></span>
+                            <span th:text="${answer}"></span>
+                        </li>
+
+                        <li th:if="${question.questionType == 'ranking'}">
+                            <span style="font-weight: bold;" th:text="'Đáp án: '"></span>
+                            <span th:text="${question.answer.get(0)}"></span>
+                        </li>
+
+                        <br>
                     </ul>
                 </li>
             </ul>

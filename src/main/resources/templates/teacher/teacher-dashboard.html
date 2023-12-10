@@ -1,16 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <title>Exam Manager</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Đề Thi</title>
+
     <link rel="stylesheet" href="/css/styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+
+
+    </style>
 </head>
 
 <body>
+    <div th:if="${message}" id="messageDiv" class="alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
     <!--Sidebar-->
+
     <div class="sidebar">
         <a href="#" class="logo">
             <i class='bx bxs-graduation'></i>
@@ -42,7 +51,7 @@
     </div>
     <!-- End of Sidebar -->
     <!-- Main Content -->
-    <div class="content">
+    <div class="content" th:if="${role == 'Teacher'}">
         <!-- Navbar -->
         <nav>
             <i class='bx bx-menu'></i>
@@ -63,10 +72,46 @@
             </a>
         </nav>
         <!-- End of Navbar -->
-        <main style="background-color: #f1f5f9;">
+        <main style="padding: 30px;">
+            <div class="header">
+                <h1>Chào mừng bạn đến với TQBEdu</h1>
+            </div>
+            <div class="insights">
+                <li onclick="submitForm1()">
+                    <i class='bx bx-add-to-queue bx-lg'></i>
+                    <form id="myForm1" th:action="@{classroom/create-classroom-page}" method="get">
+                        <button>Tạo lớp học</button>
+                    </form>
+                </li>
+                <li onclick="submitForm2()">
+                    <i class='bx bx-street-view bx-lg'></i>
+                    <form id="myForm2" th:action="@{classroom/classrooms-page}" method="get">
+                        <button>Xem các lớp học</button>
+                    </form>
+                </li>
+                <li onclick="submitForm3()">
+                    <i class='bx bxs-bank bx-lg'></i>
+                    <form id="myForm3" th:action="@{exam/create-exam-page}" method="get">
+                        <button>Tạo đề thi</button>
+                    </form>
+                </li>
+            </div>
         </main>
     </div>
+
+    <script>
+        function submitForm1() {
+            document.getElementById("myForm1").submit();
+        }
+        function submitForm2() {
+            document.getElementById("myForm2").submit();
+        }
+        function submitForm3() {
+            document.getElementById("myForm3").submit();
+        }
+    </script>
     <script src="/js/index.js"></script>
+
 </body>
 
 </html>

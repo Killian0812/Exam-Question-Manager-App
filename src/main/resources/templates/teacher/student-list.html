@@ -66,15 +66,16 @@
         </nav>
         <!-- End of Navbar -->
         <main>
-            <div th:if="${message}" id="messageDiv" class="alert alert-success">
-                <p th:text="${message}"></p>
-            </div>
-
+            
             <form th:action="@{view-classroom}" method="get">
                 <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                 <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
             </form>
-
+            
+            <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                <p th:text="${message}"></p>
+            </div>
+            
             <h1 th:text="'Lớp: ' + ${className}"></h1>
             <h3>Danh sách học sinh:</h3>
 

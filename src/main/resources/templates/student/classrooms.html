@@ -72,7 +72,7 @@
             </form><br><br>
 
             <div class="boxs">
-                <div th:if="${classrooms}">
+                <div th:if="${classrooms}" style="width: 50%;">
                     <h2 th:text="'Các lớp học hiện tại: '"></h2><br>
                     <ul>
                         <li th:each="classroom : ${classrooms}">
@@ -91,7 +91,7 @@
                     </ul>
                 </div>
 
-                <form th:action="@{join-classroom-page}" method="get" class="attend">
+                <form style="width: 50%;" th:action="@{join-classroom-page}" method="get" class="attend">
                     <input type="submit" value="Tham gia Lớp học mới" />
                 </form><br>
             </div>

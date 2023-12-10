@@ -49,7 +49,7 @@ public class AdminQuestionController {
     public String createQuestion(
             @RequestParam("text") String text,
             @RequestParam(value = "choices", required = false) List<String> choices,
-            @RequestParam("answer") String answer,
+            @RequestParam("answer") List<String> answer,
             @RequestParam("subject") String subject,
             @RequestParam("grade") int grade,
             @RequestParam(value = "chapter", required = false) String chapter,

@@ -50,6 +50,7 @@ public class UserController {
         User user = userRepository.findByUsername(sessionManagementService.getUsername()).orElse(null);
         model.addAttribute("user", user);
         model.addAttribute("message", sessionManagementService.getMessage());
+        model.addAttribute("role", sessionManagementService.getRole());
         sessionManagementService.clearMessage();
         return "edit-profile";
     }
@@ -93,6 +94,7 @@ public class UserController {
     @GetMapping("/change-password-page")
     public String changePasswordPage(Model model) {
         model.addAttribute("message", sessionManagementService.getMessage());
+        model.addAttribute("role", sessionManagementService.getRole());
         sessionManagementService.clearMessage();
         return "change-password";
     }
@@ -117,6 +119,8 @@ public class UserController {
 
     @GetMapping("/back-to-dashboard")
     public String backToDashboard() {
+        if (sessionManagementService.getUsername() == null)
+            return "redirect:/";
         return "redirect:/" + sessionManagementService.getRole().toLowerCase() + "/dashboard";
     }
 
@@ -188,26 +192,27 @@ public class UserController {
     public String logout(HttpSession session, HttpServletRequest request) {
         session.invalidate(); // Invalidate the session
         // Redirect to the specified URL after logout
-        // String referer = request.getHeader("referer"); // Get the previous URL before logout
+        // String referer = request.getHeader("referer"); // Get the previous URL before
+        // logout
         return "redirect:/";
     }
 
     // @GetMapping("/logout")
     // public String logout() {
-    //     // Clear user session on logout
-    //     sessionManagementService.clearUserSession();
-    //     return "redirect:/";
+    // // Clear user session on logout
+    // sessionManagementService.clearUserSession();
+    // return "redirect:/";
     // }
 
-    // @GetMapping("/401")
-    // public String unauthorized() {
-    // return "error";
-    // }
+    @GetMapping("/401")
+    public String unauthorized() {
+        return "401";
+    }
 
-    // @GetMapping("/403")
-    // public String forbidden() {
-    // return "error";
-    // }
+    @GetMapping("/403")
+    public String forbidden() {
+        return "403";
+    }
 
     @GetMapping("/404")
     public String notFound() {

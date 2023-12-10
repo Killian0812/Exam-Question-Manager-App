@@ -29,7 +29,9 @@ public class Question {
     @CollectionTable(name = "choices", joinColumns = @JoinColumn(name = "question_id"))
     private List<String> choices;
 
-    private String answer;
+    @ElementCollection
+    @CollectionTable(name = "answers", joinColumns = @JoinColumn(name = "question_id"))
+    private List<String> answer;
 
     private String subject;
 
@@ -49,7 +51,7 @@ public class Question {
         this.subject = subject;
     }
 
-    public Question(String text, List<String> choices, String answer, String subject, String chapter, int grade,
+    public Question(String text, List<String> choices, List<String> answer, String subject, String chapter, int grade,
             String questionType) {
         this.text = text;
         this.choices = choices;
@@ -87,11 +89,11 @@ public class Question {
         this.choices = newChoices;
     }
 
-    public String getAnswer() {
+    public List<String> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(String answer) {
+    public void setAnswer(List<String> answer) {
         this.answer = answer;
     }
 

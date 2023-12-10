@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.killian.SpringBoot.ExamApp.models.Choice;
 import com.killian.SpringBoot.ExamApp.models.Exam;
 import com.killian.SpringBoot.ExamApp.models.Question;
 import com.killian.SpringBoot.ExamApp.models.Submission;
@@ -102,7 +104,7 @@ public class StudentExamController {
                     exam.getQuestions().size(), exam.getDuration());
             submissionRepository.save(newSubmission);
             model.addAttribute("endTime", newSubmission.getEndTime());
-            model.addAttribute("selected", newSubmission.getSelected());
+            model.addAttribute("choices", newSubmission.getChoices());
             model.addAttribute("submissionId", newSubmission.getSubmissionId());
             model.addAttribute("exam", exam);
         } else {
@@ -111,7 +113,7 @@ public class StudentExamController {
             model.addAttribute("endTime", submission.getEndTime());
             model.addAttribute("exam", exam);
             model.addAttribute("submissionId", submission.getSubmissionId());
-            model.addAttribute("selected", submission.getSelected());
+            model.addAttribute("choices", submission.getChoices());
         }
         return "student/do-exam";
     }
@@ -135,14 +137,14 @@ public class StudentExamController {
         Submission submission = submissionRepository.findBySubmissionId(submissionId);
         Exam exam = examRepository.findByExamId(submission.getExamId()).get(submission.getExamCode());
         List<Question> questions = exam.getQuestions();
-        List<Integer> choiceIndexes = submission.getSelected();
+        List<Choice> selectedChoices = submission.getChoices();
         List<String> choices = new ArrayList<>();
         for (int i = 0; i < questions.size(); i++) {
-            if (choiceIndexes.size() < (i + 1) || choiceIndexes.get(i) == 99)
+            if (selectedChoices.size() < (i + 1) || selectedChoices.get(i) == null)
                 choices.add("Không trả lời");
             else {
-                int index = choiceIndexes.get(i);
-                choices.add(questions.get(i).getChoices().get(index));
+                // int index = choiceIndexes.get(i);
+                // choices.add(questions.get(i).getChoices().get(index));
             }
         }
         // Thời gian bắt đầu: 17:30:38 11/02/2023

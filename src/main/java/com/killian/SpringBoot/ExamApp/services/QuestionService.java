@@ -28,6 +28,7 @@ public class QuestionService {
 
             Question currentQuestion = null;
             List<String> currentChoices = null;
+            List<String> currentAnswers = null;
 
             for (XWPFParagraph paragraph : document.getParagraphs()) {
 
@@ -43,10 +44,12 @@ public class QuestionService {
                 if (text.startsWith("Câu ")) {
                     if (currentQuestion != null) {
                         currentQuestion.setChoices(currentChoices);
+                        currentQuestion.setAnswer(currentAnswers);
                         questionRepository.save(currentQuestion);
                     }
                     currentQuestion = new Question(grade, subject);
                     currentChoices = new ArrayList<>();
+                    currentAnswers = new ArrayList<>();
                     for (int i = 5; i < text.length(); i++) {
                         char c = text.charAt(i);
                         if (c == ':') {
@@ -54,7 +57,7 @@ public class QuestionService {
                             break;
                         }
                     }
-                } else if (currentQuestion != null && currentChoices != null) {
+                } else if (currentQuestion != null && currentChoices != null && currentAnswers != null) {
                     if (text.startsWith("A. ")
                             || text.startsWith("B. ")
                             || text.startsWith("C. ")
@@ -63,7 +66,7 @@ public class QuestionService {
                         currentChoices.add(text.substring(3));
 
                         if (run.isBold())
-                            currentQuestion.setAnswer(text.substring(3));
+                            currentAnswers.add(text.substring(3));
                     } else if (text.startsWith("Chương"))
                         currentQuestion.setChapter(text);
                 }

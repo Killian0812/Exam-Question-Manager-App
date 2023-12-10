@@ -9,15 +9,11 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/profile.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-   
+
 </head>
 
 <body>
-    <div th:if="${message}" id="messageDiv" class="alert alert-success">
-        <p th:text="${message}"></p>
-    </div>
     <!--Sidebar-->
-
     <div th:if="${user.role == 'Teacher'}" class="sidebar">
         <a href="#" class="logo">
             <i class='bx bxs-graduation'></i>
@@ -106,10 +102,6 @@
         <!-- End of Navbar -->
         <main style=" margin: 30px 20px;">
             <div>
-                <div th:if="${message}" id="messageDiv" class="alert alert-success">
-                    <p th:text="${message}"></p>
-                </div>
-
                 <form th:action="@{/back-to-dashboard}" method="get">
                     <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
                 </form><br>
@@ -118,76 +110,78 @@
                         <ul class="profile-choice">
                             <form th:action="@{profile/edit}" method="get">
                                 <li><button><i class='bx bx-reset'></i>Thay đổi thông tin cá nhân</button></li>
-                            </form> 
+                            </form>
                             <form th:action="@{change-password-page}" method="get">
                                 <li><button><i class='bx bx-fingerprint'></i>Đổi mật khẩu</button></li>
                             </form>
                         </ul>
                     </div>
                     <div class="profile-information">
+                        <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                            <p th:text="${message}"></p>
+                        </div>
                         <h2>Hồ sơ người dùng</h2>
-                            <div style="align-items: center; padding: 10px; margin-left: 40%;">
-                                <img style=" border-radius: 50%; width: 150px; height: 150px;"  th:src="@{'/images/' + ${user.avatarFileName}}" width="270" height="250" />
-                            </div><br>
-                            <div style="display: flex;">
-                                <div style="width: 50%; padding: 8px;">
-                                    <div style="margin-bottom: 5px;">
-                                        <label for="username" style="font-weight: 500;">Tên đăng nhập:</label>
-                                    </div>
-                                    <button style="border-radius: 5px;"><span th:text="${user.username}"></span></button>
+                        <div style="align-items: center; padding: 10px; margin-left: 40%;">
+                            <img style=" border-radius: 50%; width: 150px; height: 150px;"
+                                th:src="@{'/images/' + ${user.avatarFileName}}" width="270" height="250" />
+                        </div><br>
+                        <div style="display: flex;">
+                            <div style="width: 50%; padding: 8px;">
+                                <div style="margin-bottom: 5px;">
+                                    <label for="username" style="font-weight: 500;">Tên đăng nhập:</label>
                                 </div>
-                                <div style="width: 50%; padding: 8px;">
-                                    <div  style="margin-bottom: 5px;">   
-                                        <label for="name" style="font-weight: 500;">Họ và tên:</label>
-                                    </div>
-                                    <button style="border-radius: 5px;"><span th:text="${user.name}"></span></button>
-                                </div>
-                            </div>
-                            <div style="display: flex;">
-                                <div style="width: 50%; padding: 8px;">
-                                    <div style="margin-bottom: 5px;">
-                                        <label for="username" style="font-weight: 500;">Giới tính:</label>
-                                    </div>
-                                    <button style="border-radius: 5px;"><span th:text="${user.gender}"></span></button>
-                                </div>
-                                <div style="width: 50%; padding: 8px;">
-                                    <div  style="margin-bottom: 5px;">   
-                                        <label for="name" style="font-weight: 500;">Ngày sinh:</label>
-                                    </div>
-                                    <button style="border-radius: 5px;"><span  th:text="${user.dob}"></span></button>
-                                </div>
+                                <button style="border-radius: 5px;"><span th:text="${user.username}"></span></button>
                             </div>
                             <div style="width: 50%; padding: 8px;">
-                                <div  style="margin-bottom: 5px;">   
-                                    <label for="name" style="font-weight: 500;">Email:</label>
+                                <div style="margin-bottom: 5px;">
+                                    <label for="name" style="font-weight: 500;">Họ và tên:</label>
                                 </div>
-                                <button><span  th:text="${user.email}"></span></button>
+                                <button style="border-radius: 5px;"><span th:text="${user.name}"></span></button>
                             </div>
-                            
-
+                        </div>
+                        <div style="display: flex;">
+                            <div style="width: 50%; padding: 8px;">
+                                <div style="margin-bottom: 5px;">
+                                    <label for="username" style="font-weight: 500;">Giới tính:</label>
+                                </div>
+                                <button style="border-radius: 5px;"><span th:text="${user.gender}"></span></button>
+                            </div>
+                            <div style="width: 50%; padding: 8px;">
+                                <div style="margin-bottom: 5px;">
+                                    <label for="name" style="font-weight: 500;">Ngày sinh:</label>
+                                </div>
+                                <button style="border-radius: 5px;"><span th:text="${user.dob}"></span></button>
+                            </div>
+                        </div>
+                        <div style="width: 50%; padding: 8px;">
+                            <div style="margin-bottom: 5px;">
+                                <label for="name" style="font-weight: 500;">Email:</label>
+                            </div>
+                            <button><span th:text="${user.email}"></span></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-    <script>
+
+    <script th:inline="javascript">
+
         setTimeout(function () {
             var messageDiv = document.getElementById("messageDiv");
             if (messageDiv) {
                 messageDiv.style.display = "none";
             }
-        }, 2000); // message disapear after 2s
-    </script>
-    <script th:inline="javascript">
+        }, 2000);
 
-        window.onload = function () {
-            setTimeout(function () {
-                if (!window.location.hash) {
-                    window.location = window.location + '#reloaded';
-                    window.location.reload();
-                }
-            }, 500);
-        };
+        // window.onload = function () {
+        //    setTimeout(function () {
+        //        if (!window.location.hash) {
+        //            window.location = window.location + '#reloaded';
+        //            window.location.reload();
+        //        }
+        //    }, 500);
+        //};
         if (window.location.hash == "#reloaded") {
             var hashValue = window.location.hash;
             var xhr = new XMLHttpRequest();

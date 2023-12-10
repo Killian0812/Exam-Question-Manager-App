@@ -4,17 +4,16 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -38,9 +37,9 @@ public class Submission {
 
     private int examCode;
 
-    @ElementCollection
-    @CollectionTable(name = "selected_choice", joinColumns = @JoinColumn(name = "submission_id"))
-    private List<Integer> selected;
+    @ManyToMany
+    @JoinTable(name = "submission_to_choices", joinColumns = @JoinColumn(name = "submission_id"), inverseJoinColumns = @JoinColumn(name = "choice_id"))
+    private List<Choice> choices;
 
     private String assignmentId;
 
@@ -61,9 +60,6 @@ public class Submission {
         this.startedTime = getCurrentDateTime();
         this.endTime = calculateEndTime(this.startedTime, duration);
         this.score = -1.0;
-        this.selected = new ArrayList<>();
-        for (int i = 0; i < questionCount; i++)
-            this.selected.add(99);
         this.submissionId = submissionIdGenerate();
     }
 
@@ -74,9 +70,6 @@ public class Submission {
         this.startedTime = getCurrentDateTime();
         this.endTime = calculateEndTime(this.startedTime, duration);
         this.score = -1.0;
-        this.selected = new ArrayList<>();
-        for (int i = 0; i < questionCount; i++)
-            this.selected.add(99);
         this.submissionId = submissionIdGenerate();
     }
 
@@ -136,19 +129,12 @@ public class Submission {
         this.submittedTime = submittedTime;
     }
 
-    public List<Integer> getSelected() {
-        return selected;
+    public List<Choice> getChoices() {
+        return choices;
     }
 
-    public void setSelected(int index, int value, int size) {
-        if (selected.size() == size) {
-            selected.set(index, value);
-        } else {
-            while (selected.size() < size) {
-                selected.add(null);
-            }
-            selected.add(value);
-        }
+    public void setChoices(List<Choice> choices) {
+        this.choices = choices;
     }
 
     public String getAssignmentId() {

@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.killian.SpringBoot.ExamApp.models.Assignment;
+import com.killian.SpringBoot.ExamApp.models.Choice;
 import com.killian.SpringBoot.ExamApp.models.Classroom;
 import com.killian.SpringBoot.ExamApp.models.Exam;
 import com.killian.SpringBoot.ExamApp.models.Question;
 import com.killian.SpringBoot.ExamApp.models.Submission;
 import com.killian.SpringBoot.ExamApp.repositories.AssignmentRepository;
+import com.killian.SpringBoot.ExamApp.repositories.ChoiceRepository;
 import com.killian.SpringBoot.ExamApp.repositories.ClassroomRepository;
 import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.repositories.SubmissionRepository;
@@ -38,6 +40,9 @@ public class StudentAssignmentController {
 
     @Autowired
     private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private ChoiceRepository choiceRepository;
 
     @Autowired
     private SessionManagementService sessionManagementService;
@@ -116,9 +121,14 @@ public class StudentAssignmentController {
             Exam exam = exams.get(randomIndex);
             Submission newSubmission = new Submission(student, assignment.getAssignmentId(), randomIndex,
                     exam.getQuestions().size(), exam.getDuration());
+            List<Choice> newChoices = new ArrayList<>();
+            for (int j = 0; j < exam.getQuestions().size(); j++) {
+                newChoices.add(choiceRepository.save(new Choice()));
+            }
+            newSubmission.setChoices(newChoices);
             submissionRepository.save(newSubmission);
             model.addAttribute("endTime", newSubmission.getEndTime());
-            model.addAttribute("selected", newSubmission.getSelected());
+            model.addAttribute("choices", newSubmission.getChoices());
             model.addAttribute("submissionId", newSubmission.getSubmissionId());
             model.addAttribute("exam", exam);
         } else {
@@ -126,7 +136,7 @@ public class StudentAssignmentController {
             model.addAttribute("endTime", submission.getEndTime());
             model.addAttribute("exam", exam);
             model.addAttribute("submissionId", submission.getSubmissionId());
-            model.addAttribute("selected", submission.getSelected());
+            model.addAttribute("choices", submission.getChoices());
         }
         model.addAttribute("className", classroom.getName());
         model.addAttribute("classCode", classCode);
@@ -142,14 +152,42 @@ public class StudentAssignmentController {
         Assignment assignment = assignmentRepository.findByAssignmentId(submission.getAssignmentId());
         Exam exam = examRepository.findByExamId(assignment.getExamId()).get(submission.getExamCode());
         List<Question> questions = exam.getQuestions();
-        List<Integer> choiceIndexes = submission.getSelected();
+        List<Choice> selectedChoices = submission.getChoices();
         List<String> choices = new ArrayList<>();
+        List<Integer> isCorrect = new ArrayList<>();
         for (int i = 0; i < questions.size(); i++) {
-            if (choiceIndexes.size() < (i+1) || choiceIndexes.get(i) == 99)
+            if (selectedChoices.size() < (i + 1) || selectedChoices.get(i) == null
+                    || selectedChoices.get(i).getSelections() == null
+                    || selectedChoices.get(i).getSelections().size() == 0) {
                 choices.add("Không trả lời");
-            else {
-                int index = choiceIndexes.get(i);
-                choices.add(questions.get(i).getChoices().get(index));
+                isCorrect.add(0);
+            } else {
+                Choice choice = selectedChoices.get(i);
+                List<String> selections = choice.getSelections();
+                Question question = questions.get(i);
+                if (question.getQuestionType().equals("ranking")) {
+                    String tmp = "";
+                    for (int j = 0; j < selections.size(); j++) {
+                        tmp = tmp + selections.get(j);
+                        if (j < selections.size() - 1)
+                            tmp = tmp + " --> ";
+                    }
+                    choices.add(tmp);
+                }
+                if (question.getQuestionType().equals("multiple-choice")) {
+                    String tmp = "";
+                    for (int j = 0; j < selections.size(); j++) {
+                        tmp = tmp + selections.get(j);
+                        if (j < selections.size() - 1)
+                            tmp = tmp + ", ";
+                    }
+                    choices.add(tmp);
+                }
+                if (question.getQuestionType().equals("type-in")) {
+                    String tmp = selections.get(0);
+                    choices.add(tmp);
+                }
+                isCorrect.add(choice.getIsCorrect());
             }
         }
         // Thời gian bắt đầu: 17:30:38 11/02/2023
@@ -160,6 +198,7 @@ public class StudentAssignmentController {
         model.addAttribute("startedTime", desiredformat.format(startedTime));
         model.addAttribute("submittedTime", desiredformat.format(submittedTime));
         model.addAttribute("choices", choices);
+        model.addAttribute("isCorrect", isCorrect);
         model.addAttribute("questions", questions);
         model.addAttribute("submission", submission);
         model.addAttribute("assignment", assignment);

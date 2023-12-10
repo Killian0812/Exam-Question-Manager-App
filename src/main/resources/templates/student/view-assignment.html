@@ -23,6 +23,8 @@
             cursor: pointer;
             background-color: green;
             color: white;
+            height: 50px;
+            width: 100px;
             border: 2px solid rgb(0, 65, 0);
             border-radius: 5px;
             padding: 5px;
@@ -87,7 +89,7 @@
                 <p th:text="${message}"></p>
             </div>
 
-            <div class="taskbar">
+            <div class="taskbar" style="width: 78%;">
                 <form th:action="@{/student/classroom/assignment}" method="get">
                     <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                     <h2><input type="submit" value="Quay lại các bài tập" class="back-button" /></h2>
@@ -95,7 +97,7 @@
                 <h2 class="class-code" th:text="'Code lớp: ' + ${classCode}"></h2>
             </div><br>
 
-            <table class="assignment-table">
+            <table class="assignment-table" style="width: 70%; margin-left: 100px">
                 <tr>
                     <td class="sample-column">Bài tập</td>
                     <td><span th:text="${assignment.name}"></span></td>
@@ -115,7 +117,7 @@
                 <span>Đã quá thời hạn làm bài !!!</span>
             </p><br>
 
-            <form id="assignmentForm" action="do-assignment" method="get">
+            <form id="assignmentForm" action="do-assignment" method="get" style="width: 40%; margin-left: 300px">
                 <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                 <input type="hidden" id="assignmentId" name="assignmentId" th:value="${assignment.assignmentId}" />
                 <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button" disabled
@@ -156,7 +158,7 @@
 
 
 
-    <script src="index.js"></script>
+    <script src="/js/index.js"></script>
 </body>
 
 </html>

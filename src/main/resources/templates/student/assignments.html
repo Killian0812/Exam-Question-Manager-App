@@ -67,7 +67,7 @@
                 <p th:text="${message}"></p>
             </div>
 
-            <div class="taskbar">
+            <div class="taskbar" style="width: 78%;">
                 <form th:action="@{view-classroom}" method="get">
                     <input type="hidden" id="classCode" name="classCode" th:value="${classCode}" />
                     <h2><input type="submit" value="Quay lại trang trước" class="back-button" /></h2>
@@ -78,7 +78,7 @@
             <h1 th:text="'Lớp: ' + ${className}"></h1>
             <h3>Danh sách bài tập</h3>
 
-            <ul id="assignmentList" class="assignment-of-class-list">
+            <ul id="assignmentList" class="assignment-of-class-list" style="width: 30%;">
                 <li th:each="assignment : ${assignments}" class="assignment-of-class">
                     <span th:text="${assignment.name}"></span>
                     <form th:action="@{assignment/view-assignment}" method="get" style="display: inline;">

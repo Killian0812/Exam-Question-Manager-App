@@ -144,7 +144,7 @@ public class TeacherExamController {
             }
             if (j > 0) {
                 Collections.shuffle(questions); // shuffle questions
-                for (int i = 0; i < questions.size(); i++) {
+                for (int i = 0; i < questions.size(); i++) { // shuffle choices of each question
                     Question oldQuestion = questions.get(i);
                     Question newQuestion = new Question(oldQuestion.getText(), oldQuestion.getChoices(),
                             oldQuestion.getAnswer(), oldQuestion.getSubject(), oldQuestion.getChapter(),
@@ -172,6 +172,7 @@ public class TeacherExamController {
             @RequestParam("grade") int grade,
             @RequestParam("name") String name,
             @RequestParam("duration") int duration,
+            @RequestParam("amount") int amount,
             @RequestParam("file") MultipartFile file,
             Model model) {
 
@@ -181,19 +182,26 @@ public class TeacherExamController {
             return "redirect:/teacher/exam/create-own-exam-page";
         }
 
-        // process docx file
-        Exam exam = examService.processDocxFile(file, grade, subject);
-        exam.setName(name);
-        exam.setGrade(grade);
-        exam.setSubject(subject);
-        exam.setDuration(duration);
-        exam.setExamCode(0);
-        exam.setExamId();
-        exam.setOwner(sessionManagementService.getUsername());
-        examRepository.save(exam);
+        String tmp = null;
+        for (int i = 0; i < amount; i++) {
+            // process docx file
+            Exam exam = examService.processDocxFile(file, grade, subject);
+            exam.setName(name);
+            exam.setGrade(grade);
+            exam.setSubject(subject);
+            exam.setDuration(duration);
+            exam.setExamCode(i);
+            if (i == 0) {
+                exam.setExamId();
+                tmp = exam.getExamId();
+            } else
+                exam.setExamId(tmp);
+            exam.setOwner(sessionManagementService.getUsername());
+            examRepository.save(exam);
+        }
 
         sessionManagementService.setMessage("Tạo đề thi thành công!");
-        return "redirect:/teacher/exam/get-exam-by-examId?examId=" + exam.getExamId() + "&selectedCode=0";
+        return "redirect:/teacher/exam/get-exam-by-examId?examId=" + tmp + "&selectedCode=0";
     }
 
     @GetMapping("/view-exams-by-filter-page")
@@ -301,23 +309,30 @@ public class TeacherExamController {
                 contentStream.showText("Thời gian làm bài: " + exam.getDuration() + " phút");
                 contentStream.newLineAtOffset(0, -20);
                 contentStream.showText("Đề số: 00" + (exam.getExamCode() + 1));
+                contentStream.newLineAtOffset(0, -20);
+                contentStream.newLineAtOffset(0, -20);
+
+                contentStream.setFont(boldFont, 12);
+                contentStream.showText("Họ và tên: ..........................................");
+                contentStream.newLineAtOffset(0, -20);
+                contentStream.showText("Số báo danh: .....................................");
                 contentStream.endText();
-                
+
                 // Questions
                 contentStream.setFont(font, 12);
                 contentStream.beginText();
-                contentStream.newLineAtOffset(50, 650); // Set the initial position for the first line
-                
+                contentStream.newLineAtOffset(50, 580); // Set the initial position for the first line
+
                 // Create a variable to keep track of the current y-coordinate
-                float currentY = 650; // Initial position for the first line
+                float currentY = 580; // Initial position for the first line
 
                 List<Question> questions = exam.getQuestions();
                 for (int i = 0; i < questions.size(); i++) {
                     Question question = questions.get(i);
                     String fullQuestionText = "Câu " + (i + 1) + ": " + question.getText();
 
-                    List<String> lines = splitTextManually(fullQuestionText, font, 12, 400); // Adjust the width as
-                                                                                             // needed
+                    // Adjust the width as needed
+                    List<String> lines = splitTextManually(fullQuestionText, font, 12, 400);
                     for (String line : lines) {
                         // If the current Y-coordinate goes beyond the page boundary, create a new page
                         if (currentY < 50) {
@@ -334,6 +349,11 @@ public class TeacherExamController {
                         contentStream.showText(line);
                         contentStream.newLineAtOffset(0, -20); // next line
                         currentY -= 20;
+                    }
+
+                    if (question.getQuestionType().equals("type-in")) {
+                        contentStream.showText("Đáp án: ");
+                        contentStream.newLineAtOffset(0, -20);
                     }
 
                     contentStream.newLineAtOffset(10, 0);
@@ -354,7 +374,19 @@ public class TeacherExamController {
                         contentStream.newLineAtOffset(0, -20);
                         currentY -= 20;
                     }
-                    contentStream.newLineAtOffset(-10, -20);
+                    contentStream.newLineAtOffset(-10, 0);
+                    currentY -= 20;
+
+                    if (question.getQuestionType().equals("ranking")) {
+                        String rankingTxt = "Thứ tự:   ";
+                        for (int j = 1; j <= question.getChoices().size(); j++) {
+                            rankingTxt = rankingTxt + "(" + j + ")_____";
+                            if (j != question.getChoices().size())
+                                rankingTxt = rankingTxt + "  -  ";
+                        }
+                        contentStream.showText(rankingTxt);
+                    }
+                    contentStream.newLineAtOffset(0, -20);
                     currentY -= 20;
                 }
 
@@ -378,7 +410,7 @@ public class TeacherExamController {
                 // Copy into zip file
                 IOUtils.copy(fileInputStream, zipOutputStream);
 
-                // Code input stream and current zip output stream
+                // Close input stream and current zip output stream
                 fileInputStream.close();
                 zipOutputStream.closeEntry();
 
