@@ -1,5 +1,6 @@
 package com.killian.SpringBoot.ExamApp.controllers.viewcontrollers;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -83,6 +84,14 @@ public class UserController {
         if (name != null)
             thisUser.setName(name);
         if (!avatar.isEmpty()) {
+            try {
+                String oldFileName = userRepository.findByUsername(sessionManagementService.getUsername()).get()
+                        .getAvatarFileName();
+                if (oldFileName != null && !oldFileName.equals("default.jpg"))
+                    storageService.deleteFile(oldFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             String generatedFileName = storageService.storeFile(avatar);
             thisUser.setAvatarFileName(generatedFileName);
         }
@@ -196,13 +205,6 @@ public class UserController {
         // logout
         return "redirect:/";
     }
-
-    // @GetMapping("/logout")
-    // public String logout() {
-    // // Clear user session on logout
-    // sessionManagementService.clearUserSession();
-    // return "redirect:/";
-    // }
 
     @GetMapping("/401")
     public String unauthorized() {

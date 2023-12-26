@@ -96,7 +96,7 @@
             <a href="#" class="profile">
                 <form th:action="@{/.../profile}" method="get">
                     <button class="profile" style="background-color: white; border: none;">
-                        <img th:src="@{'/images/' + ${user.avatarFileName}}">
+                        <img th:src="@{'/uploads/' + ${user.avatarFileName}}">
                     </button>
                 </form>
             </a>
@@ -128,7 +128,7 @@
                                 <span>Ảnh đại diện:</span><br>
                                 <div style="align-items: center; padding: 10px; margin-left: 40%;">
                                     <img style=" border-radius: 50%; width: 150px; height: 150px;" id="imagePreview"
-                                        th:src="@{'/images/' + ${user.avatarFileName}}" width="270" height="250"><br>
+                                        th:src="@{'/uploads/' + ${user.avatarFileName}}" width="270" height="250"><br>
                                 </div>
                                 <input class="upanh" style="padding-left: 35%;" type="file" id="image" name="avatar"
                                     accept=".jpg, .png, .jpeg">

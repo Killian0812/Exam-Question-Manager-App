@@ -77,7 +77,7 @@
         </nav>
         <!-- End of Navbar -->
         <main>
-            <div class="container-fluid">
+            <div class="container-fluid" style="padding-right: 120px;">
                 <div th:if="${message}" id="messageDiv" class="alert alert-success">
                     <p th:text="${message}"></p>
                 </div><br>
@@ -88,7 +88,7 @@
                         <input type="hidden" name="selectedGrade" th:value="${exam.grade}">
                         <h2><input type="submit" value="Xem các đề tương tự" class="back-button" /></h2>
                     </form>
-
+                    <br>
                     <span th:text="'Đề số: '"></span>
                     <div class="row">
                         <div class="col-9">
@@ -105,19 +105,18 @@
                                     </div>
                                     <div class="col-sm"><button type="submit">Xem</button></div>
                                 </div>
-                            </form><br><br>
-                        </div>
-
-                        <div class="col-3">
-                            <form th:action="@{export-pdf}" method="get" class="tuongtac2">
-                                <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
-                                <button type="submit">Xuất file zip các đề thi</button>
                             </form>
                         </div>
                     </div>
+                    <br>
+                    <div>
+                        <form th:action="@{export-pdf}" method="get" class="tuongtac2">
+                            <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
+                            <button type="submit">Tải bộ đề tại đây</button>
+                        </form>
+                    </div>
                 </div>
-
-            </div>
+            </div><br><br>
 
             <div class="col" style="text-align: center;">
                 <h1><span th:text="'Đề thi: ' + ${exam.name} + ' - ID: ' + ${exam.examId}"></span></h1>
@@ -134,8 +133,9 @@
             <div class="col" style="text-align: center;">
                 <p style="font-size: 120%;">Mã đề: <span th:text="'00'+${exam.examCode+1}"></span></p>
             </div>
+            <br><br>
 
-            <ul class="question-list">
+            <ul class="question-list" style="padding-left: 50px;">
                 <li th:each="question, questionIndex : ${exam.questions}">
                     <span style="font-weight: bold;" th:text="'Câu ' + (${questionIndex.index + 1}) + ': '"></span>
                     <span th:text="${question.text}"></span>

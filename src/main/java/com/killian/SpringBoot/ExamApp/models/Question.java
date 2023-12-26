@@ -89,6 +89,13 @@ public class Question {
         this.choices = newChoices;
     }
 
+    public void resetAnswers() {
+        List<String> newAnswers = new ArrayList<>();
+        newAnswers.addAll(this.answer);
+        Collections.shuffle(newAnswers);
+        this.answer = newAnswers;
+    }
+
     public List<String> getAnswer() {
         return answer;
     }

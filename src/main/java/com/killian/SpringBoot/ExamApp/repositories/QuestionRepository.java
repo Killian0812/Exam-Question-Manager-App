@@ -23,7 +23,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
         @Query("SELECT COUNT(DISTINCT q.text) FROM Question q WHERE q.chapter = :chapter AND q.grade = :grade")
         int findNumberOfDistinctQuestionsByChapterAndGrade(@Param("chapter") String chapter, @Param("grade") int grade);
 
-        @Query("SELECT DISTINCT q.chapter FROM Question q WHERE q.subject = :subject AND q.grade = :grade")
+        @Query("SELECT DISTINCT q.chapter FROM Question q WHERE q.subject = :subject AND q.grade = :grade AND q.chapter IS NOT NULL")
         List<String> findDistinctChaptersBySubjectAndGrade(@Param("subject") String subject, @Param("grade") int grade);
 
         @Query("SELECT DISTINCT q.difficulty FROM Question q")

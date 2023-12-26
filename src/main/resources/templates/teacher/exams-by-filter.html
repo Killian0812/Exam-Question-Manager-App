@@ -86,12 +86,13 @@
                                     </div>
                                     <div class="col-9 d-flex align-items-center">
                                         <select class="form-select" name="selectedSubject">
-                                            <option th:each="subject : ${subjects}" th:value="${subject}"
+                                            <!-- <option th:each="subject : ${subjects}" th:value="${subject}"
                                                 th:text="${subject}" th:selected="${subject == selectedSubject}">
-                                            </option>
-                                            <option>Toán</option>
-                                            <option>Ngữ Văn</option>
-                                            <option>Tiếng Anh</option>
+                                            </option> -->
+                                            <option th:selected="${selectedSubject == 'Toán'}">Toán</option>
+                                            <option th:selected="${selectedSubject == 'Lịch Sử'}">Lịch Sử</option>
+                                            <option th:selected="${selectedSubject == 'Ngữ Văn'}">Ngữ Văn</option>
+                                            <option th:selected="${selectedSubject == 'Tiếng Anh'}">Tiếng Anh</option>
                                         </select>
                                     </div>
                                 </div>
@@ -101,16 +102,16 @@
                                     </div>
                                     <div class="col-9 d-flex align-items-center">
                                         <select class="form-select" name="selectedGrade">
-                                            <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}"
+                                            <!-- <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}"
                                                 th:selected="${grade == selectedGrade}">
-                                            </option>
-                                            <option>10</option>
-                                            <option>11</option>
-                                            <option>12</option>
+                                            </option> -->
+                                            <option th:selected="${selectedGrade == 10}">10</option>
+                                            <option th:selected="${selectedGrade == 11}">11</option>
+                                            <option th:selected="${selectedGrade == 12}">12</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div style="margin-top: 33px; width: 80px">
+                                <div style="margin-top: 33px; margin-left: 33px; width: 78px">
                                     <button type="submit">Tìm đề</button>
                                 </div>
                             </div><br>

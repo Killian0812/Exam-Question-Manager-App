@@ -174,9 +174,17 @@ public class ExamService {
         String newQuestionText = question.getText();
         Random random = new Random();
         Map<String, Double> hashMap = new HashMap<>();
-        for (XWPFRun run : paragraph.getRuns()) {
+        for (int k = 0; k < paragraph.getRuns().size(); k++) {
+            XWPFRun run = paragraph.getRuns().get(k);
             if (run.getUnderline() != UnderlinePatterns.NONE) {
                 String text = run.getText(0);
+                for (int k2 = k + 1; k2 < paragraph.getRuns().size(); k2++) {
+                    XWPFRun run2 = paragraph.getRuns().get(k2);
+                    if (run2.getUnderline() != UnderlinePatterns.NONE)
+                        text = text + run2.getText(0);
+                    else
+                        break;
+                }
                 String assignValueStr;
                 for (int i = 0; i < text.length(); i++) {
                     if (text.charAt(i) == '=') {
@@ -190,7 +198,7 @@ public class ExamService {
                         } else {
                             String valueInStr = "";
                             for (int j = i + 2; j < text.length(); j++) {
-                                if ((text.charAt(j) >= '0' && text.charAt(j) <= '9') || text.charAt(j) <= '.')
+                                if ((text.charAt(j) >= '0' && text.charAt(j) <= '9') || text.charAt(j) == '.')
                                     valueInStr = valueInStr + text.charAt(j);
                             }
                             hashMap.put(param, Double.parseDouble(valueInStr));

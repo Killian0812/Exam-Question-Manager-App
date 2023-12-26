@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class ImageStorageService implements IStorageService {
 
-    private final Path storageFolder = Paths.get("src/main/resources/static/images");
+    private final Path storageFolder = Paths.get("uploads");
 
     public ImageStorageService() {
         try {
@@ -65,6 +65,12 @@ public class ImageStorageService implements IStorageService {
         } catch (IOException exception) {
             throw new RuntimeException("Failed to store file", exception);
         }
+    }
+
+    @Override
+    public void deleteFile(String fileName) throws IOException {
+        Path filePath = storageFolder.resolve(fileName);
+        Files.deleteIfExists(filePath);
     }
 
     @Override
