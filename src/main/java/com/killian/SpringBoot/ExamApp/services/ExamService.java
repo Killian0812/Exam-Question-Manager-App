@@ -24,8 +24,6 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 @Service
 public class ExamService {
 
-    // private final Path storageFolder = Paths.get("uploads");
-
     @Autowired
     private QuestionRepository questionRepository;
 

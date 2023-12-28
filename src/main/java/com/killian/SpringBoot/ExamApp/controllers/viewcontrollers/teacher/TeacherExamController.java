@@ -8,6 +8,7 @@ import java.util.zip.ZipOutputStream;
 import java.util.zip.ZipEntry;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -20,6 +21,14 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
@@ -265,7 +274,7 @@ public class TeacherExamController {
     }
 
     @GetMapping("/export-pdf")
-    public void exportExamsToZip(
+    public void exportExamsZip(
             HttpServletResponse response,
             @RequestParam("examId") String examId) {
         response.setContentType("application/zip");
@@ -435,6 +444,140 @@ public class TeacherExamController {
         }
     }
 
+    @GetMapping("/export-xls")
+    public void exportAnswerXls(
+            HttpServletResponse response,
+            @RequestParam("examId") String examId) {
+
+        try (Workbook workbook = new HSSFWorkbook()) {
+
+            List<Integer> examCodes = examRepository.findDistinctExamCode(examId);
+
+            for (int k = 0; k < examCodes.size(); k++) {
+
+                int examCode = examCodes.get(k);
+                // Generate individual PDFs for each exam
+                Exam exam = examRepository.findByExamIdAndCode(examId, examCode);
+                List<Question> questions = exam.getQuestions();
+                int nQuestion = questions.size();
+
+                Sheet sheet = workbook.createSheet("Đáp án đề " + (examCode + 1));
+
+                Font boldFont = workbook.createFont();
+                boldFont.setBold(true);
+
+                CellStyle writeInBold = workbook.createCellStyle();
+                writeInBold.setFont(boldFont);
+
+                CellStyle writeInBoldAndCenter = workbook.createCellStyle();
+                writeInBoldAndCenter.setFont(boldFont);
+                writeInBoldAndCenter.setAlignment(HorizontalAlignment.CENTER);
+
+                CellStyle writeInCenter = workbook.createCellStyle();
+                writeInCenter.setAlignment(HorizontalAlignment.CENTER);
+
+                CellStyle writeInLeft = workbook.createCellStyle();
+                writeInLeft.setAlignment(HorizontalAlignment.LEFT);
+
+                Row row0 = sheet.createRow(0);
+                Cell row0col0 = row0.createCell(0);
+                row0col0.setCellValue("Câu");
+                row0col0.setCellStyle(writeInBoldAndCenter);
+                Cell row0col1 = row0.createCell(1);
+                row0col1.setCellValue("Đáp án");
+                row0col1.setCellStyle(writeInBoldAndCenter);
+                Cell row0col2 = row0.createCell(2);
+                row0col2.setCellValue("Chi tiết");
+                row0col2.setCellStyle(writeInBoldAndCenter);
+
+                for (int j = 0; j < nQuestion; j++) {
+
+                    Row row = sheet.createRow(j + 1);
+
+                    Cell col0 = row.createCell(0);
+                    col0.setCellValue(j + 1);
+                    col0.setCellStyle(writeInCenter);
+
+                    Question question = questions.get(j);
+                    List<String> answer = question.getAnswer();
+                    List<String> choices = question.getChoices();
+                    Cell col1 = row.createCell(1);
+                    String cellValue = "";
+                    if (question.getQuestionType().equals("multiple-choice")) {
+                        for (int i = 0; i < choices.size(); i++) {
+                            if (answer.contains(choices.get(i))) {
+                                if (!cellValue.equals(""))
+                                    cellValue = cellValue + " " + getSymbol(i + 1);
+                                else
+                                    cellValue = cellValue + getSymbol(i + 1);
+                            }
+                        }
+                    } else if (question.getQuestionType().equals("ranking")) {
+                        String seq = answer.get(0);
+                        int last = 0;
+                        for (int i = 0; i < seq.length() - 1; i++) {
+                            if (seq.charAt(i) == '-' && seq.charAt(i + 1) == '-') {
+                                String curChoice = seq.substring(last, i - 1);
+                                for (int choiceIndex = 0; choiceIndex < choices.size(); choiceIndex++) {
+                                    String choice = choices.get(choiceIndex);
+                                    if (curChoice.equals(choice)) {
+                                        if (cellValue.equals(""))
+                                            cellValue = cellValue + getSymbol(choiceIndex + 1);
+                                        else
+                                            cellValue = cellValue + " " + getSymbol(choiceIndex + 1);
+                                    }
+                                }
+                                last = i + 4;
+                                i += 3;
+                            }
+                        }
+                        String curChoice = seq.substring(last, seq.length());
+                        for (int choiceIndex = 0; choiceIndex < choices.size(); choiceIndex++) {
+                            String choice = choices.get(choiceIndex);
+                            if (curChoice.equals(choice)) {
+                                cellValue = cellValue + " " + getSymbol(choiceIndex + 1);
+                            }
+                        }
+                    } else if (question.getQuestionType().equals("type-in")) {
+                        cellValue = answer.get(0);
+                    }
+
+                    col1.setCellValue(cellValue);
+                    col1.setCellStyle(writeInCenter);
+
+                    if (!question.getQuestionType().equals("type-in")) {
+                        Cell col2 = row.createCell(2);
+                        if (answer.size() == 1)
+                            col2.setCellValue(answer.get(0));
+                        else
+                            col2.setCellValue(answer.toString());
+                        col2.setCellStyle(writeInLeft);
+                    }
+                }
+
+                for (int columnIndex = 0; columnIndex <= 2; columnIndex++) {
+                    sheet.autoSizeColumn(columnIndex);
+                }
+            }
+
+            // Set the content type and headers for the response
+            response.setContentType("application/vnd.ms-excel");
+            String fileName = convertVietnameseToLatin(examRepository.findByExamIdAndCode(examId, 0).getName())
+                    + "_DAP AN";
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xls");
+            try (OutputStream outputStream = response.getOutputStream()) {
+                workbook.write(outputStream);
+                outputStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (
+
+        IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static List<String> splitTextManually(String text, PDType0Font font, float fontSize, float maxWidth) {
         List<String> lines = new ArrayList<>();
         String[] words = text.split(" ");
@@ -457,6 +600,10 @@ public class TeacherExamController {
         }
         lines.add(line.toString());
         return lines;
+    }
+
+    public static char getSymbol(int x) {
+        return (char) (x + 'A' - 1);
     }
 
     public static String convertVietnameseToLatin(String input) {

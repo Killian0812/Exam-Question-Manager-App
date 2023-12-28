@@ -165,7 +165,7 @@ public class TeacherClassroomController {
             for (int i = 0; i < users.size(); i++) {
                 Row row = sheet.createRow(i + 3);
                 Cell cell0 = row.createCell(0);
-                cell0.setCellValue("" + (i+1));
+                cell0.setCellValue("" + (i + 1));
                 cell0.setCellStyle(writeInCenter);
 
                 Cell cell1 = row.createCell(1);
