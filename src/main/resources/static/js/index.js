@@ -71,7 +71,7 @@ setTimeout(function () {
     if (messageDiv) {
         messageDiv.style.display = "none";
     }
-}, 2000); // message disapear after 2s
+}, 4000); // message disapear after 2s
 
 checkSessionValidity();
 

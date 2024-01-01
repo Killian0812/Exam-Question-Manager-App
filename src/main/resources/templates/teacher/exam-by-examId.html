@@ -172,7 +172,19 @@
                         <br>
                     </ul>
                 </li>
-            </ul>
+            </ul><br>
+
+            <div style="margin-left: 50px; margin-bottom: 50px">
+                <form th:action="@{remove-exam}" method="get" class="tuongtac2">
+                    <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
+                    <input th:type="hidden" th:id="selectedGrade" th:name="selectedGrade" th:value="${exam.grade}">
+                    <input th:type="hidden" th:id="selectedSubject" th:name="selectedSubject"
+                        th:value="${exam.subject}">
+                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa bộ đề này?')">Xóa bộ
+                        đề</button>
+                </form>
+            </div>
+
         </main>
     </div>
     <style>

@@ -253,6 +253,9 @@ public class TeacherExamController {
         model.addAttribute("selectedGrade", selectedGrade);
         model.addAttribute("exams", exams);
 
+        model.addAttribute("message", sessionManagementService.getMessage());
+        sessionManagementService.clearMessage();
+        
         return "teacher/exams-by-filter";
     }
 
@@ -271,6 +274,18 @@ public class TeacherExamController {
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
         return "teacher/exam-by-examId";
+    }
+
+    @GetMapping("/remove-exam")
+    public String removeExam(
+            @RequestParam("examId") String examId,
+            @RequestParam("selectedSubject") String selectedSubject,
+            @RequestParam("selectedGrade") int selectedGrade, Model model) {
+        Exam exam = examRepository.findByExamIdAndCode(examId, 0);
+        sessionManagementService.setMessage("Bạn đã xóa đề " + exam.getName());
+        examRepository.deleteByExamId(examId);
+        return "redirect:/teacher/exam/get-exams-by-subject-and-grade?selectedSubject=" + selectedSubject
+                + "&selectedGrade=" + selectedGrade;
     }
 
     @GetMapping("/export-pdf")

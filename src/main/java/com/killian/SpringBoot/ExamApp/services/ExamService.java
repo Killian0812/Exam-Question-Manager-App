@@ -113,7 +113,8 @@ public class ExamService {
                             || text.startsWith("C. ")
                             || text.startsWith("D. ")
                             || text.startsWith("E. ")
-                            || text.startsWith("G. ")) {
+                            || text.startsWith("G. ")
+                            || text.startsWith("H. ")) {
 
                         currentChoices.add(text.substring(3));
                         if (run.isBold())

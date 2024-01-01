@@ -68,9 +68,6 @@
         <!-- End of Navbar -->
         <main style="background-color: #f1f5f9;">
             <div class="container-fluid" style="margin: 30px 20px; ">
-                <div th:if="${message}" id="messageDiv" class="alert alert-success">
-                    <p th:text="${message}"></p>
-                </div>
                 <form th:action="@{/back-to-dashboard}" method="get">
                     <button type="submit" class="back-button">Quay lại
                         trang chủ</button>
@@ -116,6 +113,10 @@
                                 </div>
                             </div><br>
                         </form>
+
+                        <div th:if="${message}" id="messageDiv" class="alert alert-success">
+                            <p th:text="${message}"></p><br>
+                        </div>
 
                         <div th:if="${exams}">
                             <h3 th:text="'Các đề thi hiện có:'"></h3><br>

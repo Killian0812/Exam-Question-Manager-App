@@ -17,6 +17,7 @@ import com.killian.SpringBoot.ExamApp.models.Choice;
 import com.killian.SpringBoot.ExamApp.models.Exam;
 import com.killian.SpringBoot.ExamApp.models.Question;
 import com.killian.SpringBoot.ExamApp.models.Submission;
+import com.killian.SpringBoot.ExamApp.repositories.ChoiceRepository;
 import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.repositories.SubmissionRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
@@ -30,6 +31,9 @@ public class StudentExamController {
 
     @Autowired
     private SubmissionRepository submissionRepository;
+
+    @Autowired
+    private ChoiceRepository choiceRepository;
 
     @Autowired
     private SessionManagementService sessionManagementService;
@@ -102,6 +106,11 @@ public class StudentExamController {
             Exam exam = exams.get(randomIndex);
             Submission newSubmission = new Submission(student, randomIndex, examId,
                     exam.getQuestions().size(), exam.getDuration());
+            List<Choice> newChoices = new ArrayList<>();
+            for (int j = 0; j < exam.getQuestions().size(); j++) {
+                newChoices.add(choiceRepository.save(new Choice()));
+            }
+            newSubmission.setChoices(newChoices);
             submissionRepository.save(newSubmission);
             model.addAttribute("endTime", newSubmission.getEndTime());
             model.addAttribute("choices", newSubmission.getChoices());
@@ -115,6 +124,7 @@ public class StudentExamController {
             model.addAttribute("submissionId", submission.getSubmissionId());
             model.addAttribute("choices", submission.getChoices());
         }
+        model.addAttribute("examId", examId);
         return "student/do-exam";
     }
 
@@ -133,18 +143,47 @@ public class StudentExamController {
     @GetMapping("/submission/view-submission")
     public String getResult(
             @RequestParam("submissionId") String submissionId,
+             @RequestParam("examId") String examId,
             Model model) {
         Submission submission = submissionRepository.findBySubmissionId(submissionId);
-        Exam exam = examRepository.findByExamId(submission.getExamId()).get(submission.getExamCode());
+        Exam exam = examRepository.findByExamIdAndCode(examId, submission.getExamCode());
         List<Question> questions = exam.getQuestions();
         List<Choice> selectedChoices = submission.getChoices();
         List<String> choices = new ArrayList<>();
+        List<Integer> isCorrect = new ArrayList<>();
         for (int i = 0; i < questions.size(); i++) {
-            if (selectedChoices.size() < (i + 1) || selectedChoices.get(i) == null)
+            if (selectedChoices.size() < (i + 1) || selectedChoices.get(i) == null
+                    || selectedChoices.get(i).getSelections() == null
+                    || selectedChoices.get(i).getSelections().size() == 0) {
                 choices.add("Không trả lời");
-            else {
-                // int index = choiceIndexes.get(i);
-                // choices.add(questions.get(i).getChoices().get(index));
+                isCorrect.add(0);
+            } else {
+                Choice choice = selectedChoices.get(i);
+                List<String> selections = choice.getSelections();
+                Question question = questions.get(i);
+                if (question.getQuestionType().equals("ranking")) {
+                    String tmp = "";
+                    for (int j = 0; j < selections.size(); j++) {
+                        tmp = tmp + selections.get(j);
+                        if (j < selections.size() - 1)
+                            tmp = tmp + " --> ";
+                    }
+                    choices.add(tmp);
+                }
+                if (question.getQuestionType().equals("multiple-choice")) {
+                    String tmp = "";
+                    for (int j = 0; j < selections.size(); j++) {
+                        tmp = tmp + selections.get(j);
+                        if (j < selections.size() - 1)
+                            tmp = tmp + ", ";
+                    }
+                    choices.add(tmp);
+                }
+                if (question.getQuestionType().equals("type-in")) {
+                    String tmp = selections.get(0);
+                    choices.add(tmp);
+                }
+                isCorrect.add(choice.getIsCorrect());
             }
         }
         // Thời gian bắt đầu: 17:30:38 11/02/2023
@@ -155,9 +194,9 @@ public class StudentExamController {
         model.addAttribute("startedTime", desiredformat.format(startedTime));
         model.addAttribute("submittedTime", desiredformat.format(submittedTime));
         model.addAttribute("choices", choices);
+        model.addAttribute("isCorrect", isCorrect);
         model.addAttribute("questions", questions);
         model.addAttribute("submission", submission);
-        model.addAttribute("examId", exam.getExamId());
         return "student/view-submission";
-    }
+    }   
 }

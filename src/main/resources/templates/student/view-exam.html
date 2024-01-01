@@ -93,7 +93,7 @@
                 </form>
             </div><br>
 
-            <table class="assignment-table">
+            <table class="assignment-table" style="width: 70%; margin-left: 100px">
                 <tr>
                     <td class="sample-column">Đề thi</td>
                     <td><span th:text="${exam.name}"></span></td>
@@ -104,9 +104,9 @@
                 </tr>
             </table><br>
 
-            <form id="assignmentForm" action="do-exam" method="get">
+            <form id="assignmentForm" action="do-exam" method="get" style="width: 40%; margin-left: 300px">
                 <input type="hidden" id="examId" name="examId" th:value="${exam.examId}" />
-                <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button" 
+                <input type="submit" id="startExamButton" value="Bắt đầu làm bài" class="start-button"
                     onclick="return confirm('Bài tập sẽ tính giờ làm bài. Bạn có chắc chắn muốn bắt đầu làm?')" />
             </form><br>
 
@@ -121,12 +121,12 @@
                 var startExamButton = document.getElementById("startExamButton");
 
                 var submittedStatus = /*[[${submitted}]]*/ 0;
-                
+
                 var isDoing = /*[[${isDoing}]]*/ 0;
 
                 if (submittedStatus == 1) {
-                    viewResultButton.removeAttribute("disabled"); 
-                } 
+                    viewResultButton.removeAttribute("disabled");
+                }
                 if (isDoing == 1) {
                     startExamButton.value = "Tiếp tục làm bài";
                 }

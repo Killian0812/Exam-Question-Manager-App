@@ -466,7 +466,7 @@ h4 {
     color: rgb(255, 255, 255);
 }
 
-.start-button:disabled {
+.start-button[disabled] {
     background-color: rgb(180, 180, 180);
     border-radius: 6px;
     color: white;
@@ -483,7 +483,7 @@ h4 {
     border: none;
 }
 
-.start-button:hover {
+.start-button:hover:not([disabled]) {
     background-color: rgb(238, 192, 53);
 }
 
@@ -499,6 +499,14 @@ h4 {
 }
 .result-button:hover {
     background-color: rgb(0, 173, 0);
+}
+.result-button[disabled] {
+    background-color: lightgray;
+    color: gray;
+    border: 2px solid rgb(167, 167, 167);
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .savingButton {

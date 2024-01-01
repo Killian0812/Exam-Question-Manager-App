@@ -75,7 +75,7 @@
             <div>
                 <section>
                     <h2>Thông tin bài nộp:</h2>
-                    <table class="result-assignment-table">
+                    <table class="result-assignment-table" style="width: 70%; margin-left: 0px">
                         <tr>
                             <td class="sample-column"><strong>Điểm số</strong></td>
                             <td><span th:text="${submission.score} + ' / 10'"></span></td>
@@ -97,16 +97,11 @@
                         <li th:each="question, questionIndex : ${questions}" class="a-question">
                             <p><strong th:text="'Câu ' + (${questionIndex.index + 1}) + ': '"></strong>
                                 <span th:text="${question.text}" class="text-question"></span>
-                                <!-- <span th:if="${question.answer == choices.get(questionIndex.index)}"
-                                    class="correct-answer">✓</span>
-                                <span th:if="${question.answer != choices.get(questionIndex.index)}"
-                                    class="incorrect-answer">✗</span> -->
                             </p>
                             <p><strong>Đáp án của bạn:</strong> <span
                                     th:text="${choices.get(questionIndex.index)}"></span>
-                                <span th:if="${question.answer == choices.get(questionIndex.index)}"
-                                    class="correct-answer">✓</span>
-                                <span th:if="${question.answer != choices.get(questionIndex.index)}"
+                                <span th:if="${isCorrect.get(questionIndex.index) == 1}" class="correct-answer">✓</span>
+                                <span th:if="${isCorrect.get(questionIndex.index) == 0}"
                                     class="incorrect-answer">✗</span>
                             </p>
                             <p><strong>Đáp án đúng:</strong> <span th:text="${question.answer}"></span></p>
@@ -116,9 +111,6 @@
             </div>
         </main>
     </div>
-
-
-
 
     <script src="/js/index.js"></script>
 </body>

@@ -76,7 +76,7 @@
             <div>
                 <section>
                     <h2>Thông tin bài nộp:</h2>
-                    <table class="result-assignment-table" style="width: 50%; text-align: left; margin-right: 650px">
+                    <table class="result-assignment-table" style="width: 70%; margin-left: 0px">
                         <tr>
                             <td class="sample-column"><strong>Điểm số</strong></td>
                             <td><span th:text="${submission.score} + ' / 10'"></span></td>
@@ -99,18 +99,19 @@
                             <p><strong th:text="'Câu ' + (${questionIndex.index + 1}) + ': '"></strong>
                                 <span th:text="${question.text}" class="text-question"></span>
                             </p>
-                            <p><strong>Đáp án của bạn:</strong>
-                                <span th:text="${choices.get(questionIndex.index)}"></span>
-                                <span th:if="${isCorrect.get(questionIndex.index) == 1}" class="correct-answer">✓</span>
+                            <p><strong>Đáp án của bạn:</strong> <span
+                                    th:text="${choices.get(questionIndex.index)}"></span>
+                                <span th:if="${isCorrect.get(questionIndex.index) == 1}"
+                                    class="correct-answer">✓</span>
                                 <span th:if="${isCorrect.get(questionIndex.index) == 0}"
                                     class="incorrect-answer">✗</span>
-                                <!-- <span th:text="${isCorrect.get(questionIndex.index)}"></span> -->
                             </p>
                             <p><strong>Đáp án đúng:</strong> <span th:text="${question.answer}"></span></p>
                         </li>
                     </ul>
                 </section>
             </div>
+
         </main>
     </div>
 

@@ -79,6 +79,7 @@
                     <form th:if="${submission.submittedTime != NULL}" th:action="@{view-submission}" method="get" style="display: inline;"
                         class="tuongtac2">
                         <input type="hidden" name="submissionId" th:value="${submission.submissionId}">
+                        <input type="hidden" name="examId" th:value="${examId}">
                         <button style=" width: 30%;" type="submit" th:text="${submission.submittedTime}"></button>
                     </form><br>
                 </li>
