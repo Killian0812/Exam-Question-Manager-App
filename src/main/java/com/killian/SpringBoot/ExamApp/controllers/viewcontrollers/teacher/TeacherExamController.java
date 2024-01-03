@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.Normalizer;
 
@@ -255,7 +257,7 @@ public class TeacherExamController {
 
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-        
+
         return "teacher/exams-by-filter";
     }
 
@@ -281,11 +283,17 @@ public class TeacherExamController {
             @RequestParam("examId") String examId,
             @RequestParam("selectedSubject") String selectedSubject,
             @RequestParam("selectedGrade") int selectedGrade, Model model) {
-        Exam exam = examRepository.findByExamIdAndCode(examId, 0);
-        sessionManagementService.setMessage("Bạn đã xóa đề " + exam.getName());
-        examRepository.deleteByExamId(examId);
-        return "redirect:/teacher/exam/get-exams-by-subject-and-grade?selectedSubject=" + selectedSubject
-                + "&selectedGrade=" + selectedGrade;
+        try {
+            Exam exam = examRepository.findByExamIdAndCode(examId, 0);
+            sessionManagementService.setMessage("Bạn đã xóa đề " + exam.getName());
+            examRepository.deleteByExamId(examId);
+            return "redirect:/teacher/exam/get-exams-by-subject-and-grade?selectedSubject="
+                    + URLEncoder.encode(selectedSubject, "UTF-8")
+                    + "&selectedGrade=" + selectedGrade;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return "redirect:/teacher/exam/view-exams-by-filter-page";
+        }
     }
 
     @GetMapping("/export-pdf")

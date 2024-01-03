@@ -105,9 +105,6 @@
                                             <option th:each="subject : ${subjects}" th:value="${subject}"
                                                 th:text="${subject}" th:selected="${subject == selectedSubject}">
                                             </option>
-                                            <option>Toán</option>
-                                            <option>Ngữ Văn</option>
-                                            <option>Tiếng Anh</option>
                                         </select>
                                     </div>
                                 </div>
@@ -117,9 +114,9 @@
                                     </div>
                                     <div class="col-9 d-flex align-items-center">
                                         <select class="form-select" name="selectedGrade">
-                                            <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}"
+                                            <!-- <option th:each="grade : ${grades}" th:value="${grade}" th:text="${grade}"
                                                 th:selected="${grade == selectedGrade}">
-                                            </option>
+                                            </option> -->
                                             <option>10</option>
                                             <option>11</option>
                                             <option>12</option>
