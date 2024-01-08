@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Câu hỏi</title>
+    <title>TQBEdu | Ngân hàng câu hỏi</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Latest compiled and minified CSS -->
@@ -16,12 +16,6 @@
     <style>
         a {
             text-decoration: none;
-        }
-
-        .choices-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
     </style>
 </head>
@@ -39,13 +33,13 @@
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
             <form th:action="@{/admin/access/user-manager}" method="get">
-                <li type="submit"><button><i class='bx bx-lock-alt'></i>Quản lý người dùng</button></li>
+                <li type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
             </form>
             <form th:action="@{create-question-page}" method="get">
-                <li class="active" type="submit"><button><i class='bx bx-edit'></i>Tạo câu hỏi</button></li>
+                <li class="active" type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
             </form>
             <form th:action="@{/admin/exam/create-exam-page}" method="get">
-                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi</button></li>
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
             </form>
             <form th:action="@{/admin/exam/view-exams-by-filter-page}" method="get">
                 <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
@@ -79,7 +73,11 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->
@@ -98,9 +96,12 @@
                 <div class="container">
                     <div class="row" style="height: 120vh;">
                         <div class="col-9">
+
                             <div class="container">
-                                <div class="col mb-5 mt-3">
-                                    <h1>Tạo Câu hỏi</h1>
+                                <div class="row align-items-start">
+                                    <div class="col mb-3 mt-3">
+                                        <h1 style="font-weight: 200px; color: #96120f">Tạo câu hỏi</h1>
+                                    </div>
                                 </div>
                             </div>
 
@@ -108,7 +109,8 @@
                                 <form th:action="@{create-question}" method="post" class="tuongtac2">
 
                                     <label for="text">Câu hỏi:&nbsp;</label>
-                                    <input type="text" id="text" name="text" required /><br /><br />
+                                    <input type="text" id="text" name="text" style="width: 300px;"
+                                        required /><br /><br />
 
                                     <div>
                                         <label>Thể loại:&nbsp;&nbsp;</label>
@@ -133,9 +135,14 @@
                                     <label for="subject">Môn học:&nbsp;</label>
                                     <select id="subject" name="subject" required>
                                         <option value="" disabled selected></option>
-                                        <option>Toán</option>
-                                        <option>Lịch Sử</option>
+                                        <option>Sinh học</option>
+                                        <option>Hóa học</option>
                                         <option>Tiếng Anh</option>
+                                        <option>Lịch sử</option>
+                                        <option>Địa lý</option>
+                                        <option>Ngữ văn</option>
+                                        <option>Toán</option>
+                                        <option>Vật lý</option>
                                     </select><br><br>
 
                                     <label for="grade">Khối lớp:&nbsp;</label>
@@ -158,8 +165,7 @@
                     </div>
                 </div>
             </div>
-    </div>
-    </main>
+        </main>
     </div>
 
     <script src="/js/index.js"></script>
@@ -217,6 +223,8 @@
 
             const newRadio = document.createElement('input');
             newRadio.type = 'radio';
+            newRadio.style.width = '30px';
+            newRadio.style.height = '17px';
             newRadio.name = 'correctChoice';
             newRadio.value = choicesContainer.children.length; // Assign a unique value
             newRadio.required = true; // Make it required
@@ -228,8 +236,10 @@
             const removeButton = document.createElement('button');
             removeButton.type = 'button';
             removeButton.style.display = 'inline-block';
+            removeButton.style.marginTop = '15px';
+            removeButton.style.marginLeft = '15px';
             removeButton.className = 'remove-choice';
-            removeButton.textContent = 'Xóa';
+            removeButton.innerHTML = 'Xóa';
             removeButton.addEventListener('click', function () {
                 newChoiceDiv.remove();
             });

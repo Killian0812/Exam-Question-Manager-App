@@ -65,7 +65,7 @@ public class LoginController {
                 sessionManagementService.setUsername(username);
                 return "redirect:/";
             } else {
-                sessionManagementService.createUserSession(username, user.getRole());
+                sessionManagementService.createUserSession(username, user.getRole(), user.getAvatarFileName());
                 return "redirect:/" + user.getRole().toLowerCase() + "/dashboard";
             }
         }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.killian.SpringBoot.ExamApp.models.ResponseObject;
@@ -46,6 +47,25 @@ public class SessionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(null);
         }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(null);
+    }
+
+    @GetMapping("/isUserAuthorized")
+    ResponseEntity<ResponseObject> isUserAuthorized(
+            HttpServletRequest request,
+            @RequestParam("pagePermission") String pagePermission) {
+        String currentUserPermission = sessionManagementService.getRole();
+        if (pagePermission.equals("admin")) {
+            if (!currentUserPermission.equals("Admin")) {
+                sessionManagementService.setMessage("Cấm truy cập");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+        } else if (pagePermission.equals("teacher"))
+            if (currentUserPermission.equals("Student")) {
+                sessionManagementService.setMessage("Cấm truy cập");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
         return ResponseEntity.status(HttpStatus.OK)
                 .body(null);
     }

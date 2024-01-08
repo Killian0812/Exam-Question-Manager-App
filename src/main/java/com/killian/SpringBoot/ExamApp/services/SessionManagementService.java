@@ -15,9 +15,10 @@ public class SessionManagementService {
         this.httpSession = httpSession;
     }
 
-    public void createUserSession(String username, String role) {
+    public void createUserSession(String username, String role, String avatarFileName) {
         httpSession.setAttribute("username", username);
         httpSession.setAttribute("role", role);
+        httpSession.setAttribute("avatarFileName", avatarFileName);
     }
 
     public void clearUserSession() {
@@ -50,5 +51,13 @@ public class SessionManagementService {
 
     public String getRole() {
         return (String) httpSession.getAttribute("role");
+    }
+
+    public void setAvatarFileName(String avatarFileName) {
+        httpSession.setAttribute("avatarFileName", avatarFileName);
+    }
+
+    public String getAvatarFileName() {
+        return (String) httpSession.getAttribute("avatarFileName");
     }
 }

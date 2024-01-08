@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết đề thi</title>
+    <title>TQBEdu | Chi tiết đề thi</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Latest compiled and minified CSS -->
@@ -32,10 +32,10 @@
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
             <form th:action="@{/profile}" method="get">
-                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
             </form>
             <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
-                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+                <li><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
             </form>
             <form th:action="@{/teacher/exam/create-exam-page}" method="get">
                 <li><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
@@ -72,7 +72,11 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->
@@ -187,19 +191,6 @@
 
         </main>
     </div>
-    <style>
-        ul {
-            list-style: none;
-            /* Remove bullets/symbols for all ul elements */
-        }
-
-        .question-list {
-            margin-left: 0;
-            /* Remove default left margin */
-            padding-left: 10px;
-            /* Add custom padding for indentation */
-        }
-    </style>
     <script src="/js/index.js"></script>
 </body>
 

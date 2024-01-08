@@ -71,6 +71,7 @@ public class TeacherAssignmentController {
         model.addAttribute("classCode", classCode);
         model.addAttribute("className", classroom.getName());
         model.addAttribute("message", sessionManagementService.getMessage());
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         sessionManagementService.clearMessage();
         return "teacher/assignments";
     }
@@ -83,6 +84,7 @@ public class TeacherAssignmentController {
         model.addAttribute("classCode", classCode);
         model.addAttribute("className", className);
         model.addAttribute("message", sessionManagementService.getMessage());
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         sessionManagementService.clearMessage();
         return "teacher/add-assignment";
     }
@@ -151,6 +153,7 @@ public class TeacherAssignmentController {
         model.addAttribute("timeToFinish", timeToFinish);
         model.addAttribute("classCode", assignment.getClassCode());
         model.addAttribute("assignmentId", assignmentId);
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/view-results";
     }
 
@@ -294,6 +297,7 @@ public class TeacherAssignmentController {
         model.addAttribute("classCode", classCode);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/edit-assignment";
     }
 
@@ -346,7 +350,7 @@ public class TeacherAssignmentController {
         model.addAttribute("classCode", classCode);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/view-assignment";
     }
 

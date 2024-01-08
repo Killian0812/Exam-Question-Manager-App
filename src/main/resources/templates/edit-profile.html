@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Exam Manager</title>
+    <title>TQBEdu | Chỉnh sửa hồ sơ</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
@@ -26,7 +26,7 @@
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
             <form th:action="@{/profile}" method="get">
-                <li class="active"><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+                <li class="active"><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
             </form>
             <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
                 <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
@@ -58,7 +58,7 @@
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
             <form th:action="@{/profile}" method="get">
-                <li class="active"><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+                <li class="active"><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
             </form>
             <form th:action="@{/student/classroom/classrooms-page?}" method="get">
                 <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
@@ -94,7 +94,7 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <form th:action="@{/.../profile}" method="get">
+                <form th:action="@{/profile}" method="get">
                     <button class="profile" style="background-color: white; border: none;">
                         <img th:src="@{'/uploads/' + ${user.avatarFileName}}">
                     </button>
@@ -112,10 +112,10 @@
                         <ul class="profile-choice">
                             <form>
                                 <li><button style="background-color: #96120f; color: white;"><i
-                                            class='bx bx-reset'></i>Thay đổi thông tin cá nhân</button></li>
+                                            class='bx bx-user'></i>Thay đổi thông tin cá nhân</button></li>
                             </form>
                             <form th:action="@{/change-password-page}" method="get">
-                                <li><button><i class='bx bx-fingerprint'></i>Đổi mật khẩu</button></li>
+                                <li><button><i class='bx bx-lock'></i>Đổi mật khẩu</button></li>
                             </form>
                         </ul>
                     </div>
@@ -172,16 +172,8 @@
                                         type="text" id="email" name="email" th:value="${user.email}">
                                 </div>
                             </div>
-                            <input style="
-                                        width: auto;
-                                        padding: 8px;
-                                        height: 38px;
-                                        border-radius: 3px;
-                                        border-color: white;
-                                        font-size: 16px;
-                                        text-align: center;
-                                        border: none;
-                                        margin-left: 45%;" type="submit" id="submitButton" value="Xác nhận" disabled>
+                            <input style="width: 84px;" class="submitChangeInfo" type="submit" id="submitButton" value="Xác nhận"
+                                disabled>
                         </form>
                     </div>
 
@@ -212,14 +204,14 @@
 
             var isFormChanged = false;
 
-            function enableSubmitButton() {
+            function enablesubmitButton() {
                 submitButton.disabled = !isFormChanged;
             }
 
             inputs.forEach(function (input) {
                 input.addEventListener('change', function () {
                     isFormChanged = true;
-                    enableSubmitButton();
+                    enablesubmitButton();
                 });
             });
         });

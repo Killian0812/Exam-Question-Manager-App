@@ -58,6 +58,7 @@ public class StudentAssignmentController {
         model.addAttribute("classCode", classCode);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/assignments";
     }
 
@@ -98,6 +99,7 @@ public class StudentAssignmentController {
             else
                 model.addAttribute("expired", 0);
         }
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/view-assignment";
     }
 
@@ -141,6 +143,7 @@ public class StudentAssignmentController {
         model.addAttribute("className", classroom.getName());
         model.addAttribute("classCode", classCode);
         model.addAttribute("assignmentName", assignment.getName());
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/do-assignment";
     }
 
@@ -203,6 +206,7 @@ public class StudentAssignmentController {
         model.addAttribute("submission", submission);
         model.addAttribute("assignment", assignment);
         model.addAttribute("classCode", assignment.getClassCode());
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/result";
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo đề thi</title>
+    <title>TQBEdu | Tạo đề thi</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/profile.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -33,10 +33,10 @@
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
             <form th:action="@{/profile}" method="get">
-                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
             </form>
             <form th:action="@{/teacher/classroom/classrooms-page?}" method="get">
-                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+                <li><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
             </form>
             <form th:action="@{/teacher/exam/create-exam-page}" method="get">
                 <li class="active"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
@@ -73,7 +73,11 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->
@@ -91,7 +95,7 @@
                         <ul class="profile-choice">
                             <form th:action="@{select-subject-and-grade}" method="get">
                                 <li><button><i class='bx bx-file'></i>
-                                    Tạo đề thi từ ngân hàng câu hỏi</button></li>
+                                        Tạo đề thi từ ngân hàng câu hỏi</button></li>
                             </form>
                             <form th:action="@{create-own-exam-page}" method="get">
                                 <li><button><i class='bx bx-file-blank'></i>Tự tạo đề thi</button></li>
@@ -100,22 +104,17 @@
                     </div>
                 </div>
             </div>
-            <script>
-                setTimeout(function () {
-                    var messageDiv = document.getElementById("messageDiv");
-                    if (messageDiv) {
-                        messageDiv.style.display = "none";
-                    }
-                }, 2000); // message disapear after 2s
-            </script>
-    </div>
-    <!-- <div class="col" style="background-color: rgb(120, 120, 120)"></div> -->
-    </div>
-    </div>
-    </div>
-    </main>
+        </main>
     </div>
 
+    <script>
+        setTimeout(function () {
+            var messageDiv = document.getElementById("messageDiv");
+            if (messageDiv) {
+                messageDiv.style.display = "none";
+            }
+        }, 2000); // message disapear after 2s
+    </script>
     <script src="/js/index.js"></script>
 </body>
 

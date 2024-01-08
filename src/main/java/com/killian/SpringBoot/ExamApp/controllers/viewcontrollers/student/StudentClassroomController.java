@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.killian.SpringBoot.ExamApp.models.Classroom;
 import com.killian.SpringBoot.ExamApp.models.StudentClassroom;
+import com.killian.SpringBoot.ExamApp.models.User;
 import com.killian.SpringBoot.ExamApp.repositories.ClassroomRepository;
 import com.killian.SpringBoot.ExamApp.repositories.StudentClassroomRepository;
+import com.killian.SpringBoot.ExamApp.repositories.UserRepository;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
@@ -31,6 +33,9 @@ public class StudentClassroomController {
     @Autowired
     private StudentClassroomRepository studentClassroomRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/classrooms-page")
     public String classroomPage(Model model) {
         List<StudentClassroom> studentClassrooms = studentClassroomRepository
@@ -45,6 +50,7 @@ public class StudentClassroomController {
         model.addAttribute("classrooms", classrooms);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/classrooms";
     }
 
@@ -54,14 +60,18 @@ public class StudentClassroomController {
             Model model) {
         Classroom classroom = classroomRepository.findByClasscode(classCode);
         model.addAttribute("classroom", classroom);
+        User teacher = userRepository.findByUsername(classroom.getTeacher()).get();
+        model.addAttribute("teacherName", teacher.getName());
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/view-classroom";
     }
 
     @GetMapping("/join-classroom-page")
     public String joinClassroomPage(
             Model model) {
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/join-classroom";
     }
 

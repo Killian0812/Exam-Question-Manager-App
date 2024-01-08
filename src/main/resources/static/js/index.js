@@ -74,6 +74,7 @@ setTimeout(function () {
 }, 4000); // message disapear after 2s
 
 checkSessionValidity();
+checkAuthority();
 
 function checkSessionValidity() {
     const xhr = new XMLHttpRequest();
@@ -88,10 +89,30 @@ function checkSessionValidity() {
             }
         }
     };
-
     xhr.open('GET', '/api/v1/session/isSessionValid');
     xhr.send();
 }
-setInterval(checkSessionValidity, 30000);
+
+function checkAuthority() {
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                console.log('Session is valid');
+                // Do something if the session is valid
+            } else {
+                console.log('Session is not valid');
+                window.location.href = "/403";
+            }
+        }
+    };
+    const currentURL = window.location.href;
+    const url = new URL(currentURL);
+    const pathname = url.pathname;
+    const parts = pathname.split('/');
+    const pagePermission = parts[1];
+    xhr.open('GET', '/api/v1/session/isUserAuthorized?pagePermission=' + pagePermission);
+    xhr.send();
+}
 
 

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Exam Manager</title>
+    <title>TQBEdu</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -28,10 +28,10 @@
         <ul class="side-menu">
             <li class="active"><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             <form th:action="@{/profile}" method="get">
-                <li type="submit"><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+                <li type="submit"><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
             </form>
             <form th:action="@{classroom/classrooms-page}" method="get">
-                <li type="submit"><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+                <li type="submit"><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
             </form>
             <form th:action="@{exam/create-exam-page}" method="get">
                 <li type="submit"><button><i class='bx bx-edit'></i>Tạo đề thi</button></li>
@@ -68,7 +68,11 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->
@@ -84,13 +88,13 @@
                     </form>
                 </li>
                 <li onclick="submitForm2()">
-                    <i class='bx bx-street-view bx-lg'></i>
+                    <i class='bx bx-book-reader bx-lg'></i>
                     <form id="myForm2" th:action="@{classroom/classrooms-page}" method="get">
                         <button>Xem các lớp học</button>
                     </form>
                 </li>
                 <li onclick="submitForm3()">
-                    <i class='bx bxs-bank bx-lg'></i>
+                    <i class='bx bxs-edit bx-lg'></i>
                     <form id="myForm3" th:action="@{exam/create-exam-page}" method="get">
                         <button>Tạo đề thi</button>
                     </form>

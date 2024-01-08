@@ -74,6 +74,7 @@ public class TeacherClassroomController {
         model.addAttribute("classCodes", classCodes);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/classrooms";
     }
 
@@ -85,6 +86,7 @@ public class TeacherClassroomController {
         model.addAttribute("classroom", classroom);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/view-classroom";
     }
 
@@ -212,6 +214,7 @@ public class TeacherClassroomController {
         model.addAttribute("students", students);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/student-list";
     }
 
@@ -252,6 +255,7 @@ public class TeacherClassroomController {
         model.addAttribute("grades", grades);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/create-classroom";
     }
 

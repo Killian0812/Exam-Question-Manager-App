@@ -43,7 +43,7 @@ public class DataGenerator {
                                                 "Chương 2: Bất phương trình và hệ bất phương trình bậc nhất 2 ẩn", 10,
                                                 "multiple-choice"),
                                 new Question("Giải bất phương trình 4x^2 - 12x + 9 < 0. Tập nghiệm của bất phương trình là:",
-                                                Arrays.asList("x ∈ (−∞,1)", "x ∈ (1,3)", "x ∈ (3,∞)", "x ∈ (1,3)"),
+                                                Arrays.asList("x ∈ (−∞,1)", "x ∈ (1,-3)", "x ∈ (3,∞)", "x ∈ (1,3)"),
                                                 Arrays.asList("x ∈ (1,3)"), "Toán",
                                                 "Chương 2: Bất phương trình và hệ bất phương trình bậc nhất 2 ẩn", 10,
                                                 "multiple-choice"));
@@ -983,6 +983,7 @@ public class DataGenerator {
         }
 
         public void dataGenerate() {
+                // Grade 10
                 generateBiology10();
                 generateChemistry10();
                 generateEnglish10();
@@ -991,5 +992,15 @@ public class DataGenerator {
                 generateLiterature10();
                 generateMath10();
                 generatePhysics10();
+
+                // Grade 11
+                // generateBiology10();
+                // generateChemistry10();
+                // generateEnglish10();
+                // generateGeography10();
+                // generateHistory10();
+                // generateLiterature10();
+                // generateMath10();
+                // generatePhysics10();
         }
 }

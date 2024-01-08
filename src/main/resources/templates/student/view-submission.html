@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
+    <title>TQBEdu | Kết quả</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/style-student.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -22,10 +22,10 @@
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
             <form th:action="@{/profile}" method="get">
-                <li><button><i class='bx bx-paperclip'></i>Xem hồ sơ</button></li>
+                <li><button><i class='bx bx-user-circle'></i>Xem hồ sơ</button></li>
             </form>
             <form th:action="@{/student/classroom/classrooms-page?}" method="get">
-                <li><button><i class='bx bx-book-open'></i>Xem các lớp học</button></li>
+                <li><button><i class='bx bx-book-reader'></i>Xem các lớp học</button></li>
             </form>
             <form th:action="@{/student/exam/training}" method="get">
                 <li class="active"><button><i class='bx bx-folder'></i>Xem các đề thi tự luyện</button></li>
@@ -58,7 +58,11 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->

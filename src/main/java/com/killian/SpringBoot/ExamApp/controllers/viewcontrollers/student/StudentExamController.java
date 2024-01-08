@@ -41,6 +41,7 @@ public class StudentExamController {
     @GetMapping("/training")
     public String trainingExam(Model model) {
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/exams-by-filter";
     }
 
@@ -61,7 +62,7 @@ public class StudentExamController {
         model.addAttribute("selectedSubject", selectedSubject);
         model.addAttribute("selectedGrade", selectedGrade);
         model.addAttribute("exams", exams);
-
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/exams-by-filter";
     }
 
@@ -86,6 +87,7 @@ public class StudentExamController {
         } else {
             model.addAttribute("submitted", 0);
         }
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/view-exam";
     }
 
@@ -125,6 +127,7 @@ public class StudentExamController {
             model.addAttribute("choices", submission.getChoices());
         }
         model.addAttribute("examId", examId);
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/do-exam";
     }
 
@@ -137,13 +140,14 @@ public class StudentExamController {
         model.addAttribute("submissions", submissions);
         model.addAttribute("examId", examId);
         model.addAttribute("submission", submissions.get(0));
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/submissions";
     }
 
     @GetMapping("/submission/view-submission")
     public String getResult(
             @RequestParam("submissionId") String submissionId,
-             @RequestParam("examId") String examId,
+            @RequestParam("examId") String examId,
             Model model) {
         Submission submission = submissionRepository.findBySubmissionId(submissionId);
         Exam exam = examRepository.findByExamIdAndCode(examId, submission.getExamCode());
@@ -197,6 +201,7 @@ public class StudentExamController {
         model.addAttribute("isCorrect", isCorrect);
         model.addAttribute("questions", questions);
         model.addAttribute("submission", submission);
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/view-submission";
-    }   
+    }
 }

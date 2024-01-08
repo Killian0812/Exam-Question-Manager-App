@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Exam Manager</title>
+    <title>TQBEdu | Quản lý người dùng</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -34,12 +34,12 @@
             <form th:action="@{/back-to-dashboard}" method="get">
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
-            <li class="active" type="submit"><button><i class='bx bx-lock-alt'></i>Quản lý người dùng</button></li>
+            <li class="active" type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
             <form th:action="@{/admin/questions/create-question-page}" method="get">
-                <li type="submit"><button><i class='bx bx-edit'></i>Tạo câu hỏi</button></li>
+                <li type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
             </form>
             <form th:action="@{/admin/exam/create-exam-page}" method="get">
-                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi</button></li>
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
             </form>
             <form th:action="@{/admin/exam/view-exams-by-filter-page}" method="get">
                 <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
@@ -73,7 +73,11 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->

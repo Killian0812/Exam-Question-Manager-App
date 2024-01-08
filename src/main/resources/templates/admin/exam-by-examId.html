@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết đề thi</title>
+    <title>TQBEdu | Chi tiết đề thi</title>
     <link rel="stylesheet" href="/css/styles.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <!-- Latest compiled and minified CSS -->
@@ -22,7 +22,7 @@
 
 <body style="background-color: #f1f5f9;">
     <!--Sidebar-->
-    
+
     <div class="sidebar">
         <a href="#" class="logo">
             <i class='bx bxs-graduation'></i>
@@ -33,26 +33,27 @@
                 <li><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             </form>
             <form th:action="@{/admin/access/user-manager}" method="get">
-                <li type="submit"><button><i class='bx bx-lock-alt'></i>Quản lý người dùng</button></li>
+                <li type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
             </form>
             <form th:action="@{/admin/questions/create-question-page}" method="get">
-                <li type="submit"><button><i class='bx bx-edit'></i>Tạo câu hỏi</button></li>
+                <li type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
             </form>
             <form th:action="@{create-exam-page}" method="get">
-                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi</button></li>
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
             </form>
             <form th:action="@{view-exams-by-filter-page}" method="get">
                 <li class="active" type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
             </form>
-            <li type="submit"><button><i class='bx bx-cog' ></i>Cài đặt</button></li>
+            <li type="submit"><button><i class='bx bx-cog'></i>Cài đặt</button></li>
         </ul>
         <ul class="side-menu">
             <form th:action="@{/logout}" method="get" id="logoutForm">
-                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out' ></i>Đăng xuất</button></li>
+                <li type="submit" id="logoutButton"><button class="logout"><i class='bx bx-log-out'></i>Đăng
+                        xuất</button></li>
             </form>
         </ul>
     </div>
-    
+
     <!-- End of Sidebar -->
     <!-- Main Content -->
     <div class="content">
@@ -72,21 +73,43 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->
         <main>
-            <div>
+            <div class="container-fluid" style="padding-right: 120px;">
                 <div th:if="${message}" id="messageDiv" class="alert alert-success">
                     <p th:text="${message}"></p>
                 </div><br>
 
                 <div class="container">
-                    <form th:action="@{view-exams-by-filter-page}" method="get">
-                        <h2><input type="submit" value="Quay lại các đề" class="back-button" /></h2>
+                    <form th:action="@{get-exams-by-subject-and-grade}" method="get">
+                        <input type="hidden" name="selectedSubject" th:value="${exam.subject}">
+                        <input type="hidden" name="selectedGrade" th:value="${exam.grade}">
+                        <h2><input type="submit" value="Xem các đề tương tự" class="back-button" /></h2>
                     </form>
+                    <br>
 
+                    <div class="row">
+                        <div class="col">
+                            <form th:action="@{export-pdf}" method="get" class="tuongtac1">
+                                <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
+                                <button type="submit">Tải về bộ đề</button>
+                            </form>
+                        </div>
+                        <div class="col" style="margin-right: 850px">
+                            <form th:action="@{export-xls}" method="get" class="tuongtac1">
+                                <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
+                                <button class="col-sm" type="submit">Tải về đáp án</button>
+                            </form>
+                        </div>
+                    </div>
+                    <br>
                     <span th:text="'Đề số: '"></span>
                     <div class="row">
                         <div class="col-9">
@@ -103,88 +126,85 @@
                                     </div>
                                     <div class="col-sm"><button type="submit">Xem</button></div>
                                 </div>
-                            </form><br><br>
-                        </div>
-
-                        <div class="col-3">
-                            <form th:action="@{export-pdf}" method="get" class="tuongtac2">
-                                <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
-                                <button type="submit">Xuất file zip các đề thi</button>
                             </form>
                         </div>
                     </div>
                 </div>
-
-            </div>
+            </div><br><br>
 
             <div class="col" style="text-align: center;">
                 <h1><span th:text="'Đề thi: ' + ${exam.name} + ' - ID: ' + ${exam.examId}"></span></h1>
+            </div><br>
+
+            <div class="col" style="text-align: center;">
+                <h2><span th:text="'Môn học: '+ ${exam.subject} + ' - Khối lớp: ' + ${exam.grade}"></span></h2>
             </div>
 
             <div class="col" style="text-align: center;">
-                <h1><span th:text="'Môn học: '+ ${exam.subject} + ' - Khối lớp: ' + ${exam.grade}"></span></h1>
+                <p style="font-size: 140%;">Thời gian làm bài: <span th:text="${exam.duration} + ' phút'"></span></p>
             </div>
 
             <div class="col" style="text-align: center;">
-                <p>Thời gian làm bài: <span th:text="${exam.duration} + ' phút'"></span></p>
+                <p style="font-size: 120%;">Mã đề: <span th:text="'00'+${exam.examCode+1}"></span></p>
             </div>
+            <br><br>
 
-            <div class="col" style="text-align: center;">
-                <p>Mã đề: <span th:text="'00'+${exam.examCode+1}"></span></p>
-            </div>
-
-            <!-- Display List of Questions -->
-            <!--<h2>Các câu hỏi:</h2>-->
-
-            <ul class="question-list">
+            <ul class="question-list" style="padding-left: 50px;">
                 <li th:each="question, questionIndex : ${exam.questions}">
-                    <p th:text="'Câu ' + (${questionIndex.index + 1}) + ': ' + ${question.text}"></p>
+                    <span style="font-weight: bold;" th:text="'Câu ' + (${questionIndex.index + 1}) + ': '"></span>
+                    <span th:text="${question.text}"></span>
                     <ul>
                         <li th:each="choice, choiceIndex : ${question.choices}">
-                            <p th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></p>
+                            <span style="font-weight: bold;" th:if="${question.answer.contains(choice)}"
+                                th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></span>
+                            <span th:unless="${question.answer.contains(choice)}"
+                                th:text="${@labelGenerator.getLabel(choiceIndex.index)} + ' ' + ${choice}"></span>
                         </li>
+
+                        <li th:if="${question.questionType == 'type-in'}"
+                            th:each="answer, answerIndex : ${question.answer}">
+                            <span style="font-weight: bold;" th:text="'Đáp án'"></span>
+                            <span th:text="${question.answer.size() > 1} ? (${answerIndex.index + 1} + ': ') : ':'"
+                                style="font-weight: bold;"></span>
+                            <span th:text="${answer}"></span>
+                        </li>
+
+                        <li th:if="${question.questionType == 'ranking'}">
+                            <span style="font-weight: bold;" th:text="'Đáp án: '"></span>
+                            <span th:text="${question.answer.get(0)}"></span>
+                        </li>
+
+                        <br>
                     </ul>
                 </li>
-            </ul>
+            </ul><br>
 
-            <style>
-                ul {
-                    list-style: none;
-                    /* Remove bullets/symbols for all ul elements */
-                }
+            <div style="margin-left: 50px; margin-bottom: 50px">
+                <form th:action="@{remove-exam}" method="get" class="tuongtac2">
+                    <input th:type="hidden" th:id="examId" th:name="examId" th:value="${exam.examId}">
+                    <input th:type="hidden" th:id="selectedGrade" th:name="selectedGrade" th:value="${exam.grade}">
+                    <input th:type="hidden" th:id="selectedSubject" th:name="selectedSubject"
+                        th:value="${exam.subject}">
+                    <button type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa bộ đề này?')">Xóa bộ
+                        đề</button>
+                </form>
+            </div>
 
-                .question-list {
-                    margin-left: 0;
-                    /* Remove default left margin */
-                    padding-left: 10px;
-                    /* Add custom padding for indentation */
-                }
-
-                .redirect-button {
-                    display: inline-block;
-                    padding: 5px 10px;
-                    font-size: 14px;
-                    background-color: #000000;
-                    color: #fff;
-                    text-decoration: none;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                }
-            </style>
-
-            <script>
-                setTimeout(function () {
-                    var messageDiv = document.getElementById("messageDiv");
-                    if (messageDiv) {
-                        messageDiv.style.display = "none";
-                    }
-                }, 2000); // message disapear after 2s
-            </script>
+        </main>
     </div>
-    </main>
-    </div>
+    <style>
+        ul {
+            list-style: none;
+            /* Remove bullets/symbols for all ul elements */
+        }
 
+        .question-list {
+            margin-left: 0;
+            /* Remove default left margin */
+            padding-left: 10px;
+            /* Add custom padding for indentation */
+        }
+    </style>
     <script src="/js/index.js"></script>
 </body>
 

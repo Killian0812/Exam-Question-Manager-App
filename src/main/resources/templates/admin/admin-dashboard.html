@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Exam Manager</title>
+    <title>TQBEdu</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -28,13 +28,13 @@
         <ul class="side-menu">
             <li class="active"><button><i class='bx bxs-dashboard'></i>Trang chủ</button></li>
             <form th:action="@{/admin/access/user-manager}" method="get">
-                <li type="submit"><button><i class='bx bx-lock-alt'></i>Quản lý người dùng</button></li>
+                <li type="submit"><button><i class='bx bx-user-check'></i>Quản lý người dùng</button></li>
             </form>
             <form th:action="@{questions/create-question-page}" method="get">
-                <li type="submit"><button><i class='bx bx-edit'></i>Tạo câu hỏi</button></li>
+                <li type="submit"><button><i class='bx bx-edit'></i>Ngân hàng câu hỏi</button></li>
             </form>
             <form th:action="@{exam/create-exam-page}" method="get">
-                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi</button></li>
+                <li type="submit"><button><i class='bx bx-book-open'></i>Tạo đề thi tự do</button></li>
             </form>
             <form th:action="@{exam/view-exams-by-filter-page}" method="get">
                 <li type="submit"><button><i class='bx bx-data'></i>Xem các đề thi</button></li>
@@ -50,7 +50,6 @@
     </div>
 
     <!-- End of Sidebar -->
-    <!-- Main Content -->
     <div class="content">
         <!-- Navbar -->
         <nav>
@@ -68,17 +67,53 @@
                 <span class="count">12</span>
             </a>
             <a href="#" class="profile">
-                <img src="images/logo.png">
+                <form th:action="@{/profile}" method="get">
+                    <button class="profile" style="background-color: white; border: none;">
+                        <img th:src="@{'/uploads/' + ${avatarFileName}}">
+                    </button>
+                </form>
             </a>
         </nav>
         <!-- End of Navbar -->
-        <main>
-            <div>
-
+        <main style="padding: 30px;">
+            <div class="header">
+                <h1>Chào mừng bạn đến với TQBEdu</h1>
+            </div>
+            <div class="insights">
+                <li onclick="submitForm1()">
+                    <i class='bx bx-user-check bx-lg'></i>
+                    <form id="myForm1" th:action="@{access/user-manager}" method="get">
+                        <button>Quản lý người dùng</button>
+                    </form>
+                </li>
+                <li onclick="submitForm2()">
+                    <i class='bx bx-book-open bx-lg'></i>
+                    <form id="myForm2" th:action="@{exam/create-exam-page}" method="get">
+                        <button>Tạo đề thi tự do</button>
+                    </form>
+                </li>
+                <li onclick="submitForm3()">
+                    <i class='bx bx-data bx-lg'></i>
+                    <form id="myForm3" th:action="@{exam/view-exams-by-filter-page}" method="get">
+                        <button>Xem các đề thi</button>
+                    </form>
+                </li>
             </div>
         </main>
     </div>
-    
+
+    <script>
+        function submitForm1() {
+            document.getElementById("myForm1").submit();
+        }
+        function submitForm2() {
+            document.getElementById("myForm2").submit();
+        }
+        function submitForm3() {
+            document.getElementById("myForm3").submit();
+        }
+    </script>
+
     <script src="/js/index.js"></script>
 </body>
 

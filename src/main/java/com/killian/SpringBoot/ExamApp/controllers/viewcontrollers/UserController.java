@@ -94,6 +94,7 @@ public class UserController {
             }
             String generatedFileName = storageService.storeFile(avatar);
             thisUser.setAvatarFileName(generatedFileName);
+            sessionManagementService.setAvatarFileName(generatedFileName);
         }
         userRepository.save(thisUser);
         sessionManagementService.setMessage("Cập nhật thông tin thành công");
@@ -105,6 +106,7 @@ public class UserController {
         model.addAttribute("message", sessionManagementService.getMessage());
         model.addAttribute("role", sessionManagementService.getRole());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "change-password";
     }
 
@@ -151,7 +153,7 @@ public class UserController {
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/teacher-dashboard";
     }
 
@@ -172,7 +174,7 @@ public class UserController {
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "student/student-dashboard";
     }
 
@@ -193,7 +195,7 @@ public class UserController {
         model.addAttribute("role", role);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "admin/admin-dashboard";
     }
 

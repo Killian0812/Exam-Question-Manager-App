@@ -72,6 +72,7 @@ public class TeacherExamController {
 
     @GetMapping("/create-exam-page")
     public String createExamPage(Model model) {
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/create-exam";
     }
 
@@ -84,6 +85,7 @@ public class TeacherExamController {
         model.addAttribute("grades", grades);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/select-subject-and-grade";
     }
 
@@ -105,7 +107,7 @@ public class TeacherExamController {
             limit.add(questionRepository.findNumberOfDistinctQuestionsByChapterAndGrade(chapter, selectedGrade));
         }
         model.addAttribute("limit", limit);
-
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/create-exam-from-bank";
     }
 
@@ -177,6 +179,7 @@ public class TeacherExamController {
     public String createExamManuallyPage(Model model) {
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/create-exam-by-docx";
     }
 
@@ -234,6 +237,7 @@ public class TeacherExamController {
 
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/exams-by-filter";
     }
 
@@ -249,7 +253,8 @@ public class TeacherExamController {
         model.addAttribute("subjects", subjects);
         model.addAttribute("grades", grades);
 
-        List<Exam> exams = examRepository.findBySubjectGradeAndCode(selectedSubject, selectedGrade, 0);
+        List<Exam> exams = examRepository.findPrivateExamBySubjectGradeAndCode(selectedSubject, selectedGrade, 0,
+                sessionManagementService.getUsername());
 
         model.addAttribute("selectedSubject", selectedSubject);
         model.addAttribute("selectedGrade", selectedGrade);
@@ -257,7 +262,7 @@ public class TeacherExamController {
 
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
-
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/exams-by-filter";
     }
 
@@ -275,6 +280,7 @@ public class TeacherExamController {
         model.addAttribute("selectedCode", selectedCode);
         model.addAttribute("message", sessionManagementService.getMessage());
         sessionManagementService.clearMessage();
+        model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
         return "teacher/exam-by-examId";
     }
 
