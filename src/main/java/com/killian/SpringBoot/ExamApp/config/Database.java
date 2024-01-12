@@ -13,17 +13,20 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 
 // Connect to mysql with JPA
 /*
-docker run -d --rm --name mysql-springboot-exam \
+docker run -d --name mysql-container \
 -e MYSQL_ROOT_PASSWORD=123456 \
--e MYSQL_USER=killian \
--e MYSQL_PASSWORD=081203 \
+-e MYSQL_USER=admin \
+-e MYSQL_PASSWORD=1 \
 -e MYSQL_DATABASE=my_db \
 -p 3309:3306 \
---volume mysql-springboot-exam-volume:/var/lib/mysql \
+--volume mysql-container-volume:/var/lib/mysql \
 mysql:latest
-*/
 /* 
-mysql -h localhost -P 3309 --protocol=tcp -u killian -p
+mysql -h localhost -P 3309 --protocol=tcp -u admin -p
+*/
+// redis for session storage
+/* 
+docker run -d -p 6379:6379 --name redis-session-storage redis:latest
 */
 
 @Configuration
@@ -41,8 +44,9 @@ public class Database {
             @Override
             public void run(String... args) throws Exception {
                 try {
-                    dataGenerator.dataGenerate();
-                    logger.info("Data generated");
+                    // dataGenerator.adminAccountGenerate();
+                    // dataGenerator.dataGenerate();
+                    // logger.info("Data generated");  
                 } catch (Exception e) {
                     logger.info("Data duplicated");
                 }

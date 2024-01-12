@@ -1,5 +1,7 @@
 package com.killian.SpringBoot.ExamApp.models;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.CollectionTable;
@@ -12,51 +14,52 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 
-// A POJO 
 @Entity
 @Table(name = "tblQuestion")
 public class Question {
-    // this is "primary key"
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // validate = constraint
-    @Column(nullable = false, unique = true, length = 300)
+    @Column(name = "text", columnDefinition = "VARCHAR(2000) COLLATE utf8mb4_bin")
     private String text;
 
     @ElementCollection
     @CollectionTable(name = "choices", joinColumns = @JoinColumn(name = "question_id"))
     private List<String> choices;
 
-    private int correctAnswerID;
+    @ElementCollection
+    @CollectionTable(name = "answers", joinColumns = @JoinColumn(name = "question_id"))
+    private List<String> answer;
 
     private String subject;
 
     private String difficulty;
 
+    private String chapter;
+
+    private int grade;
+
+    private String questionType;
+
     public Question() {
     }
 
-    public Question(Long id, String text, List<String> choices, int correctAnswerID) {
-        this.id = id;
-        this.text = text;
-        this.choices = choices;
-        this.correctAnswerID = correctAnswerID;
-    }
-
-    public Question(String text, List<String> choices, int correctAnswerID) {
-        this.text = text;
-        this.choices = choices;
-        this.correctAnswerID = correctAnswerID;
-    }
-
-    public Question(String text, List<String> choices, int correctAnswerID, String subject, String difficulty) {
-        this.text = text;
-        this.choices = choices;
-        this.correctAnswerID = correctAnswerID;
+    public Question(int grade, String subject) {
+        this.grade = grade;
         this.subject = subject;
-        this.difficulty = difficulty;
+    }
+
+    public Question(String text, List<String> choices, List<String> answer, String subject, String chapter, int grade,
+            String questionType) {
+        this.text = text;
+        this.choices = choices;
+        this.answer = answer;
+        this.subject = subject;
+        this.chapter = chapter;
+        this.grade = grade;
+        this.questionType = questionType;
     }
 
     public String getText() {
@@ -71,20 +74,34 @@ public class Question {
         return choices;
     }
 
+    public void addChoice(String choice) {
+        this.choices.add(choice);
+    }
+
     public void setChoices(List<String> choices) {
         this.choices = choices;
     }
 
-    public void setChoicesByOrder(String newChoice, int idx) {
-        this.choices.set(idx, newChoice);
+    public void shuffleChoices() {
+        List<String> newChoices = new ArrayList<>();
+        newChoices.addAll(this.choices);
+        Collections.shuffle(newChoices);
+        this.choices = newChoices;
     }
 
-    public int getCorrectAnswerID() {
-        return correctAnswerID;
+    public void resetAnswers() {
+        List<String> newAnswers = new ArrayList<>();
+        newAnswers.addAll(this.answer);
+        Collections.shuffle(newAnswers);
+        this.answer = newAnswers;
     }
 
-    public void setCorrectAnswerID(int correctAnswerID) {
-        this.correctAnswerID = correctAnswerID;
+    public List<String> getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(List<String> answer) {
+        this.answer = answer;
     }
 
     public String getSubject() {
@@ -101,6 +118,30 @@ public class Question {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(String chapter) {
+        this.chapter = chapter;
+    }
+
+    public int getGrade() {
+        return grade;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public String getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(String questionType) {
+        this.questionType = questionType;
     }
 
     @Override
