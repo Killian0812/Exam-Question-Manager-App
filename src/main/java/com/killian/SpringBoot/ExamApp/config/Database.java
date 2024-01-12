@@ -44,6 +44,7 @@ public class Database {
             @Override
             public void run(String... args) throws Exception {
                 try {
+                    // dataGenerator.adminAccountGenerate();
                     // dataGenerator.dataGenerate();
                     // logger.info("Data generated");  
                 } catch (Exception e) {

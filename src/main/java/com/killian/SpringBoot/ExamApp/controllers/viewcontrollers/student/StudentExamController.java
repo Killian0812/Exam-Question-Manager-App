@@ -202,6 +202,7 @@ public class StudentExamController {
         model.addAttribute("questions", questions);
         model.addAttribute("submission", submission);
         model.addAttribute("avatarFileName", sessionManagementService.getAvatarFileName());
+        model.addAttribute("examId", examId);
         return "student/view-submission";
     }
 }
