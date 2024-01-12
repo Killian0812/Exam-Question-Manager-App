@@ -37,6 +37,7 @@ import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
+@SuppressWarnings("null")
 @RequestMapping(path = "/teacher/classroom")
 public class TeacherClassroomController {
 

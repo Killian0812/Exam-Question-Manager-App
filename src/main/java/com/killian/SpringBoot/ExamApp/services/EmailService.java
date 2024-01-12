@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 
 @Service
+@SuppressWarnings("null")
 public class EmailService {
 
     @Autowired

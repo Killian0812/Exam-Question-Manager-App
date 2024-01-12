@@ -22,6 +22,7 @@ import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 
 @Service
+@SuppressWarnings("null")
 public class ExamService {
 
     @Autowired

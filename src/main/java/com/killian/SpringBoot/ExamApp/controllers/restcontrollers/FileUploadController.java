@@ -21,6 +21,7 @@ import com.killian.SpringBoot.ExamApp.services.ImageStorageService;
 import com.killian.SpringBoot.ExamApp.services.SessionManagementService;
 
 @Controller
+@SuppressWarnings("null")
 @RequestMapping(path = "api/v1/FileUpload")
 public class FileUploadController {
 

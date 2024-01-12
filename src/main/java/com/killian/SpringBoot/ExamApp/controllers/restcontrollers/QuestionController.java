@@ -21,6 +21,7 @@ import com.killian.SpringBoot.ExamApp.models.ResponseObject;
 import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 
 @RestController
+@SuppressWarnings("null")
 @RequestMapping(path = "/api/v1/questions")
 // Request: http://localhost:8080/api/v1/questions
 public class QuestionController {

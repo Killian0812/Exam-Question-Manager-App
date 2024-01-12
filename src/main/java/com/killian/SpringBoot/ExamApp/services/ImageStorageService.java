@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@SuppressWarnings("null")
 @Service
 public class ImageStorageService implements IStorageService {
 

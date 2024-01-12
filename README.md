@@ -22,6 +22,13 @@ Student:
 - Do assignments, view results
 - Do training exams (no class needed), view submissions...
 
-All users:
+Admin:
+- Manage users
+- Create open training exam
+- Add questions to the question-bank.
+
+All users (except admin):
 - Register / Login
 - Edit personal info (name, email, change avatar, ...)
+
+ver 1.0 _ 1/13/2024

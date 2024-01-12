@@ -13,6 +13,7 @@ import com.killian.SpringBoot.ExamApp.repositories.QuestionRepository;
 import com.killian.SpringBoot.ExamApp.services.UserServiceImpl;
 
 @Configuration
+@SuppressWarnings("null")
 public class DataGenerator {
 
         @Autowired

@@ -21,6 +21,7 @@ import com.killian.SpringBoot.ExamApp.repositories.ExamRepository;
 import com.killian.SpringBoot.ExamApp.services.ExamService;
 
 @RestController
+@SuppressWarnings("null")
 @RequestMapping(path = "/api/exam")
 // Request: http://localhost:8080/api/exam
 public class ExamController {
